@@ -1,7 +1,46 @@
+import React, { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 import car6 from '../assets/images/car6.jpg';
+import bbbLogo from '../assets/images/bbb_logo.png.png';
+import refMurray from '../assets/images/ref_murray1.jpg.png';
+import refRightlook from '../assets/images/ref_rightlook.jpg.png';
+import refWaverley from '../assets/images/ref_waverley.jpg.png';
+import refBestbuy from '../assets/images/ref_bestbuy-1.jpg.png';
+import Footer from '../components/Footer';
 
 const CarDetailingReference = () => {
+  const [visibleElements, setVisibleElements] = useState(new Set());
+
+  // Scroll animation handler
+  useEffect(() => {
+    const handleScroll = () => {
+      const elements = document.querySelectorAll('.scroll-animate');
+      const windowHeight = window.innerHeight;
+      const newVisibleElements = new Set(visibleElements);
+
+      elements.forEach((element, index) => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = elementTop < windowHeight - 100;
+
+        if (elementVisible && !visibleElements.has(index)) {
+          newVisibleElements.add(index);
+          element.classList.add('animate-in');
+        }
+      });
+
+      if (newVisibleElements.size !== visibleElements.size) {
+        setVisibleElements(newVisibleElements);
+      }
+    };
+
+    // Initial check
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visibleElements]);
+
   const handlePrivacyPolicyDownload = () => {
     const link = document.createElement('a');
     link.href = 'https://actioncardetailing.ca/wp-content/uploads/2019/03/OnlinePrivacyPolicy.mr11.pdf';
@@ -11,124 +50,203 @@ const CarDetailingReference = () => {
   };
 
   return (
-   <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden pt-16">
-
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-16 h-16 bg-blue-500 rounded-full opacity-10 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-24 h-24 bg-blue-400 rounded-full opacity-5 animate-bounce"></div>
-        <div className="absolute top-1/2 left-1/3 w-12 h-12 bg-blue-300 rounded-full opacity-8 animate-ping"></div>
-      </div>
+   <div className="min-h-screen bg-gradient-to-br from-sky-100 via-blue-50 to-sky-100 relative overflow-hidden pt-16">
+      
+      {/* Add CSS for scroll animations */}
+      <style jsx>{`
+        .scroll-animate {
+          opacity: 0;
+          transform: translateY(50px);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-animate.animate-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .scroll-animate-delay-1 {
+          transition-delay: 0.1s;
+        }
+        
+        .scroll-animate-delay-2 {
+          transition-delay: 0.2s;
+        }
+        
+        .scroll-animate-delay-3 {
+          transition-delay: 0.3s;
+        }
+        
+        .scroll-animate-delay-4 {
+          transition-delay: 0.4s;
+        }
+        
+        .scroll-animate-fade {
+          opacity: 0;
+          transition: opacity 1s ease-out;
+        }
+        
+        .scroll-animate-fade.animate-in {
+          opacity: 1;
+        }
+        
+        .scroll-animate-scale {
+          opacity: 0;
+          transform: scale(0.8);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-animate-scale.animate-in {
+          opacity: 1;
+          transform: scale(1);
+        }
+        
+        .scroll-animate-slide-up {
+          opacity: 0;
+          transform: translateY(80px);
+          transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-animate-slide-up.animate-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .scroll-animate-slide-left {
+          opacity: 0;
+          transform: translateX(-50px);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-animate-slide-left.animate-in {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .scroll-animate-slide-right {
+          opacity: 0;
+          transform: translateX(50px);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .scroll-animate-slide-right.animate-in {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      `}</style>
 
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-30"
+        className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{
           backgroundImage: `url(${car6})`
         }}
       />
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-transparent to-blue-900/80" />
-
-
+      <div className="absolute inset-0 bg-gradient-to-b from-sky-100/80 via-transparent to-blue-50/90" />
 
       {/* Main Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6">
 
         {/* Partner Logos Row */}
-        <div className="mb-8 w-full max-w-4xl">
-          <div className="bg-gradient-to-r from-white to-blue-50 py-4 px-6 rounded-xl shadow-xl border border-blue-200">
-            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
+        <div className="mb-6 md:mb-8 w-full max-w-6xl scroll-animate">
+          <div className="bg-gradient-to-r from-sky-50 to-sky-100 py-3 md:py-4 px-4 md:px-6 rounded-xl shadow-lg border border-sky-200">
+            <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6 lg:gap-8">
 
               {/* Rightlook */}
-              <div className="bg-blue-600 px-3 py-2 rounded-lg flex items-center grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer transform hover:scale-110 shadow-lg hover:shadow-xl">
-                <span className="text-white text-sm">✓</span>
-                <span className="text-white font-bold text-sm ml-2">Rightlook</span>
+              <div className="relative group scroll-animate scroll-animate-delay-1">
+                <img 
+                  src={refRightlook} 
+                  alt="Rightlook" 
+                  className="h-12 md:h-16 lg:h-20 w-auto object-contain transition-all duration-500 cursor-pointer transform hover:scale-110 shadow-md hover:shadow-lg rounded-lg"
+                />
+                <div className="absolute inset-0 bg-sky-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* Murray Hyundai */}
-              <div className="text-center grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer transform hover:scale-110">
-                <div className="text-blue-600 font-bold text-lg drop-shadow-lg">MURRAY</div>
-                <div className="text-blue-600 text-xs font-semibold">HYUNDAI</div>
+              <div className="relative group scroll-animate scroll-animate-delay-2">
+                <img 
+                  src={refMurray} 
+                  alt="Murray Hyundai" 
+                  className="h-12 md:h-16 lg:h-20 w-auto object-contain transition-all duration-500 cursor-pointer transform hover:scale-110 shadow-md hover:shadow-lg rounded-lg"
+                />
+                <div className="absolute inset-0 bg-sky-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* Waverley */}
-              <div className="text-center grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer transform hover:scale-110">
-                <div className="text-blue-800 font-serif text-sm">Gauthier's</div>
-                <div className="text-blue-800 font-bold text-base">Waverley</div>
+              <div className="relative group scroll-animate scroll-animate-delay-3">
+                <img 
+                  src={refWaverley} 
+                  alt="Gauthier's Waverley" 
+                  className="h-12 md:h-16 lg:h-20 w-auto object-contain transition-all duration-500 cursor-pointer transform hover:scale-110 shadow-md hover:shadow-lg rounded-lg"
+                />
+                <div className="absolute inset-0 bg-sky-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* BestBuy Auto */}
-              <div className="text-center grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer transform hover:scale-110">
-                <div className="text-blue-600 font-bold text-base drop-shadow-lg">BestBuy</div>
-                <div className="text-blue-600 text-xs font-semibold">AUTO</div>
+              <div className="relative group scroll-animate scroll-animate-delay-4">
+                <img 
+                  src={refBestbuy} 
+                  alt="BestBuy Auto" 
+                  className="h-12 md:h-16 lg:h-20 w-auto object-contain transition-all duration-500 cursor-pointer transform hover:scale-110 shadow-md hover:shadow-lg rounded-lg"
+                />
+                <div className="absolute inset-0 bg-sky-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Privacy Policy Section */}
-        <div className="text-center mb-6">
-          <div className="text-blue-300 text-base font-bold mb-3 drop-shadow-lg animate-pulse">
+        <div className="text-center mb-4 md:mb-6 scroll-animate scroll-animate-slide-up">
+          <div className="text-sky-600 text-sm md:text-base font-bold mb-3 drop-shadow-lg animate-pulse">
             DOWNLOAD OUR PRIVACY POLICY
           </div>
 
           <button
             onClick={handlePrivacyPolicyDownload}
-            className="bg-gradient-to-r from-white to-blue-50 hover:from-blue-50 hover:to-blue-100 text-blue-800 px-4 py-2 rounded-lg border-2 border-blue-300 transition-all duration-300 flex items-center space-x-2 mx-auto shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="bg-gradient-to-r from-sky-100 to-sky-200 hover:from-sky-200 hover:to-sky-300 text-sky-700 px-3 md:px-4 py-2 rounded-lg border-2 border-sky-300 transition-all duration-300 flex items-center space-x-2 mx-auto shadow-lg hover:shadow-xl transform hover:scale-105 text-sm md:text-base"
           >
             <Download className="w-4 h-4" />
-            <span className="font-semibold text-sm">Action Car Detailing Privacy Policy</span>
+            <span className="font-semibold">Action Car Detailing Privacy Policy</span>
           </button>
         </div>
 
-        {/* Contact Information with BBB Badge - Compact Version */}
-        <div className="w-full max-w-2xl">
-          <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white text-center shadow-xl rounded-xl overflow-hidden border-2 border-blue-400">
+        {/* Contact Information with BBB Badge - Responsive Version */}
+        <div className="w-full max-w-2xl lg:max-w-3xl scroll-animate scroll-animate-scale">
+          <div className="bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-600 text-white text-center shadow-xl rounded-xl overflow-hidden border-2 border-sky-300">
 
             {/* BBB Badge - Top Center */}
             <div className="flex justify-center pt-4 pb-2">
-              <div className="bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg p-3 shadow-xl border-2 border-white transform hover:scale-105 transition-transform duration-300">
-                <div className="flex flex-col items-center text-white">
-                  {/* BBB Logo with torch flame icon */}
-                  <div className="mb-1">
-                    <svg
-                      className="w-6 h-6 text-white drop-shadow-lg"
-                      viewBox="0 0 32 32"
-                      fill="currentColor"
-                    >
-                      <path d="M15.418,8.627c-0.173-1.781,1.318-2.25,0.585-3.73c1.765,1.353,0.289,3.951,0.289,3.951s1.672-0.92,1.745-2.797 s-2.062-3.043-2.876-3.608C14.348,1.877,15.054,0,15.054,0s-1.07,1.204-1.083,2.503 c-0.012,1.299,0.228,1.915,0.745,2.758C15.233,6.103,15.054,7.078,15.418,8.627z" />
-                      <path d="M13.975,12.861h1.998h0.055h1.998l1.455-2.948l-1.646,0.001c0.015-0.01,0.026-0.02,0.041-0.03 c0.07-0.051,0.14-0.106,0.209-0.162c0.069-0.056,0.146-0.114,0.217-0.175c0.146-0.117,0.291-0.254,0.436-0.387l0.055-0.052 l0.052-0.054l0.022-0.027l0.094-0.108c0.026-0.026,0.074-0.092,0.113-0.153s0.08-0.123,0.112-0.184 c0.053-0.119,0.11-0.234,0.137-0.358c0.037-0.121,0.056-0.241,0.063-0.359c0.014-0.233-0.012-0.451-0.062-0.637" />
-                      <path d="M12.861,14.72h1.117l1.194,14.755c-0.568,0.229-0.787,0.715-0.787,1.053c0,0.457,1.519,1.473,1.519,1.473 s1.547-1.148,1.563-1.54c0.011-0.269-0.205-0.687-0.696-0.927c0.13-1.691,1.202-12.725,1.405-14.813h0.815l0.021-1.368h-6.129 L12.861,14.72z" />
-                    </svg>
-                  </div>
-                  <div className="text-lg font-bold mb-1">BBB</div>
-                  <div className="bg-white text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mb-1 shadow-lg">
-                    A+
-                  </div>
-                  <div className="text-xs font-medium text-center leading-tight">
-                    ACCREDITED<br />BUSINESS
+              <div className="bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg p-4 md:p-6 shadow-xl border-2 border-sky-100 transform hover:scale-105 transition-transform duration-300">
+                <div className="flex flex-col items-center">
+                  {/* Only BBB Logo Image - Bigger Size */}
+                  <div>
+                    <img 
+                      src={bbbLogo} 
+                      alt="BBB Logo" 
+                      className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain drop-shadow-lg"
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Contact Text Content - Compact */}
-            <div className="px-6 pb-6 pt-2">
+            {/* Contact Text Content - Responsive */}
+            <div className="px-4 md:px-6 pb-4 md:pb-6 pt-2">
               <div className="space-y-2">
-                <div className="text-base font-bold leading-tight">
+                <div className="text-sm md:text-base font-bold leading-tight">
                   CONTACT US FOR OUR RATES AND
                 </div>
-                <div className="text-base font-bold mb-4 leading-tight">
+                <div className="text-sm md:text-base font-bold mb-4 leading-tight">
                   SERVICES
                 </div>
 
                 {/* Phone Number */}
-                <div className="bg-gradient-to-r from-blue-800 to-blue-900 inline-block px-6 py-3 rounded-lg shadow-xl transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-sky-600 to-sky-700 inline-block px-4 md:px-6 py-2 md:py-3 rounded-lg shadow-xl transform hover:scale-105 transition-all duration-300">
                   <a
                     href="tel:+12047750005"
-                    className="text-2xl font-bold hover:text-blue-200 transition-colors duration-300 drop-shadow-lg"
+                    className="text-lg md:text-2xl font-bold hover:text-sky-100 transition-colors duration-300 drop-shadow-lg"
                   >
                     (204) 775-0005
                   </a>
@@ -140,14 +258,15 @@ const CarDetailingReference = () => {
 
       </div>
 
-      {/* Bottom right corner text */}
-      <div className="absolute bottom-4 right-4 text-blue-400 text-xs opacity-70 z-10">
-        Delta Auto Service
+      {/* External Footer Component */}
+      <div className="scroll-animate">
+        <Footer />
       </div>
 
-      {/* Floating Animation Elements */}
-      <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-60"></div>
-      <div className="absolute top-3/4 right-1/4 w-3 h-3 bg-blue-300 rounded-full animate-pulse opacity-40"></div>
+      {/* Bottom right corner text */}
+      <div className="absolute bottom-4 right-4 text-sky-500 text-xs opacity-70 z-10 scroll-animate scroll-animate-fade">
+        Delta Auto Service
+      </div>
     </div>
   );
 };

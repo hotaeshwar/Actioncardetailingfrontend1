@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFacebook, FaTwitter } from 'react-icons/fa';
+import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import actionCarLogo from '../assets/images/action car logo.png';
 import awardLogo from '../assets/images/award png.png';
 
@@ -34,13 +34,28 @@ const Footer = () => {
               
               {/* Social Media Icons */}
               <div className="flex space-x-3 sm:space-x-4 mt-3 sm:mt-4">
-                <a href="#" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-colors shadow-md">
+                <a 
+                  href="https://www.facebook.com/actioncardetailingwinnipeg" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-blue-600 flex items-center justify-center hover:bg-blue-50 hover:text-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
+                  aria-label="Follow us on Facebook"
+                >
                   <FaFacebook size={16} className="sm:text-lg md:text-xl" />
                 </a>
-                <a href="#" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-sky-600 flex items-center justify-center hover:bg-sky-50 transition-colors shadow-md">
-                  <FaTwitter size={16} className="sm:text-lg md:text-xl" />
+                <a 
+                  href="https://www.instagram.com/actioncardetailingwinnipeg/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-pink-600 flex items-center justify-center hover:bg-pink-50 hover:text-pink-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
+                  aria-label="Follow us on Instagram"
+                >
+                  <FaInstagram size={16} className="sm:text-lg md:text-xl" />
                 </a>
               </div>
+              
+              {/* Follow us text */}
+              <p className="text-xs sm:text-sm mt-2 opacity-90">Follow us for updates and showcases!</p>
             </div>
             
             {/* Business Hours */}

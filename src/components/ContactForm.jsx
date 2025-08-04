@@ -41,8 +41,64 @@ const ContactForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log(formData);
+        
+        // Create a hidden form element for FormSubmit
+        const formElement = document.createElement('form');
+        formElement.action = 'https://formsubmit.co/actioncardetailing@gmail.com';
+        formElement.method = 'POST';
+        formElement.style.display = 'none';
+
+        // Prepare form data for submission
+        const submissionData = {
+            'Name': formData.name,
+            'Email': formData.email,
+            'Phone': formData.phone,
+            'Message': formData.message,
+            '_subject': 'New Contact Form Submission - Action Car Detailing',
+            '_replyto': formData.email,
+            '_captcha': 'false',
+            '_template': 'table'
+        };
+
+        // Add all form fields as hidden inputs
+        Object.keys(submissionData).forEach(key => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = submissionData[key];
+            formElement.appendChild(input);
+        });
+
+        // Handle file upload if photo is selected
+        if (formData.photo) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.name = 'attachment';
+            fileInput.style.display = 'none';
+            
+            // Create a new FileList with the selected file
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(formData.photo);
+            fileInput.files = dataTransfer.files;
+            
+            formElement.appendChild(fileInput);
+        }
+
+        // Append form to body and submit
+        document.body.appendChild(formElement);
+        formElement.submit();
+
+        // Show success message
+        alert('Thank you for your message! We will get back to you within 24 hours.');
+        
+        // Reset form data
+        setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+            photo: null
+        });
     };
 
     return (
@@ -98,6 +154,7 @@ const ContactForm = () => {
                                         value={formData.name}
                                         onChange={handleChange}
                                         placeholder="Name"
+                                        required
                                         className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
                                     />
                                 </div>
@@ -109,6 +166,7 @@ const ContactForm = () => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="Email"
+                                        required
                                         className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
                                     />
                                 </div>
@@ -120,6 +178,7 @@ const ContactForm = () => {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         placeholder="Phone"
+                                        required
                                         className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
                                     />
                                 </div>
@@ -131,6 +190,7 @@ const ContactForm = () => {
                                         onChange={handleChange}
                                         placeholder="Message"
                                         rows="4"
+                                        required
                                         className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
                                     ></textarea>
                                 </div>
@@ -141,11 +201,13 @@ const ContactForm = () => {
                                         type="file"
                                         name="photo"
                                         onChange={handleChange}
+                                        accept="image/*"
                                         className="w-full p-1 sm:p-2 text-sm sm:text-base border border-gray-300 rounded-lg file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 file:rounded-md file:border-0 file:bg-sky-700 file:text-white file:text-sm sm:file:text-base hover:file:bg-sky-600 transition duration-300"
                                     />
                                 </div>
 
-                                <div
+                                <button
+                                    type="button"
                                     onClick={handleSubmit}
                                     onMouseEnter={() => setIsHovered(true)}
                                     onMouseLeave={() => setIsHovered(false)}
@@ -155,7 +217,7 @@ const ContactForm = () => {
                                         }`}
                                 >
                                     Submit
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -5,71 +5,127 @@ const Hero = () => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Enhanced mobile video optimization - target all video elements
-    const videos = document.querySelectorAll('video');
+    // Optimized single video handling
+    const video = videoRef.current;
     
-    videos.forEach(video => {
-      if (video) {
-        // Mobile-specific optimizations
-        if (window.innerWidth < 768) {
-          video.setAttribute('playsinline', 'true');
-          video.setAttribute('webkit-playsinline', 'true');
-          video.muted = true;
-          video.defaultMuted = true;
-          video.volume = 0;
-        }
+    if (video) {
+      // Essential settings only
+      video.muted = true;
+      video.defaultMuted = true;
+      video.volume = 0;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
+      
+      // Minimal preload for faster start
+      video.preload = 'none';
+      
+      // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
+      const adjustVideoFit = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
         
-        // Play with error handling
-        video.play().catch(error => {
-          console.warn("Autoplay blocked:", error.message);
-          // Fallback: try playing again after user interaction
-          document.addEventListener('touchstart', () => {
-            video.play().catch(e => console.warn("Manual play failed:", e));
-          }, { once: true });
-        });
-        
-        // Optimize video quality and performance
-        video.playbackRate = 1.0;
-        if (video.style) {
-          video.style.filter = 'none';
+        // Mobile screens (below 768px) - Force 16:10 aspect ratio
+        if (width < 768) {
+          const idealHeight = width / (16/10); // Calculate 16:10 height
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          
+          // Center the video container vertically in viewport
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
         }
-      }
-    });
+        // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
+        else if (width >= 768 && width < 1024) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // iPad Pro: 1024x1366 - 16:10 cinematic 
+        else if (width >= 1024 && width < 1280) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // Desktop and Laptop screens (1280px and above) - Full screen as original
+        else {
+          video.style.objectFit = 'cover';
+          video.style.objectPosition = 'center center';
+          video.style.height = '100vh';
+          video.style.width = '100vw';
+          video.style.top = '0';
+          video.style.left = '0';
+          video.style.transform = 'none';
+          video.style.position = 'absolute';
+        }
+      };
+      
+      // Apply initial adjustments
+      adjustVideoFit();
+      
+      // Reapply on orientation change
+      window.addEventListener('resize', adjustVideoFit);
+      window.addEventListener('orientationchange', adjustVideoFit);
+      
+      // Simple autoplay with minimal error handling
+      const playVideo = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          // Single fallback attempt
+          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+        }
+      };
+      
+      // Start playing immediately
+      playVideo();
+      
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', adjustVideoFit);
+        window.removeEventListener('orientationchange', adjustVideoFit);
+      };
+    }
   }, []);
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-snow">
-      {/* Video background - mobile-first responsive approach */}
+      {/* Video background - single optimized video */}
       <div className="absolute inset-0 z-0">
-        {/* Mobile video (below md breakpoint) */}
         <video
           ref={videoRef}
-          className="block md:hidden absolute top-0 left-0 w-full h-full object-fill"
+          className="absolute top-0 left-0 w-full h-full object-cover object-center"
           src={carwashVideo}
           autoPlay
           loop
           muted
           playsInline
-          preload="auto"
-          webkit-playsinline="true"
+          preload="none"
           poster=""
           controls={false}
-          defaultMuted={true}
-        />
-        
-        {/* Desktop/Tablet video (md breakpoint and above) */}
-        <video
-          className="hidden md:block absolute top-0 left-0 w-full h-full object-cover object-center"
-          src={carwashVideo}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          webkit-playsinline="true"
-          poster=""
-          controls={false}
-          defaultMuted={true}
+          style={{
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            objectPosition: 'center center'
+          }}
         />
       </div>
 

@@ -18,6 +18,8 @@ import RemediationClaim from './components/RemediationClaim'  // Import the new 
 import PaintProtectionFilm from './components/PaintProtectionFilm'  // Import the new Paint Protection Film component
 import DentRepairComponent from './components/DentRepairComponent'  // Import the new Dent Repair component
 import BeforeAfterVideo from './components/BeforeAfterVideo'  // Import the new Before After Video component
+import Booking from './components/Booking'  // Import the new Booking component
+import PaintPolishingForm from './components/PaintPolishingForm'  // Import the new Paint Polishing Form component
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -33,7 +35,7 @@ function App() {
       case 'giftcard':
         return <GiftCard />;
       case 'auto-detailing':  // Add the new auto detailing case
-        return <CarDetailingWebsite />;
+        return <CarDetailingWebsite setCurrentView={setCurrentView} />;
       case 'paint-correction':  // Add the new paint correction case
         return <PaintCorrection />;
       case 'window-tinting':  // Add the new window tinting case
@@ -48,12 +50,16 @@ function App() {
         return <DentRepairComponent />;
       case 'before-after':  // Add the new before after video case
         return <BeforeAfterVideo />;
+      case 'booking':  // Add the new booking case
+        return <Booking />;
+      case 'paint-polishing':  // Add the new paint polishing form case
+        return <PaintPolishingForm />;
       case 'home':
       default:
         return (
           <>
             <Hero />
-            <Service />
+            <Service setCurrentView={setCurrentView} />
             <CustomerReview />
             <ContactForm />
             <Footer />

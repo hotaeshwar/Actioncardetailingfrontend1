@@ -1,8 +1,114 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Play, Check, Shield, Star, Droplets, Settings, HardHat, Sun, Atom, Beaker } from 'lucide-react';
+import Footer from '../components/Footer';
+// Import Ceramic Coating Video
+import ceramicCoatingVideo from '../assets/images/Copy of Ceramic coating.mp4';
 
 const CeramicCoatings = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    // Optimized single video handling - same as Hero component
+    const video = videoRef.current;
+    
+    if (video) {
+      // Essential settings only
+      video.muted = true;
+      video.defaultMuted = true;
+      video.volume = 0;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
+      
+      // Minimal preload for faster start
+      video.preload = 'none';
+      
+      // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
+      const adjustVideoFit = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Mobile screens (below 768px) - Force 16:10 aspect ratio
+        if (width < 768) {
+          const idealHeight = width / (16/10); // Calculate 16:10 height
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          
+          // Center the video container vertically in viewport
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
+        else if (width >= 768 && width < 1024) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // iPad Pro: 1024x1366 - 16:10 cinematic 
+        else if (width >= 1024 && width < 1280) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // Desktop and Laptop screens (1280px and above) - Full screen as original
+        else {
+          video.style.objectFit = 'cover';
+          video.style.objectPosition = 'center center';
+          video.style.height = '100vh';
+          video.style.width = '100vw';
+          video.style.top = '0';
+          video.style.left = '0';
+          video.style.transform = 'none';
+          video.style.position = 'absolute';
+        }
+      };
+      
+      // Apply initial adjustments
+      adjustVideoFit();
+      
+      // Reapply on orientation change
+      window.addEventListener('resize', adjustVideoFit);
+      window.addEventListener('orientationchange', adjustVideoFit);
+      
+      // Simple autoplay with minimal error handling
+      const playVideo = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          // Single fallback attempt
+          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+        }
+      };
+      
+      // Start playing immediately
+      playVideo();
+      
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', adjustVideoFit);
+        window.removeEventListener('orientationchange', adjustVideoFit);
+      };
+    }
+  }, []);
 
   const features = [
     {
@@ -135,27 +241,47 @@ const CeramicCoatings = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-900 via-sky-800 to-sky-900">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-sky-900/70 via-sky-800/65 to-sky-700/60 z-10"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.3)_0%,transparent_50%)] z-10"></div>
-        <img
-          src="https://actioncardetailing.ca/wp-content/uploads/2021/05/image2.png.webp"
-          alt="Window Tinting Hero"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="relative z-20 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-sky-400 via-sky-300 to-sky-200 bg-clip-text text-transparent drop-shadow-2xl">
-            Ceramic Coatings
-          </h1>
-          <div className="h-1 w-32 bg-gradient-to-r from-sky-400 to-sky-200 mx-auto rounded-full"></div>
+      {/* Hero Section with Video */}
+      <section className="bg-white">
+        {/* Hero Video - Responsive like Hero component */}
+        <div className="relative h-screen w-full overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <video
+              ref={videoRef}
+              className="absolute top-0 left-0 w-full h-full object-cover object-center"
+              src={ceramicCoatingVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="none"
+              poster=""
+              controls={false}
+              style={{
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                objectPosition: 'center center'
+              }}
+            />
+          </div>
+        </div>
+        
+        {/* Hero Content - positioned below video */}
+        <div className="bg-white py-8 sm:py-10 lg:py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-sky-400">
+              Ceramic Coatings
+            </h1>
+            <div className="h-1 w-32 bg-gradient-to-r from-sky-400 to-sky-200 mx-auto rounded-full"></div>
+          </div>
         </div>
       </section>
+
       {/* Video Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-white via-sky-50 to-sky-100">
+      <section className="py-8 md:py-12 bg-gradient-to-br from-white via-sky-50 to-sky-100">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-sky-400 via-sky-400 to-sky-400 bg-clip-text text-transparent mb-4">
+          <div className="text-center mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-sky-400 via-sky-400 to-sky-400 bg-clip-text text-transparent mb-0">
               NO OTHER COATING COMES CLOSE
             </h2>
             <h3 className="text-xl md:text-2xl font-semibold text-sky-400">
@@ -263,13 +389,12 @@ const CeramicCoatings = () => {
         </div>
       </section>
 
-      {/* Financing Section */}
-      <section className="py-16 bg-gradient-to-r from-white via-sky-50 to-sky-100 border-t border-sky-200">
+      {/* Financing Section - Removed "Click below to learn more" text and reduced spacing */}
+      <section className="py-12 bg-gradient-to-r from-white via-sky-50 to-sky-100 border-t border-sky-200">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-400 to-sky-400 bg-clip-text text-transparent mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-400 to-sky-400 bg-clip-text text-transparent mb-8">
             FINANCING AVAILABLE
           </h2>
-          <p className="text-lg text-sky-400 mb-8">Click below to learn more</p>
 
           <div className="max-w-md mx-auto">
             <img
@@ -475,9 +600,6 @@ const CeramicCoatings = () => {
 
                   <div className="space-y-4 text-sm md:text-base">
                     <p className="leading-relaxed bg-white/20 backdrop-blur-sm p-4 rounded-lg">
-                      <span className="font-bold">FUSION PLUS</span>™ bonds at the molecular level to seal and protect surfaces from environmental contaminants, harmful UV rays, and insect acids. <span className="font-bold">FUSION PLUS</span> also provides resistance to light scratches and fading. Its hydrophobic properties repel dirt and liquids, making surfaces easier to clean.
-                    </p>
-                    <p className="leading-relaxed bg-white/20 backdrop-blur-sm p-4 rounded-lg">
                       Developed to perform in a wide variety of surface types, <span className="font-bold">FUSION PLUS</span> Ceramic Coating offers unrivaled gloss, superior hydrophobic protection, and improved scratch resistance.
                     </p>
                   </div>
@@ -510,6 +632,9 @@ const CeramicCoatings = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer Component */}
+      <Footer />
     </div>
   );
 };

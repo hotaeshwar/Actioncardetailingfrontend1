@@ -9,6 +9,7 @@ const ChatBot = () => {
     agreeToPolicy: false
   });
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -48,7 +49,7 @@ const ChatBot = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     
@@ -57,14 +58,63 @@ const ChatBot = () => {
       return;
     }
     
-    console.log('Form submitted:', formData);
-    alert('Message sent successfully!');
-    setFormData({
-      name: '',
-      mobile: '',
-      message: '',
-      agreeToPolicy: false
-    });
+    setIsSubmitting(true);
+
+    try {
+      // Create form element for FormSubmit
+      const formElement = document.createElement('form');
+      formElement.action = 'https://formsubmit.co/actioncardetailing@gmail.com'; // Replace with your email
+      formElement.method = 'POST';
+      formElement.style.display = 'none';
+
+      // Prepare form data for submission
+      const submissionData = {
+        'Customer Name': formData.name,
+        'Mobile Number': formData.mobile,
+        'Message': formData.message,
+        'Source': 'Website Chat Widget',
+        'Timestamp': new Date().toLocaleString(),
+        '_subject': 'New Message from Website Chat',
+        '_replyto': formData.mobile, // Use mobile as reply-to for SMS follow-up
+        '_captcha': 'false',
+        '_template': 'table' // Makes the email look nicer
+      };
+
+      // Add form fields
+      Object.keys(submissionData).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = submissionData[key];
+        formElement.appendChild(input);
+      });
+
+      // Submit form
+      document.body.appendChild(formElement);
+      formElement.submit();
+
+      // Show success message
+      alert('Message sent successfully! We\'ll get back to you shortly by text.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        mobile: '',
+        message: '',
+        agreeToPolicy: false
+      });
+      
+      // Optionally close the chat widget after successful submission
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('There was an error sending your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -215,6 +265,7 @@ const ChatBot = () => {
                       : 'border-sky-200 hover:border-sky-300 focus:bg-sky-50'
                   }`}
                   placeholder="Enter your name"
+                  disabled={isSubmitting}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-500 flex items-center">
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -240,6 +291,7 @@ const ChatBot = () => {
                       : 'border-sky-200 hover:border-sky-300 focus:bg-sky-50'
                   }`}
                   placeholder="Enter your mobile number"
+                  disabled={isSubmitting}
                 />
                 {errors.mobile && <p className="mt-1 text-xs text-red-500 flex items-center">
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -265,6 +317,7 @@ const ChatBot = () => {
                       : 'border-sky-200 hover:border-sky-300 focus:bg-sky-50'
                   }`}
                   placeholder="Type your message here..."
+                  disabled={isSubmitting}
                 ></textarea>
                 {errors.message && <p className="mt-1 text-xs text-red-500 flex items-center">
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -285,6 +338,7 @@ const ChatBot = () => {
                     className={`mt-1 w-4 h-4 text-sky-400 border-2 rounded focus:ring-2 focus:ring-sky-400 transition-colors ${
                       errors.agreeToPolicy ? 'border-red-400' : 'border-sky-300'
                     }`}
+                    disabled={isSubmitting}
                   />
                   <label className="text-xs text-sky-500 leading-relaxed">
                     By checking this box, you agree to our{' '}
@@ -314,13 +368,30 @@ const ChatBot = () => {
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 hover:from-sky-500 hover:via-sky-600 hover:to-sky-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+                disabled={isSubmitting}
+                className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 ${
+                  isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 hover:from-sky-500 hover:via-sky-600 hover:to-sky-700 text-white hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0'
+                }`}
               >
                 <span className="flex items-center justify-center">
-                  SEND MESSAGE
-                  <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      SENDING...
+                    </>
+                  ) : (
+                    <>
+                      SEND MESSAGE
+                      <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </>
+                  )}
                 </span>
               </button>
             </div>
