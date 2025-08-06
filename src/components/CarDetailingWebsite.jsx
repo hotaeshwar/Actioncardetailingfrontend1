@@ -104,15 +104,15 @@ const BookingModal = ({ isOpen, onClose }) => {
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    
+
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(day);
     }
-    
+
     return days;
   };
 
@@ -222,9 +222,9 @@ const BookingModal = ({ isOpen, onClose }) => {
     });
 
     document.body.appendChild(formElement);
-    
+
     alert('Booking submitted successfully! We will confirm your appointment within 24 hours. Redirecting to homepage...');
-    
+
     formElement.submit();
     onClose();
   };
@@ -265,11 +265,10 @@ const BookingModal = ({ isOpen, onClose }) => {
                 <div
                   key={vehicle.id}
                   onClick={() => handleVehicleSelect(vehicle)}
-                  className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
-                    selectedVehicle.id === vehicle.id
-                      ? 'border-white bg-white/20 text-white'
-                      : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
-                  }`}
+                  className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${selectedVehicle.id === vehicle.id
+                    ? 'border-white bg-white/20 text-white'
+                    : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
+                    }`}
                 >
                   <div className="text-center">
                     <vehicle.icon className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-white" />
@@ -346,11 +345,10 @@ const BookingModal = ({ isOpen, onClose }) => {
                   </div>
                   <button
                     onClick={() => handleAddOnToggle(addon)}
-                    className={`px-3 sm:px-4 py-2 rounded-full font-semibold transition-colors duration-300 text-xs sm:text-sm ${
-                      selectedAddOns.find(item => item.id === addon.id)
-                        ? 'bg-[#1393c4] text-white'
-                        : 'border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
-                    }`}
+                    className={`px-3 sm:px-4 py-2 rounded-full font-semibold transition-colors duration-300 text-xs sm:text-sm ${selectedAddOns.find(item => item.id === addon.id)
+                      ? 'bg-[#1393c4] text-white'
+                      : 'border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
+                      }`}
                   >
                     {selectedAddOns.find(item => item.id === addon.id) ? 'Selected' : 'Select'}
                   </button>
@@ -375,7 +373,7 @@ const BookingModal = ({ isOpen, onClose }) => {
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">SELECT DATE AND TIME</h2>
               <p className="text-white/80 text-sm sm:text-base">Choose your preferred date and time.</p>
             </div>
-            
+
             <div className="bg-white/20 rounded-xl border-2 border-white/30 p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-lg font-semibold text-white">
@@ -407,27 +405,26 @@ const BookingModal = ({ isOpen, onClose }) => {
 
               <div className="grid grid-cols-7 gap-1 mb-6">
                 {getDaysInMonth(currentMonth).map((day, index) => {
-                  const isToday = day && 
-                    new Date().getDate() === day && 
+                  const isToday = day &&
+                    new Date().getDate() === day &&
                     new Date().getMonth() === currentMonth.getMonth() &&
                     new Date().getFullYear() === currentMonth.getFullYear();
-                  
+
                   const isSelected = selectedDate === `${months[currentMonth.getMonth()]} ${day}, ${currentMonth.getFullYear()}`;
-                  
+
                   return (
                     <button
                       key={index}
                       onClick={() => day && handleDateSelect(day)}
                       disabled={!day}
-                      className={`h-10 w-10 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                        !day 
-                          ? 'cursor-default' 
-                          : isSelected
-                            ? 'bg-white text-[#1393c4]'
-                            : isToday
-                              ? 'bg-white/20 text-white'
-                              : 'hover:bg-white/10 text-white/80 hover:text-white'
-                      }`}
+                      className={`h-10 w-10 rounded-lg text-sm font-medium transition-colors duration-200 ${!day
+                        ? 'cursor-default'
+                        : isSelected
+                          ? 'bg-white text-[#1393c4]'
+                          : isToday
+                            ? 'bg-white/20 text-white'
+                            : 'hover:bg-white/10 text-white/80 hover:text-white'
+                        }`}
                     >
                       {day}
                     </button>
@@ -443,11 +440,10 @@ const BookingModal = ({ isOpen, onClose }) => {
                       <button
                         key={time}
                         onClick={() => handleTimeSelect(time)}
-                        className={`py-2 px-3 text-sm rounded-lg border transition-colors duration-200 ${
-                          selectedTime === time
-                            ? 'bg-white text-[#1393c4] border-white'
-                            : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/70'
-                        }`}
+                        className={`py-2 px-3 text-sm rounded-lg border transition-colors duration-200 ${selectedTime === time
+                          ? 'bg-white text-[#1393c4] border-white'
+                          : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/70'
+                          }`}
                       >
                         {time}
                       </button>
@@ -579,7 +575,7 @@ const BookingModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={handleClose}></div>
-      
+
       <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
         <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
           <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#1393c4]/20 bg-[#1393c4]/10">
@@ -597,11 +593,10 @@ const BookingModal = ({ isOpen, onClose }) => {
               {[1, 2, 3, 4, 5].map((step) => (
                 <React.Fragment key={step}>
                   <div className="flex-1 flex items-center">
-                    <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mx-auto ${
-                      step <= currentStep 
-                        ? 'bg-[#1393c4] text-white shadow-lg' 
-                        : 'bg-white text-[#1393c4] border-2 border-[#1393c4]/30'
-                    }`}>
+                    <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mx-auto ${step <= currentStep
+                      ? 'bg-[#1393c4] text-white shadow-lg'
+                      : 'bg-white text-[#1393c4] border-2 border-[#1393c4]/30'
+                      }`}>
                       {step < currentStep ? <Check className="w-3 h-3 sm:w-4 sm:h-4" /> : step}
                     </div>
                   </div>
@@ -623,25 +618,23 @@ const BookingModal = ({ isOpen, onClose }) => {
             <button
               onClick={handlePrev}
               disabled={currentStep === 1}
-              className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
-                currentStep === 1
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-white border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white shadow-md hover:shadow-lg'
-              }`}
+              className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${currentStep === 1
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-white border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white shadow-md hover:shadow-lg'
+                }`}
             >
               <ChevronLeft className="w-5 h-5" />
               <span>Previous</span>
             </button>
-            
+
             {currentStep < 5 && (
               <button
                 onClick={handleNext}
                 disabled={!isStepValid()}
-                className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
-                  !isStepValid()
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-[#1393c4] text-white hover:bg-[#1393c4]/90 shadow-md hover:shadow-lg'
-                }`}
+                className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${!isStepValid()
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-[#1393c4] text-white hover:bg-[#1393c4]/90 shadow-md hover:shadow-lg'
+                  }`}
               >
                 <span>Next</span>
                 <ChevronRight className="w-5 h-5" />
@@ -662,7 +655,7 @@ const CarDetailingWebsite = () => {
   useEffect(() => {
     // Video handling with responsive sizing like Hero component
     const video = videoRef.current;
-    
+
     if (video) {
       // Essential settings only
       video.muted = true;
@@ -670,24 +663,24 @@ const CarDetailingWebsite = () => {
       video.volume = 0;
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
-      
+
       // Minimal preload for faster start
       video.preload = 'none';
-      
+
       // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
       const adjustVideoFit = () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
+
         // Mobile screens (below 768px) - Force 16:10 aspect ratio
         if (width < 768) {
-          const idealHeight = width / (16/10); // Calculate 16:10 height
-          
+          const idealHeight = width / (16 / 10); // Calculate 16:10 height
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
           video.style.objectPosition = 'center center';
-          
+
           // Center the video container vertically in viewport
           video.style.top = '50%';
           video.style.left = '0';
@@ -696,8 +689,8 @@ const CarDetailingWebsite = () => {
         }
         // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
         else if (width >= 768 && width < 1024) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -709,8 +702,8 @@ const CarDetailingWebsite = () => {
         }
         // iPad Pro: 1024x1366 - 16:10 cinematic 
         else if (width >= 1024 && width < 1280) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -732,27 +725,27 @@ const CarDetailingWebsite = () => {
           video.style.position = 'absolute';
         }
       };
-      
+
       // Apply initial adjustments
       adjustVideoFit();
-      
+
       // Reapply on orientation change
       window.addEventListener('resize', adjustVideoFit);
       window.addEventListener('orientationchange', adjustVideoFit);
-      
+
       // Simple autoplay with minimal error handling
       const playVideo = async () => {
         try {
           await video.play();
         } catch (error) {
           // Single fallback attempt
-          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+          document.addEventListener('click', () => video.play().catch(() => { }), { once: true });
         }
       };
-      
+
       // Start playing immediately
       playVideo();
-      
+
       // Cleanup
       return () => {
         window.removeEventListener('resize', adjustVideoFit);
@@ -795,11 +788,11 @@ const CarDetailingWebsite = () => {
       <section className="relative">
         {/* Video Container with responsive sizing */}
         <div className="relative w-full h-screen sm:h-auto sm:aspect-video lg:h-screen overflow-hidden">
-          <video 
+          <video
             ref={videoRef}
-            autoPlay 
-            muted 
-            loop 
+            autoPlay
+            muted
+            loop
             playsInline
             preload="none"
             className="absolute inset-0 w-full h-full object-cover"
@@ -813,7 +806,7 @@ const CarDetailingWebsite = () => {
             Your browser does not support the video tag.
           </video>
         </div>
-        
+
         {/* Hero Content - positioned below video with reduced spacing */}
         <div className={`animate-section transition-all duration-1000 ease-in-out ${isVisible[0] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="bg-white py-8 sm:py-12">
@@ -829,29 +822,23 @@ const CarDetailingWebsite = () => {
       {/* About Section with reduced spacing */}
       <section className={`animate-section py-8 sm:py-12 bg-white transition-all duration-1000 ease-in-out ${isVisible[1] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
-              About Us
-            </h2>
-          </div>
-          
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <p className="text-base text-sky-400 leading-relaxed">
                 Action car detailing is made up of a team of experts who can handle any size vehicles in any condition. We are dedicated to getting the job done right, there is no better place in Winnipeg to get your car detailed. Quality products, quality work and quality service is our promise.
               </p>
-              
+
               <p className="text-base text-sky-400 leading-relaxed">
                 We are passionate about cars that's why we take our time with each vehicle. Our chemical and allergy-free interior cleaning methods will leave your car's interior spotless and scentless- the way it should be.
               </p>
-              
+
               <div className="bg-sky-50 p-4 rounded-lg border-l-4 border-sky-600">
                 <p className="text-base text-sky-400 font-medium">
                   Action car Detailing offers a very thorough, deep cleaning of interior and exterior. We specialize in paint correction, ceramic coating and complete interior reconditioning. In Business for 14 years. Better Business Bureau accredited with an A+ rating. We are MPI accredited.
                 </p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-sky-50 rounded-lg">
                 <div className="text-2xl font-bold text-sky-400 mb-1">14+</div>
@@ -885,7 +872,7 @@ const CarDetailingWebsite = () => {
               Our proven process ensures your vehicle receives the most thorough cleaning possible
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Step 1 */}
             <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg">
@@ -966,7 +953,7 @@ const CarDetailingWebsite = () => {
               Comprehensive detailing services to keep your vehicle in pristine condition
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -999,9 +986,9 @@ const CarDetailingWebsite = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-8">
-            <button 
+            <button
               onClick={openBookingModal}
               className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
@@ -1021,18 +1008,18 @@ const CarDetailingWebsite = () => {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
               Read some of our Reviews
             </h2>
-            
+
             <div className="inline-flex items-center justify-center bg-white border-2 border-sky-500 rounded-full p-1 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-sky-100 rounded-full flex items-center justify-center">
-                <img 
-                  src={googlePng} 
-                  alt="Google Reviews" 
+                <img
+                  src={googlePng}
+                  alt="Google Reviews"
                   className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                 />
               </div>
             </div>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {

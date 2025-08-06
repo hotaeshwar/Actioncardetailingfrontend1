@@ -185,14 +185,13 @@ const Service = ({ setCurrentView }) => {
     {
       src: carwashing2,
       title: "Complete Exterior and Interior Detailing",
-      description: "Professional Detailing  services"
+      description: "Professional Detailing services"
     },
     {
       src: carwashing3,
       title: "Interior Detailing",
       description: "Deep cleaning and protection"
     },
-
   ];
 
   // Professional service data with custom auto detailing
@@ -200,16 +199,16 @@ const Service = ({ setCurrentView }) => {
     "Auto Detailing": {
       title: "Premium Auto Detailing",
       shortDescription: "Complete interior and exterior restoration services",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: autoDetailingVideo, // Using the video file for service card
+        type: 'video',
+        src: autoDetailingVideo,
         alt: "Professional Auto Detailing Service"
       },
       gradientFrom: "sky-400",
       gradientTo: "sky-600",
       hoverColor: "sky-600",
-      fullDescription: "Our comprehensive auto detailing service combines advanced techniques with premium-grade products to restore your vehicle to showroom condition. From paint correction to interior deep cleaning, we provide meticulous attention to every detail of your vehicle.",
+      fullDescription: "Our comprehensive auto detailing service combines advanced techniques with premium-grade products to restore your vehicle to showroom condition. From paint correction polishing to interior deep cleaning, we provide meticulous attention to every detail of your vehicle.",
       features: [
         "Professional hand wash with premium soaps and microfiber techniques",
         "Clay bar treatment to remove embedded contaminants and surface pollution",
@@ -223,19 +222,19 @@ const Service = ({ setCurrentView }) => {
       guarantee: "100% satisfaction guaranteed or we'll make it right",
       linkTo: 'auto-detailing'
     },
-    "Paint Correction": {
+    "Paint Correction Polishing": {
       title: "Paint Correction Polishing",
       shortDescription: "Restore gloss, clarity, and a factory-fresh finish",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: paintCorrectionVideo, // Using the video file for service card
+        type: 'video',
+        src: paintCorrectionVideo,
         alt: "Paint Correction Polishing Service"
       },
       gradientFrom: "sky-300",
       gradientTo: "sky-500",
       hoverColor: "sky-600",
-      fullDescription: "Our paint correction service eliminates imperfections like swirls, scratches, and oxidation — bringing your vehicle's paint back to life with a deep, flawless shine.",
+      fullDescription: "Our paint correction polishing service eliminates imperfections like swirls, scratches, and oxidation — bringing your vehicle's paint back to life with a deep, flawless shine.",
       features: [
         "Scratch and swirl mark removal for a refined finish",
         "Oxidation and UV damage correction to restore color",
@@ -252,10 +251,10 @@ const Service = ({ setCurrentView }) => {
     "Window Tinting": {
       title: "Automotive Window Film",
       shortDescription: "Get Ready to Enjoy Every Drive with XPEL PRIME",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: windowTintingVideo, // Using the video file for service card
+        type: 'video',
+        src: windowTintingVideo,
         alt: "Window Tinting Service"
       },
       gradientFrom: "sky-500",
@@ -278,10 +277,10 @@ const Service = ({ setCurrentView }) => {
     "Ceramic Coating": {
       title: "Automotive Ceramic Coating",
       shortDescription: "Leave Water (and Worries) Behind with FUSION PLUS™",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: ceramicCoatingVideo, // Using the video file for service card
+        type: 'video',
+        src: ceramicCoatingVideo,
         alt: "Ceramic Coating Service"
       },
       gradientFrom: "sky-400",
@@ -301,13 +300,13 @@ const Service = ({ setCurrentView }) => {
       guarantee: "5-year performance warranty with certified application",
       linkTo: 'ceramic-coatings'
     },
-    "Paint Protection": {
+    "Paint Protection Film": {
       title: "Paint Protection Film",
       shortDescription: "Invisible protection against chips, scratches, and road debris",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: paintProtectionVideo, // Using the video file for service card
+        type: 'video',
+        src: paintProtectionVideo,
         alt: "Paint Protection Film Service"
       },
       gradientFrom: "sky-300",
@@ -330,10 +329,10 @@ const Service = ({ setCurrentView }) => {
     "Dent Repair": {
       title: "Professional Dent Repair",
       shortDescription: "Paintless dent removal and traditional repair services",
-      icon: null, // Remove FontAwesome icon
+      icon: null,
       customMedia: {
-        type: 'video', // Using video for the service card icon
-        src: dentRepairVideo, // Using the video file for service card
+        type: 'video',
+        src: dentRepairVideo,
         alt: "Dent Repair Service"
       },
       gradientFrom: "sky-400",
@@ -446,7 +445,7 @@ const Service = ({ setCurrentView }) => {
     'card6': {
       frontTitle: 'MPI Accredited',
       icon: faTrophy,
-      customImage: insuranceImg, // Use insurance image for MPI
+      customImage: insuranceImg,
       backTitle: 'MPI Accredited',
       backContent: 'Only Auto Detailing shop in Winnipeg accredited by MPI. This exclusive accreditation demonstrates our commitment to meeting the highest industry standards.',
       features: [
@@ -459,7 +458,7 @@ const Service = ({ setCurrentView }) => {
     'card7': {
       frontTitle: 'Award Winning',
       icon: faStar,
-      customImage: awardHome, // Use NEW BIGGER award home image for Award Winning
+      customImage: awardHome,
       backTitle: 'Award Winning',
       backContent: 'Winner of Consumer Choice Award 2025 in Auto Detailing Category. This prestigious award recognizes our outstanding service and customer satisfaction.',
       features: [
@@ -766,7 +765,7 @@ const Service = ({ setCurrentView }) => {
                         className="w-16 h-16 sm:w-18 sm:h-18 object-contain z-10 relative group-hover:scale-110 transition-transform duration-300"
                         style={{ filter: 'brightness(0) invert(1)' }}
                       />
-                    ) : title === "Paint Correction" ? (
+                    ) : title === "Paint Correction Polishing" ? (
                       <img
                         src={paintCorrectionImage}
                         alt={serviceData.customMedia.alt}
@@ -787,7 +786,7 @@ const Service = ({ setCurrentView }) => {
                         className="w-16 h-16 sm:w-18 sm:h-18 object-contain z-10 relative group-hover:scale-110 transition-transform duration-300"
                         style={{ filter: 'brightness(0) invert(1)' }}
                       />
-                    ) : title === "Paint Protection" ? (
+                    ) : title === "Paint Protection Film" ? (
                       <img
                         src={wash1}
                         alt={serviceData.customMedia.alt}
@@ -827,10 +826,10 @@ const Service = ({ setCurrentView }) => {
                     className="w-16 h-16 sm:w-18 sm:h-18 object-contain z-10 relative group-hover:scale-110 transition-transform duration-300"
                     style={{ filter: 'brightness(0) invert(1)' }}
                   />
-                ) : title === "Paint Protection" ? (
+                ) : title === "Paint Protection Film" ? (
                   <img
                     src={wash1}
-                    alt="Paint Protection"
+                    alt="Paint Protection Film"
                     className="w-16 h-16 sm:w-18 sm:h-18 object-contain z-10 relative group-hover:scale-110 transition-transform duration-300"
                     style={{ filter: 'brightness(0) invert(1)' }}
                   />
@@ -1485,10 +1484,10 @@ const Service = ({ setCurrentView }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {renderServiceCard(null, "Auto Detailing", "Complete interior and exterior detailing services", null, 0)}
-            {renderServiceCard(null, "Paint Correction", "Restore gloss, clarity, and a factory-fresh finish", null, 1)}
+            {renderServiceCard(null, "Paint Correction Polishing", "Restore gloss, clarity, and a factory-fresh finish", null, 1)}
             {renderServiceCard(null, "Window Tinting", "Premium tinting solutions", null, 2)}
             {renderServiceCard(null, "Ceramic Coating", "Long-lasting protection", null, 3)}
-            {renderServiceCard(null, "Paint Protection", "Film installation", null, 4)}
+            {renderServiceCard(null, "Paint Protection Film", "Film installation", null, 4)}
             {renderServiceCard(null, "Dent Repair", "Paintless dent removal and traditional repair services", null, 5)}
           </div>
         </div>
@@ -1496,7 +1495,6 @@ const Service = ({ setCurrentView }) => {
 
       {/* Section Divider */}
       <SectionDivider animationId="divider-1" />
-
       {/* FREE PAINT EVALUATION Banner */}
       <AnimatedSection
         animationId="paint-evaluation"
