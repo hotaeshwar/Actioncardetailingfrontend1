@@ -245,15 +245,15 @@ const DentRepairComponent = () => {
       </section>
 
       {/* Content Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-cyan-50 to-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Services Section */}
           <div className={`text-center mb-12 sm:mb-16 fade-in-up ${isVisible(200) ? 'visible' : ''}`}>
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl text-cyan-500 mb-0">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl mb-0" style={{color: '#1393c4'}}>
               <span className="font-bold">Professional</span>
             </h3>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cyan-500 mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#1393c4'}}>
               <span className="font-bold">Dent Repair Services</span>
             </h1>
           </div>
@@ -271,9 +271,10 @@ const DentRepairComponent = () => {
                     onClick={() => setActiveTab(service.id)}
                     className={`px-6 py-4 rounded-xl font-semibold transition-all duration-300 text-center shadow-lg stagger-${index + 1} ${
                       activeTab === service.id
-                        ? 'bg-cyan-600 text-white shadow-cyan-200 transform scale-105'
-                        : 'bg-white text-cyan-500 hover:bg-cyan-50 border-2 border-cyan-200 hover:border-cyan-300'
+                        ? 'text-white shadow-blue-200 transform scale-105'
+                        : 'bg-white hover:bg-blue-50 border-2 hover:border-blue-300'
                     }`}
+                    style={activeTab === service.id ? {backgroundColor: '#1393c4'} : {color: '#1393c4', borderColor: '#1393c4'}}
                   >
                     <span className="text-sm sm:text-base font-bold">{service.title}</span>
                   </button>
@@ -281,28 +282,28 @@ const DentRepairComponent = () => {
               </div>
 
               {/* Active Tab Content */}
-              <div className={`bg-white rounded-2xl p-8 sm:p-10 shadow-xl border-2 border-cyan-100 scale-in ${isVisible(600) ? 'visible' : ''}`}>
+              <div className={`bg-white rounded-2xl p-8 sm:p-10 shadow-xl border-2 scale-in ${isVisible(600) ? 'visible' : ''}`} style={{borderColor: '#1393c4'}}>
                 {services.map((service) => (
                   activeTab === service.id && (
                     <div key={service.id} className="space-y-6 text-center">
-                      <h3 className="text-2xl sm:text-3xl font-bold text-cyan-500">
+                      <h3 className="text-2xl sm:text-3xl font-bold" style={{color: '#1393c4'}}>
                         <span>{service.title}</span>
                       </h3>
-                      <p className="text-cyan-600 text-lg sm:text-xl leading-relaxed">
+                      <p className="text-lg sm:text-xl leading-relaxed" style={{color: '#1393c4'}}>
                         <span>{service.description}</span>
                       </p>
                       
                       <div className="space-y-4 max-w-md mx-auto">
                         {service.features.map((feature, index) => (
-                          <div key={index} className={`flex items-center space-x-4 bg-cyan-50 p-4 rounded-lg fade-in-left stagger-${index + 1} ${isVisible(700) ? 'visible' : ''}`}>
-                            <CheckCircle className="w-6 h-6 text-cyan-500 flex-shrink-0" />
-                            <span className="text-cyan-600 font-medium text-base sm:text-lg">{feature}</span>
+                          <div key={index} className={`flex items-center space-x-4 p-4 rounded-lg fade-in-left stagger-${index + 1} ${isVisible(700) ? 'visible' : ''}`} style={{backgroundColor: '#e6f3ff'}}>
+                            <CheckCircle className="w-6 h-6 flex-shrink-0" style={{color: '#1393c4'}} />
+                            <span className="font-medium text-base sm:text-lg" style={{color: '#1393c4'}}>{feature}</span>
                           </div>
                         ))}
                       </div>
 
                       <div className={`pt-6 fade-in-up ${isVisible(800) ? 'visible' : ''}`}>
-                        <button className="bg-cyan-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-cyan-600 transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 mx-auto">
+                        <button className="text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 mx-auto" style={{backgroundColor: '#1393c4'}}>
                           <span>Get Free Estimate</span>
                           <ArrowRight className="w-5 h-5" />
                         </button>
@@ -319,17 +320,18 @@ const DentRepairComponent = () => {
             {benefits.map((benefit, index) => (
               <div 
                 key={index} 
-                className={`bg-white rounded-2xl p-8 text-center shadow-xl border-2 border-cyan-100 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 fade-in-up stagger-${index + 1} ${isVisible(900) ? 'visible' : ''}`}
+                className={`bg-white rounded-2xl p-8 text-center shadow-xl border-2 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 fade-in-up stagger-${index + 1} ${isVisible(900) ? 'visible' : ''}`}
+                style={{borderColor: '#1393c4'}}
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-500 rounded-full mb-6 shadow-lg">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 shadow-lg" style={{backgroundColor: '#1393c4'}}>
                   <div className="text-white">
                     {benefit.icon}
                   </div>
                 </div>
-                <h4 className="text-xl font-bold text-cyan-500 mb-3">
+                <h4 className="text-xl font-bold mb-3" style={{color: '#1393c4'}}>
                   <span>{benefit.title}</span>
                 </h4>
-                <p className="text-cyan-600 leading-relaxed">
+                <p className="leading-relaxed" style={{color: '#1393c4'}}>
                   <span>{benefit.description}</span>
                 </p>
               </div>
@@ -337,26 +339,16 @@ const DentRepairComponent = () => {
           </div>
 
           {/* CTA Section */}
-          <div className={`bg-white rounded-3xl p-10 sm:p-16 text-center shadow-2xl border-2 border-cyan-100 scale-in ${isVisible(1200) ? 'visible' : ''}`}>
-            <h3 className="text-3xl sm:text-4xl font-bold mb-6 text-cyan-500">
+          <div className={`bg-white rounded-3xl p-10 sm:p-16 text-center shadow-2xl border-2 scale-in ${isVisible(1200) ? 'visible' : ''}`} style={{borderColor: '#1393c4'}}>
+            <h3 className="text-3xl sm:text-4xl font-bold mb-6" style={{color: '#1393c4'}}>
               <span className="block">Ready to Restore</span>
-              <span className="text-cyan-600">Your Vehicle?</span>
+              <span>Your Vehicle?</span>
             </h3>
-            <p className="text-xl sm:text-2xl mb-10 text-cyan-600 leading-relaxed">
+            <p className="text-xl sm:text-2xl mb-10 leading-relaxed" style={{color: '#1393c4'}}>
               <span className="block">Contact Action Car Wash today for a</span>
-              <span className="font-bold text-cyan-500">free estimate</span>
+              <span className="font-bold">free estimate</span>
               <span> on your dent repair needs</span>
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button className={`bg-cyan-500 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-cyan-600 transition-all duration-300 flex items-center space-x-3 shadow-lg transform hover:scale-105 fade-in-left ${isVisible(1400) ? 'visible' : ''}`}>
-                <Phone className="w-6 h-6" />
-                <span>Call Now</span>
-              </button>
-              <button className={`border-2 border-cyan-500 text-cyan-500 px-10 py-5 rounded-xl font-bold text-lg hover:bg-cyan-500 hover:text-white transition-all duration-300 shadow-lg transform hover:scale-105 fade-in-right ${isVisible(1400) ? 'visible' : ''}`}>
-                <span>Schedule Online</span>
-              </button>
-            </div>
           </div>
 
         </div>

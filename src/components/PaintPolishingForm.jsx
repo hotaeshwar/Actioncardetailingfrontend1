@@ -45,7 +45,8 @@ const PaintPolishingForm = () => {
       'Message': formData.message,
       '_subject': 'New Paint Polishing Booking Request',
       '_replyto': formData.email,
-      '_captcha': 'false'
+      '_captcha': 'false',
+      '_next': window.location.origin // This will redirect to homepage after form submission
     };
 
     Object.keys(bookingSummary).forEach(key => {
@@ -57,9 +58,12 @@ const PaintPolishingForm = () => {
     });
 
     document.body.appendChild(formElement);
+    
+    // Show success message
+    alert('Booking submitted successfully! We will confirm your appointment within 24 hours. Redirecting to homepage...');
+    
+    // Submit form - FormSubmit will handle the redirect
     formElement.submit();
-
-    alert('Booking submitted successfully! We will confirm your appointment within 24 hours.');
   };
 
   const washPackages = [
@@ -186,10 +190,10 @@ const PaintPolishingForm = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <Car className="w-8 h-8 text-cyan-600" />
-                <h2 className="text-2xl md:text-3xl font-bold text-cyan-700">VEHICLE TYPE</h2>
+                <Car className="w-8 h-8 text-white" />
+                <h2 className="text-2xl md:text-3xl font-bold text-white">VEHICLE TYPE</h2>
               </div>
-              <p className="text-cyan-600">Select vehicle type below.</p>
+              <p className="text-white">Select vehicle type below.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {vehicleTypes.map((vehicle) => (
@@ -198,12 +202,12 @@ const PaintPolishingForm = () => {
                   onClick={() => handleInputChange('vehicleType', vehicle.id)}
                   className={`p-6 rounded-lg border-2 transition-all duration-200 text-left ${
                     formData.vehicleType === vehicle.id
-                      ? 'border-cyan-500 bg-cyan-50 text-cyan-700'
-                      : 'border-gray-200 hover:border-cyan-300 text-gray-700'
+                      ? 'border-white bg-white/20 text-white'
+                      : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="text-cyan-600">{vehicle.icon}</div>
+                    <div className="text-white">{vehicle.icon}</div>
                     <span className="font-medium">{vehicle.name}</span>
                   </div>
                 </button>
@@ -217,24 +221,24 @@ const PaintPolishingForm = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <CreditCard className="w-8 h-8 text-cyan-600" />
-                <h2 className="text-2xl md:text-3xl font-bold text-cyan-700">WASH PACKAGES</h2>
+                <CreditCard className="w-8 h-8 text-white" />
+                <h2 className="text-2xl md:text-3xl font-bold text-white">WASH PACKAGES</h2>
               </div>
-              <p className="text-cyan-600">Which wash is best for your vehicle?</p>
+              <p className="text-white">Which wash is best for your vehicle?</p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {washPackages.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className={`border-2 rounded-lg p-6 transition-all duration-200 ${
+                  className={`border-2 rounded-lg p-6 bg-white transition-all duration-200 ${
                     formData.washPackage === pkg.id
-                      ? 'border-cyan-500 bg-cyan-50'
-                      : 'border-gray-200 hover:border-cyan-300'
+                      ? 'border-white shadow-lg'
+                      : 'border-white/30 hover:border-white/70'
                   }`}
                 >
                   <div className="text-center mb-4">
                     <h3 className="font-bold text-lg text-gray-800 mb-2">{pkg.name}</h3>
-                    <div className="text-4xl font-bold text-cyan-600 mb-2">
+                    <div className="text-4xl font-bold text-[#1393c4] mb-2">
                       {pkg.price}<span className="text-sm">CAD</span>
                     </div>
                     <p className="text-sm text-gray-600 mb-4">{pkg.description}</p>
@@ -243,8 +247,8 @@ const PaintPolishingForm = () => {
                     onClick={() => handleInputChange('washPackage', pkg.id)}
                     className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
                       formData.washPackage === pkg.id
-                        ? 'bg-cyan-600 text-white'
-                        : 'border-2 border-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white'
+                        ? 'bg-[#1393c4] text-white'
+                        : 'border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
                     }`}
                   >
                     {formData.washPackage === pkg.id ? 'Selected' : 'Book Now'}
@@ -260,26 +264,26 @@ const PaintPolishingForm = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <MapPin className="w-8 h-8 text-cyan-600" />
-                <h2 className="text-2xl md:text-3xl font-bold text-cyan-700">ADD-ON OPTIONS</h2>
+                <MapPin className="w-8 h-8 text-white" />
+                <h2 className="text-2xl md:text-3xl font-bold text-white">ADD-ON OPTIONS</h2>
               </div>
-              <p className="text-cyan-600">Add services to your package.</p>
+              <p className="text-white">Add services to your package.</p>
             </div>
             <div className="space-y-4">
               {addOnOptions.map((addOn) => (
-                <div key={addOn.id} className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg">
+                <div key={addOn.id} className="flex items-center justify-between p-4 border-2 border-white/30 rounded-lg bg-white">
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-800">{addOn.name}</h3>
                     <p className="text-sm text-gray-600">{addOn.duration}</p>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="font-bold text-cyan-600">{addOn.price}.00 CAD</span>
+                    <span className="font-bold text-[#1393c4]">{addOn.price}.00 CAD</span>
                     <button
                       onClick={() => handleAddOnToggle(addOn.id)}
                       className={`py-2 px-6 rounded-lg font-medium transition-all duration-200 ${
                         formData.addOns.includes(addOn.id)
-                          ? 'bg-cyan-600 text-white'
-                          : 'border-2 border-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white'
+                          ? 'bg-[#1393c4] text-white'
+                          : 'border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
                       }`}
                     >
                       {formData.addOns.includes(addOn.id) ? 'Selected' : 'Select'}
@@ -291,7 +295,7 @@ const PaintPolishingForm = () => {
             <div className="text-center">
               <button
                 onClick={nextStep}
-                className="bg-cyan-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-cyan-700 transition-all duration-200"
+                className="bg-white text-[#1393c4] py-3 px-6 rounded-lg font-medium hover:bg-white/90 transition-all duration-200"
               >
                 Continue
               </button>
@@ -304,14 +308,14 @@ const PaintPolishingForm = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <Calendar className="w-8 h-8 text-cyan-600" />
-                <h2 className="text-2xl md:text-3xl font-bold text-cyan-700">SELECT DATE AND TIME</h2>
+                <Calendar className="w-8 h-8 text-white" />
+                <h2 className="text-2xl md:text-3xl font-bold text-white">SELECT DATE AND TIME</h2>
               </div>
-              <p className="text-cyan-600">Click on any date and time to make a booking.</p>
+              <p className="text-white">Click on any date and time to make a booking.</p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <h3 className="font-bold text-lg text-gray-800 mb-4">Select Date</h3>
+                <h3 className="font-bold text-lg text-white mb-4">Select Date</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
                   {generateDates().slice(0, 21).map((dateObj) => {
                     // Extra validation to ensure we have a valid date
@@ -325,8 +329,8 @@ const PaintPolishingForm = () => {
                         onClick={() => handleInputChange('selectedDate', dateObj.displayText)}
                         className={`p-3 rounded-lg border-2 transition-all duration-200 ${
                           formData.selectedDate === dateObj.displayText
-                            ? 'border-cyan-500 bg-cyan-50 text-cyan-700'
-                            : 'border-gray-200 hover:border-cyan-300 text-gray-700'
+                            ? 'border-white bg-white/20 text-white'
+                            : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
                         }`}
                       >
                         <div className="text-center">
@@ -340,7 +344,7 @@ const PaintPolishingForm = () => {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-gray-800 mb-4">Select Time</h3>
+                <h3 className="font-bold text-lg text-white mb-4">Select Time</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
                   {timeSlots.map((time) => (
                     <button
@@ -348,8 +352,8 @@ const PaintPolishingForm = () => {
                       onClick={() => handleInputChange('selectedTime', time)}
                       className={`p-3 rounded-lg border-2 transition-all duration-200 ${
                         formData.selectedTime === time
-                          ? 'border-cyan-500 bg-cyan-50 text-cyan-700'
-                          : 'border-gray-200 hover:border-cyan-300 text-gray-700'
+                          ? 'border-white bg-white/20 text-white'
+                          : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
                       }`}
                     >
                       {time}
@@ -366,26 +370,26 @@ const PaintPolishingForm = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <User className="w-8 h-8 text-cyan-600" />
-                <h2 className="text-2xl md:text-3xl font-bold text-cyan-700">BOOKING SUMMARY</h2>
+                <User className="w-8 h-8 text-white" />
+                <h2 className="text-2xl md:text-3xl font-bold text-white">BOOKING SUMMARY</h2>
               </div>
-              <p className="text-cyan-600">Please provide us with your contact information.</p>
+              <p className="text-white">Please provide us with your contact information.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-cyan-50 p-4 rounded-lg text-center">
-                <Calendar className="w-8 h-8 text-cyan-600 mx-auto mb-2" />
-                <div className="font-bold text-cyan-700">{formData.selectedDate || '?'}</div>
-                <div className="text-sm text-cyan-600">Your Appointment Date</div>
+              <div className="bg-white/20 p-4 rounded-lg text-center">
+                <Calendar className="w-8 h-8 text-white mx-auto mb-2" />
+                <div className="font-bold text-white">{formData.selectedDate || '?'}</div>
+                <div className="text-sm text-white/80">Your Appointment Date</div>
               </div>
-              <div className="bg-cyan-50 p-4 rounded-lg text-center">
-                <Clock className="w-8 h-8 text-cyan-600 mx-auto mb-2" />
-                <div className="font-bold text-cyan-700">{formData.selectedTime || '?'}</div>
-                <div className="text-sm text-cyan-600">Your Appointment Time</div>
+              <div className="bg-white/20 p-4 rounded-lg text-center">
+                <Clock className="w-8 h-8 text-white mx-auto mb-2" />
+                <div className="font-bold text-white">{formData.selectedTime || '?'}</div>
+                <div className="text-sm text-white/80">Your Appointment Time</div>
               </div>
-              <div className="bg-cyan-50 p-4 rounded-lg text-center">
-                <div className="font-bold text-2xl text-cyan-700">{calculateTotal()}.00 CAD</div>
-                <div className="text-sm text-cyan-600">Total Price</div>
+              <div className="bg-white/20 p-4 rounded-lg text-center">
+                <div className="font-bold text-2xl text-white">{calculateTotal()}.00 CAD</div>
+                <div className="text-sm text-white/80">Total Price</div>
               </div>
             </div>
 
@@ -397,7 +401,7 @@ const PaintPolishingForm = () => {
                     placeholder="First name *"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none"
+                    className="w-full p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none bg-white/10 text-white placeholder-white/60"
                   />
                 </div>
                 <div>
@@ -406,7 +410,7 @@ const PaintPolishingForm = () => {
                     placeholder="Last Name *"
                     value={formData.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none"
+                    className="w-full p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none bg-white/10 text-white placeholder-white/60"
                   />
                 </div>
               </div>
@@ -414,25 +418,25 @@ const PaintPolishingForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                     <input
                       type="email"
                       placeholder="Your E-mail *"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full pl-10 p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none"
+                      className="w-full pl-10 p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none bg-white/10 text-white placeholder-white/60"
                     />
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                     <input
                       type="tel"
                       placeholder="Phone Number *"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full pl-10 p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none"
+                      className="w-full pl-10 p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none bg-white/10 text-white placeholder-white/60"
                     />
                   </div>
                 </div>
@@ -440,38 +444,38 @@ const PaintPolishingForm = () => {
 
               <div>
                 <div className="relative">
-                  <Car className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Car className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                   <input
                     type="text"
                     placeholder="Vehicle Make and Model *"
                     value={formData.vehicleMake}
                     onChange={(e) => handleInputChange('vehicleMake', e.target.value)}
-                    className="w-full pl-10 p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none"
+                    className="w-full pl-10 p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none bg-white/10 text-white placeholder-white/60"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-white/60" />
                   <textarea
                     placeholder="Message"
                     value={formData.message}
                     onChange={(e) => handleInputChange('message', e.target.value)}
                     rows="4"
-                    className="w-full pl-10 p-3 border-2 border-gray-200 rounded-lg focus:border-cyan-500 focus:outline-none resize-none"
+                    className="w-full pl-10 p-3 border-2 border-white/30 rounded-lg focus:border-white focus:outline-none resize-none bg-white/10 text-white placeholder-white/60"
                   />
                 </div>
               </div>
 
               <div className="text-center pt-4">
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-white/80 mb-4">
                   We will confirm your appointment with you by phone or e-mail within 24 hours of receiving your request. 
                   Vehicle pick up will be the next day for services scheduled later in the day.
                 </p>
                 <button
                   onClick={handleFormSubmit}
-                  className="bg-cyan-600 text-white py-3 px-8 rounded-lg font-medium hover:bg-cyan-700 transition-all duration-200"
+                  className="bg-white text-[#1393c4] py-3 px-8 rounded-lg font-medium hover:bg-white/90 transition-all duration-200"
                 >
                   Confirm Booking
                 </button>
@@ -496,9 +500,9 @@ const PaintPolishingForm = () => {
                 key={step}
                 className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-200 ${
                   step < currentStep
-                    ? 'bg-cyan-600 text-white'
+                    ? 'bg-[#1393c4] text-white'
                     : step === currentStep
-                    ? 'bg-cyan-600 text-white'
+                    ? 'bg-[#1393c4] text-white'
                     : 'bg-gray-200 text-gray-500'
                 }`}
               >
@@ -507,45 +511,45 @@ const PaintPolishingForm = () => {
             ))}
           </div>
           <div className="text-center">
-            <span className="text-cyan-600 font-medium">Step {currentStep} of {totalSteps}</span>
+            <span className="text-[#1393c4] font-medium">Step {currentStep} of {totalSteps}</span>
           </div>
         </div>
 
         {/* Form Content */}
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div className="bg-[#1393c4] rounded-xl shadow-lg p-6 md:p-8">
           {renderStep()}
         </div>
 
         {/* Navigation Buttons */}
-        {currentStep < 5 && (
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
-                currentStep === 1
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-white border-2 border-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white'
-              }`}
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <span>Previous</span>
-            </button>
-            
+        <div className="flex justify-between mt-8">
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 1}
+            className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
+              currentStep === 1
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-white border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
+            }`}
+          >
+            <ChevronLeft className="w-5 h-5" />
+            <span>Previous</span>
+          </button>
+          
+          {currentStep < 5 && (
             <button
               onClick={nextStep}
               disabled={!isStepValid()}
               className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
                 !isStepValid()
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-cyan-600 text-white hover:bg-cyan-700'
+                  : 'bg-[#1393c4] text-white hover:bg-[#1393c4]/90'
               }`}
             >
               <span>Next</span>
               <ChevronRight className="w-5 h-5" />
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

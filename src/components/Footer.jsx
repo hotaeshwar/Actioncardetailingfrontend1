@@ -9,12 +9,13 @@ const Footer = () => {
       {/* Wave curve top border */}
       <div className="w-full h-12 sm:h-14 md:h-16 bg-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" className="w-full h-full">
-          <path fill="#0ea5e9" d="M0,0 C240,100 480,100 720,50 C960,0 1200,0 1440,100 L1440,100 L0,100 Z"></path>
+          
+          <path fill="#1393c4" d="M0,0 C240,100 480,100 720,50 C960,0 1200,0 1440,100 L1440,100 L0,100 Z"></path>
         </svg>
       </div>
       
       {/* Footer content with sky blue and white theme */}
-      <div className="w-full py-6 sm:py-8 md:py-10 bg-gradient-to-br from-sky-700 via-sky-600 to-sky-800 text-white">
+      <div className="w-full py-6 sm:py-8 md:py-10 text-white" style={{backgroundColor: '#1393c4'}}>
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             

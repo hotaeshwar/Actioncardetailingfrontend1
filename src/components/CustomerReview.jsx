@@ -86,10 +86,10 @@ const CustomerReview = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-block mb-4 px-6 py-2 bg-sky-100/60 backdrop-blur-md rounded-full border border-sky-200/50">
-            <span className="text-sky-800 text-sm sm:text-base font-medium tracking-wide">TESTIMONIALS</span>
+            <span className="text-sm sm:text-base font-medium tracking-wide" style={{color: '#1393c4'}}>TESTIMONIALS</span>
           </div>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 relative">
-            <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-sky-700 to-sky-800 drop-shadow-2xl">
+            <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-sky-700 to-sky-800 drop-shadow-2xl" style={{color: '#1393c4'}}>
               Customer Reviews
             </span>
             <div className="absolute -bottom-2 sm:-bottom-4 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 lg:w-40 h-1 sm:h-2 bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 rounded-full shadow-xl shadow-sky-500/50"></div>

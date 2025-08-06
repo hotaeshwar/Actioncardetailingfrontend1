@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Check, Shield, Star, Droplets, Settings, HardHat, Sun, Atom, Beaker } from 'lucide-react';
+import { Play, Check, Shield, Star, Droplets, Settings, HardHat, Sun, Atom, Beaker, X } from 'lucide-react';
 import Footer from '../components/Footer';
+import Quote from '../components/Quote';
 // Import Ceramic Coating Video
 import ceramicCoatingVideo from '../assets/images/Copy of Ceramic coating.mp4';
 
 const CeramicCoatings = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [visibleCards, setVisibleCards] = useState(new Set());
   const videoRef = useRef(null);
+  const cardRefs = useRef([]);
 
   useEffect(() => {
     // Optimized single video handling - same as Hero component
@@ -109,6 +113,46 @@ const CeramicCoatings = () => {
       };
     }
   }, []);
+
+  // Smooth scroll animation effect
+  useEffect(() => {
+    const handleScroll = () => {
+      cardRefs.current.forEach((card, index) => {
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          // Check if card is in viewport (with some offset for better UX)
+          if (rect.top < windowHeight * 0.9 && rect.bottom > 0) {
+            if (!visibleCards.has(index)) {
+              setTimeout(() => {
+                setVisibleCards(prev => new Set([...prev, index]));
+              }, index * 50); // Reduced delay for faster appearance
+            }
+          }
+        }
+      });
+    };
+
+    // Initial check
+    handleScroll();
+    
+    // Add scroll listener with throttling
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', throttledScroll);
+    
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, [visibleCards]);
 
   const features = [
     {
@@ -269,10 +313,10 @@ const CeramicCoatings = () => {
         {/* Hero Content - positioned below video */}
         <div className="bg-white py-8 sm:py-10 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-sky-400">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4" style={{ color: '#1393c4' }}>
               Ceramic Coatings
             </h1>
-            <div className="h-1 w-32 bg-gradient-to-r from-sky-400 to-sky-200 mx-auto rounded-full"></div>
+            <div className="h-1 w-32 bg-gradient-to-r from-[#1393c4] to-[#1393c4] mx-auto rounded-full opacity-70"></div>
           </div>
         </div>
       </section>
@@ -281,20 +325,20 @@ const CeramicCoatings = () => {
       <section className="py-8 md:py-12 bg-gradient-to-br from-white via-sky-50 to-sky-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-4">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-sky-400 via-sky-400 to-sky-400 bg-clip-text text-transparent mb-0">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent mb-0">
               NO OTHER COATING COMES CLOSE
             </h2>
-            <h3 className="text-xl md:text-2xl font-semibold text-sky-400">
+            <h3 className="text-xl md:text-2xl font-semibold" style={{ color: '#1393c4' }}>
               WATCH VIDEO
             </h3>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="relative aspect-video bg-gradient-to-br from-sky-900 to-sky-800 rounded-xl overflow-hidden shadow-2xl border-2 border-sky-400/30 hover:border-sky-400/60 transition-all duration-300">
+            <div className="relative aspect-video bg-gradient-to-br from-[#1393c4] to-[#1393c4] rounded-xl overflow-hidden shadow-2xl border-2 border-[#1393c4]/30 hover:border-[#1393c4]/60 transition-all duration-300">
               {!isVideoPlaying ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-sky-900 to-sky-800">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#1393c4] to-[#1393c4]">
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full mb-4 cursor-pointer hover:from-sky-300 hover:to-sky-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 animate-pulse"
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#1393c4] to-[#1393c4] rounded-full mb-4 cursor-pointer hover:from-sky-300 hover:to-sky-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 animate-pulse"
                       onClick={() => setIsVideoPlaying(true)}>
                       <Play className="w-8 h-8 text-white ml-1" />
                     </div>
@@ -328,8 +372,8 @@ const CeramicCoatings = () => {
       {/* Protection Description */}
       <section className="py-12 bg-gradient-to-r from-sky-100 via-sky-50 to-white">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-lg md:text-xl text-sky-400 max-w-4xl mx-auto">
-            <span className="text-sky-400 font-semibold bg-white px-2 py-1 rounded-md shadow-sm">Protect paint and surfaces</span> from wear and tear and harsh elements, exponentially reducing scratches, rock chips and maintenance.
+          <p className="text-lg md:text-xl max-w-4xl mx-auto" style={{ color: '#1393c4' }}>
+            <span className="font-semibold bg-white px-2 py-1 rounded-md shadow-sm" style={{ color: '#1393c4' }}>Protect paint and surfaces</span> from wear and tear and harsh elements, exponentially reducing scratches, rock chips and maintenance.
           </p>
         </div>
       </section>
@@ -338,26 +382,34 @@ const CeramicCoatings = () => {
       <section className="py-16 md:py-24 bg-gradient-to-br from-white via-sky-50 to-sky-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-sky-400 via-sky-400 to-sky-400 bg-clip-text text-transparent mb-8">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent mb-8">
               LOOK NEW ALL THE TIME
             </h2>
-            <p className="text-lg md:text-xl text-sky-400 max-w-4xl mx-auto">
-              XPEL Ceramic Coating is a <span className="text-sky-400 font-semibold bg-white px-2 py-1 rounded-md shadow-sm">liquid nano-ceramic clear coat</span>, with 3 times the hardness and self cleaning properties.
+            <p className="text-lg md:text-xl max-w-4xl mx-auto" style={{ color: '#1393c4' }}>
+              XPEL Ceramic Coating is a <span className="font-semibold bg-white px-2 py-1 rounded-md shadow-sm" style={{ color: '#1393c4' }}>liquid nano-ceramic clear coat</span>, with 3 times the hardness and self cleaning properties.
             </p>
           </div>
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-sky-300/50 group">
-                <div className="bg-gradient-to-br from-sky-500 to-sky-600 p-6 text-center group-hover:from-sky-400 group-hover:to-sky-500 transition-all duration-300">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index] = el}
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
+                  visibleCards.has(index) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+              >
+                <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
                   <div className="transform group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold text-sky-400 mb-3 group-hover:text-sky-400 transition-colors">{feature.title}</h3>
-                  <p className="text-sky-400 text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-bold mb-3 group-hover:text-[#1393c4] transition-colors" style={{ color: '#1393c4' }}>{feature.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#1393c4' }}>{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -366,15 +418,23 @@ const CeramicCoatings = () => {
           {/* Additional Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {additionalFeatures.map((feature, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-sky-300/50 group">
-                <div className="bg-gradient-to-br from-sky-500 to-sky-600 p-6 text-center group-hover:from-sky-400 group-hover:to-sky-500 transition-all duration-300">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 4] = el}
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
+                  visibleCards.has(index + 4) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+              >
+                <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
                   <div className="transform group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold text-sky-900 mb-3 group-hover:text-sky-600 transition-colors">{feature.title}</h3>
-                  <p className="text-sky-700 text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-bold mb-3 group-hover:text-[#1393c4] transition-colors" style={{ color: '#1393c4' }}>{feature.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#1393c4' }}>{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -382,7 +442,7 @@ const CeramicCoatings = () => {
 
           {/* Warranty Text */}
           <div className="text-center mt-16">
-            <p className="text-lg md:text-xl text-sky-400 max-w-5xl mx-auto bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-sky-200/50">
+            <p className="text-lg md:text-xl max-w-5xl mx-auto bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-sky-200/50" style={{ color: '#1393c4' }}>
               Each XPEL Ceramic Coating package comes with a manufacturer-backed warranty, and can be modified to include add-on protection with a layer of Ceramic Coating, or combined with interior treatments.
             </p>
           </div>
@@ -392,7 +452,7 @@ const CeramicCoatings = () => {
       {/* Financing Section - Removed "Click below to learn more" text and reduced spacing */}
       <section className="py-12 bg-gradient-to-r from-white via-sky-50 to-sky-100 border-t border-sky-200">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-400 to-sky-400 bg-clip-text text-transparent mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#1393c4] to-[#1393c4] bg-clip-text text-transparent mb-8">
             FINANCING AVAILABLE
           </h2>
 
@@ -407,7 +467,7 @@ const CeramicCoatings = () => {
       </section>
 
       {/* Installation Pricing Section */}
-      <section className="py-16 bg-gradient-to-br from-sky-900 via-sky-800 to-sky-900 text-white">
+      <section className="py-16 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0f7a9c 50%, #1393c4 100%)' }}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-400 to-sky-300 bg-clip-text text-transparent mb-4">
@@ -424,18 +484,16 @@ const CeramicCoatings = () => {
               <div className="hover:text-sky-400 transition-colors">Paint Decontamination</div>
               <div className="hover:text-sky-400 transition-colors">Paint Prep</div>
             </div>
-            <p className="text-sm text-sky-300 mt-8 max-w-4xl mx-auto bg-sky-800/50 p-4 rounded-lg backdrop-blur-sm">
+            <p className="text-sm text-sky-300 mt-8 max-w-4xl mx-auto bg-[#1393c4]/50 p-4 rounded-lg backdrop-blur-sm">
               ** Paint Correction will be charged additionally. For a more accurate quote on a Paint Correction, schedule 15 minutes appointment to have your paint evaluated (free of charge and no obligation)**
             </p>
 
-            <a
-              href="https://www.yocale.com/widget/action-car-detailing/offerings?gei=009eaMj_I7qdseMPjsjDiQc&hl=en-IN&index=0&locations=49895&merchant_id=B53547-L49895&rwg_token=ACgRB3eVv8FcyHcBwdjLyYYzxJndWpDdj5JwjbK0BM3Q95FVj7UlEJnsWUcag15NXETRnCinPLVndetSrXO4qeadV66Tuio0hQ%3D%3D&sort=alphabetically"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setIsQuoteModalOpen(true)}
               className="inline-block mt-8 px-8 py-3 border-2 border-sky-400 text-sky-400 rounded-full hover:bg-sky-400 hover:text-white transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-sky-400/50"
             >
-              Book now
-            </a>
+              Quote
+            </button>
           </div>
         </div>
       </section>
@@ -445,7 +503,15 @@ const CeramicCoatings = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {packages.map((pkg, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-sky-300/50 group">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 8] = el}
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
+                  visibleCards.has(index + 8) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+              >
                 <div className="p-6">
                   <div className="mb-6 transform group-hover:scale-105 transition-transform duration-300">
                     <img
@@ -455,32 +521,32 @@ const CeramicCoatings = () => {
                     />
                   </div>
 
-                  <h3 className="text-lg font-bold text-sky-400 text-center mb-2 group-hover:text-sky-400 transition-colors">
+                  <h3 className="text-lg font-bold text-center mb-2 group-hover:text-[#1393c4] transition-colors" style={{ color: '#1393c4' }}>
                     {pkg.title}
                   </h3>
-                  <p className="text-sm text-sky-400 text-center mb-6 bg-sky-50 py-2 px-4 rounded-full">
+                  <p className="text-sm text-center mb-6 bg-sky-50 py-2 px-4 rounded-full" style={{ color: '#1393c4' }}>
                     {pkg.warranty}
                   </p>
 
                   <div className="space-y-2 mb-6 text-center bg-sky-50 p-4 rounded-lg">
                     <div className="text-sm">
-                      <span className="font-semibold text-sky-400">Coupe/Small car</span> <span className="text-sky-400 font-bold">{pkg.prices.coupe}</span>
+                      <span className="font-semibold" style={{ color: '#1393c4' }}>Coupe/Small car</span> <span className="font-bold" style={{ color: '#1393c4' }}>{pkg.prices.coupe}</span>
                     </div>
                     <div className="text-sm">
-                      <span className="font-semibold text-sky-400">Large car/Small SUV</span> <span className="text-sky-400 font-bold">{pkg.prices.large}</span>
+                      <span className="font-semibold" style={{ color: '#1393c4' }}>Large car/Small SUV</span> <span className="font-bold" style={{ color: '#1393c4' }}>{pkg.prices.large}</span>
                     </div>
                     <div className="text-sm">
-                      <span className="font-semibold text-sky-400">Large SUV/Truck</span> <span className="text-sky-400 font-bold">{pkg.prices.truck}</span>
+                      <span className="font-semibold" style={{ color: '#1393c4' }}>Large SUV/Truck</span> <span className="font-bold" style={{ color: '#1393c4' }}>{pkg.prices.truck}</span>
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     {pkg.features.map((feature, fIndex) => (
                       <div key={fIndex} className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 w-5 h-5 bg-gradient-to-br from-sky-500 to-sky-600 rounded-full flex items-center justify-center mt-0.5">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ background: '#1393c4' }}>
                           <Check className="w-3 h-3 text-white" />
                         </div>
-                        <span className="text-sm text-sky-400">{feature}</span>
+                        <span className="text-sm" style={{ color: '#1393c4' }}>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -494,13 +560,24 @@ const CeramicCoatings = () => {
       {/* Add-ons Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-sky-400 text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: '#1393c4' }}>
             ADD-ONS
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {addOns.map((addon, index) => (
-              <div key={index} className="bg-gradient-to-br from-sky-600 to-sky-700 text-white rounded-lg p-6 hover:from-sky-500 hover:to-sky-600 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 11] = el}
+                className={`text-white rounded-lg p-6 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl group transform ${
+                  visibleCards.has(index + 11) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+                style={{ 
+                  background: `linear-gradient(135deg, #1393c4 0%, #0f7a9c 100%)`
+                }}
+              >
                 <h3 className="text-lg font-bold text-white text-center mb-4 group-hover:text-sky-100 transition-colors">
                   {addon.title}
                 </h3>
@@ -521,7 +598,7 @@ const CeramicCoatings = () => {
                   {addon.features.map((feature, fIndex) => (
                     <div key={fIndex} className="flex items-start space-x-3">
                       <div className="flex-shrink-0 w-4 h-4 bg-white rounded-full flex items-center justify-center mt-1">
-                        <Check className="w-2.5 h-2.5 text-sky-600" />
+                        <Check className="w-2.5 h-2.5" style={{ color: '#1393c4' }} />
                       </div>
                       <span className="text-xs text-sky-100">{feature}</span>
                     </div>
@@ -536,43 +613,43 @@ const CeramicCoatings = () => {
       {/* Combined Fusion Plus Card Section */}
       <section className="py-16 bg-gradient-to-br from-white via-sky-50 to-sky-100">
         <div className="container mx-auto px-4">
-          <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-2 border-sky-200/50 hover:border-sky-300/70 transition-all duration-300">
+          <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-2 border-sky-200/50 hover:border-[#1393c4]/70 transition-all duration-300">
             {/* Top Section - Protect Your Vehicle */}
             <div className="p-8 lg:p-12">
               <div className="flex flex-col lg:flex-row items-center">
                 <div className="lg:w-1/2 mb-8 lg:mb-0">
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-sky-400 via-sky-400 to-sky-400 bg-clip-text text-transparent mb-8">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent mb-8">
                     PROTECT YOUR VEHICLE WITH XPEL FUSION PLUS CERAMIC COATING
                   </h2>
 
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS LITE</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS LITE</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS PAINT & PPF</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PAINT & PPF</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS PREMIUM</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PREMIUM</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS WHEEL & CALIPER</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS WHEEL & CALIPER</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS GLASS</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS GLASS</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS PLASTIC & TRIMS</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PLASTIC & TRIMS</span>
                     </div>
                     <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"></span>
-                      <span className="text-sky-400 font-semibold text-lg underline decoration-sky-400 hover:text-sky-400 transition-colors">FUSION PLUS UPHOLSTY</span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
+                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS UPHOLSTY</span>
                     </div>
                   </div>
                 </div>
@@ -590,7 +667,7 @@ const CeramicCoatings = () => {
             </div>
 
             {/* Bottom Section - Fusion Plus Details */}
-            <div className="bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 text-white p-8 lg:p-12">
+            <div className="text-white p-8 lg:p-12" style={{ background: 'linear-gradient(45deg, #1393c4 0%, #0f7a9c 50%, #1393c4 100%)' }}>
               <div className="flex flex-col lg:flex-row items-center">
                 <div className="lg:w-1/2 mb-8 lg:mb-0">
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
@@ -632,6 +709,23 @@ const CeramicCoatings = () => {
           </div>
         </div>
       </section>
+
+      {/* Quote Modal */}
+      {isQuoteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto relative shadow-2xl">
+            <button
+              onClick={() => setIsQuoteModalOpen(false)}
+              className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors shadow-sm"
+            >
+              <X className="w-5 h-5" style={{ color: '#1393c4' }} />
+            </button>
+            <div className="p-1">
+              <Quote onClose={() => setIsQuoteModalOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer Component */}
       <Footer />

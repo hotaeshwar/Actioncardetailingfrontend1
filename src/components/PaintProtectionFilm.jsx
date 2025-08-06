@@ -2,13 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronUp, Play, Shield, Star, Award, Clock, Zap, X } from 'lucide-react';
 import Footer from '../components/Footer';
 import PaintPolishingForm from '../components/PaintPolishingForm';
+import Quote from '../components/Quote';
 import PPFVideo from '../assets/images/PPF (1).mp4';
+import InstallImage from '../assets/images/Install.png';
+import PrepImage from '../assets/images/Prep.png';
+import ExecuteImage from '../assets/images/Execute.png';
 
 const PaintProtectionFilm = () => {
   const [openFAQ, setOpenFAQ] = useState(null);
   const [currentText, setCurrentText] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+  const [visibleCards, setVisibleCards] = useState(new Set());
   const videoRef = useRef(null);
+  const cardRefs = useRef([]);
 
   const runningTexts = [
     "ROAD DEBRIS",
@@ -23,6 +30,46 @@ const PaintProtectionFilm = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  // Smooth scroll animation effect
+  useEffect(() => {
+    const handleScroll = () => {
+      cardRefs.current.forEach((card, index) => {
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          // Check if card is in viewport (with some offset for better UX)
+          if (rect.top < windowHeight * 0.9 && rect.bottom > 0) {
+            if (!visibleCards.has(index)) {
+              setTimeout(() => {
+                setVisibleCards(prev => new Set([...prev, index]));
+              }, index * 50); // Reduced delay for faster appearance
+            }
+          }
+        }
+      });
+    };
+
+    // Initial check
+    handleScroll();
+    
+    // Add scroll listener with throttling
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', throttledScroll);
+    
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, [visibleCards]);
 
   // Video setup effect similar to Hero component
   useEffect(() => {
@@ -39,14 +86,14 @@ const PaintProtectionFilm = () => {
       // Minimal preload for faster start
       video.preload = 'none';
       
-      // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
+      // Device-specific object-fit adjustments - 16:9 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
       const adjustVideoFit = () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
         
-        // Mobile screens (below 768px) - Force 16:10 aspect ratio
+        // Mobile screens (below 768px) - Force 16:9 aspect ratio
         if (width < 768) {
-          const idealHeight = width / (16/10); // Calculate 16:10 height
+          const idealHeight = width / (16/9); // Calculate 16:9 height
           
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
@@ -59,9 +106,9 @@ const PaintProtectionFilm = () => {
           video.style.transform = 'translateY(-50%)';
           video.style.position = 'absolute';
         }
-        // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
+        // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:9 cinematic
         else if (width >= 768 && width < 1024) {
-          const idealHeight = width / (16/10);
+          const idealHeight = width / (16/9);
           
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
@@ -72,9 +119,9 @@ const PaintProtectionFilm = () => {
           video.style.transform = 'translateY(-50%)';
           video.style.position = 'absolute';
         }
-        // iPad Pro: 1024x1366 - 16:10 cinematic 
+        // iPad Pro: 1024x1366 - 16:9 cinematic 
         else if (width >= 1024 && width < 1280) {
-          const idealHeight = width / (16/10);
+          const idealHeight = width / (16/9);
           
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
@@ -131,12 +178,34 @@ const PaintProtectionFilm = () => {
   };
 
   const handleGetQuote = () => {
-    setIsFormOpen(true);
+    setIsQuoteOpen(true);
   };
 
   const closeForm = () => {
     setIsFormOpen(false);
   };
+
+  const closeQuote = () => {
+    setIsQuoteOpen(false);
+  };
+
+  const serviceCards = [
+    {
+      image: InstallImage,
+      title: "WE INSTALL",
+      description: "Using the DAP (Xpel's premier computer cutting software) or custom bulk installation methods we create patterns to extend edges and offer our renowned \"signature\" wrap techniques to make all installations safe, clean, and as invisible as possible"
+    },
+    {
+      image: PrepImage,
+      title: "WE PREP", 
+      description: "Using our exclusive 5 step process with DI water, baby shampoo, clay treatment, isopropyl alcohol, and paint sealant we meticulously clean and prepare all surfaces of the vehicle for surgery"
+    },
+    {
+      image: ExecuteImage,
+      title: "WE EXECUTE",
+      description: "What we do is an art, and because we push for excellence in every vehicle we protect, we treat it that way. Attention to detail is our goal and we stand behind our work satisfaction"
+    }
+  ];
 
   const packages = [
     {
@@ -301,8 +370,8 @@ const PaintProtectionFilm = () => {
           <div className="flex flex-col items-center">
             <span className="text-white text-xs sm:text-sm md:text-base mb-1 sm:mb-2 tracking-widest font-medium drop-shadow-md">SCROLL</span>
             <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-sky-500/40 animate-pulse"></div>
-              <div className="animate-bounce bg-sky-600/90 p-1.5 sm:p-2 rounded-full shadow-lg">
+              <div className="absolute -inset-1 rounded-full bg-[#1393c4]/40 animate-pulse"></div>
+              <div className="animate-bounce bg-[#1393c4]/90 p-1.5 sm:p-2 rounded-full shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-7 lg:w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
@@ -315,7 +384,7 @@ const PaintProtectionFilm = () => {
       {/* Text Content Below Video */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-sky-400 via-sky-300 to-sky-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent">
             PAINT PROTECTION FILM
           </h1>
           <p className="text-xl md:text-2xl mb-4" style={{color: '#1393c4'}}>Say Goodbye To...</p>
@@ -324,7 +393,54 @@ const PaintProtectionFilm = () => {
               {runningTexts[currentText]}
             </h2>
           </div>
-          <div className="h-1 w-32 bg-gradient-to-r from-sky-400 to-sky-200 mx-auto rounded-full"></div>
+          <div className="h-1 w-32 bg-gradient-to-r from-[#1393c4] to-[#1393c4] mx-auto rounded-full opacity-70"></div>
+        </div>
+      </section>
+
+      {/* Service Cards Section */}
+      <section className="py-16" style={{backgroundColor: '#f8fafc'}}>
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
+            SELECT YOUR SERVICE
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {serviceCards.map((card, index) => (
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index] = el}
+                className={`bg-white rounded-2xl overflow-hidden shadow-xl hover:transform hover:scale-105 transition-all duration-500 transform ${
+                  visibleCards.has(index) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+              >
+                <div className="h-64 overflow-hidden">
+                  <img 
+                    src={card.image}
+                    alt={card.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-center mb-4" style={{color: '#1393c4'}}>
+                    {card.title}
+                  </h3>
+                  <p className="text-center leading-relaxed mb-6" style={{color: '#1393c4'}}>
+                    {card.description}
+                  </p>
+                  <div className="text-center">
+                    <button 
+                      onClick={handleGetQuote}
+                      className="px-8 py-3 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105"
+                      style={{backgroundColor: '#1393c4'}}
+                    >
+                      Get Quote
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -342,7 +458,7 @@ const PaintProtectionFilm = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-center mb-8" style={{color: '#1393c4'}}>
               WATCH VIDEO
             </h3>
-            <div className="relative bg-sky-900 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{backgroundColor: '#1393c4'}}>
               <div className="aspect-video">
                 <iframe 
                   src="https://www.youtube.com/embed/hI4lW8uNRqY" 
@@ -366,8 +482,17 @@ const PaintProtectionFilm = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-gradient-to-b from-sky-600 to-sky-700 p-6 rounded-xl text-center hover:transform hover:scale-105 transition-all duration-300 shadow-xl text-white">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-sky-600">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 3] = el}
+                className={`p-6 rounded-xl text-center hover:transform hover:scale-105 transition-all duration-500 shadow-xl text-white transform ${
+                  visibleCards.has(index + 3) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+                style={{background: `linear-gradient(to bottom, #1393c4, #0e7aa3)`}}
+              >
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4" style={{color: '#1393c4'}}>
                   {benefit.icon}
                 </div>
                 <h3 className="text-lg font-bold mb-3">
@@ -421,7 +546,7 @@ const PaintProtectionFilm = () => {
           </div>
 
           {/* XPEL Section */}
-          <div className="bg-gradient-to-r from-sky-600 to-sky-700 rounded-2xl p-8 md:p-12 text-white">
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="mb-8">
@@ -504,7 +629,16 @@ const PaintProtectionFilm = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {packages.map((pkg, index) => (
-              <div key={index} className="bg-gradient-to-b from-sky-600 to-sky-700 rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300 shadow-2xl text-white">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 8] = el}
+                className={`rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-500 shadow-2xl text-white transform ${
+                  visibleCards.has(index + 8) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+                style={{background: `linear-gradient(to bottom, #1393c4, #0e7aa3)`}}
+              >
                 <div className="text-center mb-6">
                   <img 
                     src="https://actioncardetailing.ca/wp-content/uploads/2021/05/Bumper.png"
@@ -528,7 +662,8 @@ const PaintProtectionFilm = () => {
                 
                 <button 
                   onClick={handleGetQuote}
-                  className="w-full bg-white text-sky-600 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:bg-sky-50"
+                  className="w-full bg-white py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:bg-sky-50"
+                  style={{color: '#1393c4'}}
                 >
                   Get Quote
                 </button>
@@ -560,7 +695,8 @@ const PaintProtectionFilm = () => {
               </div>
               <button 
                 onClick={handleGetQuote}
-                className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
               >
                 Get A Free Quote
               </button>
@@ -582,7 +718,8 @@ const PaintProtectionFilm = () => {
           </p>
           <button 
             onClick={handleGetQuote}
-            className="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
           >
             Get A Free Quote
           </button>
@@ -603,7 +740,16 @@ const PaintProtectionFilm = () => {
 
           <div className="max-w-4xl mx-auto space-y-4">
             {faqData.map((faq, index) => (
-              <div key={index} className="bg-gradient-to-r from-sky-600 to-sky-700 rounded-xl overflow-hidden shadow-xl">
+              <div 
+                key={index} 
+                ref={el => cardRefs.current[index + 12] = el}
+                className={`rounded-xl overflow-hidden shadow-xl transition-all duration-500 transform ${
+                  visibleCards.has(index + 12) 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-12'
+                }`}
+                style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
+              >
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="w-full p-6 text-left flex justify-between items-center hover:bg-sky-500/50 transition-colors duration-300 text-white"
@@ -627,7 +773,8 @@ const PaintProtectionFilm = () => {
                     </div>
                     <button 
                       onClick={handleGetQuote}
-                      className="mt-6 bg-white text-sky-600 px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-sky-50"
+                      className="mt-6 bg-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-sky-50"
+                      style={{color: '#1393c4'}}
                     >
                       GET MY QUOTE
                     </button>
@@ -645,11 +792,28 @@ const PaintProtectionFilm = () => {
           <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto relative">
             <button
               onClick={closeForm}
-              className="absolute top-4 right-4 z-10 bg-sky-600 text-white p-2 rounded-full hover:bg-sky-700 transition-colors duration-200"
+              className="absolute top-4 right-4 z-10 text-white p-2 rounded-full hover:bg-sky-700 transition-colors duration-200"
+              style={{backgroundColor: '#1393c4'}}
             >
               <X className="w-6 h-6" />
             </button>
             <PaintPolishingForm />
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Quote Form */}
+      {isQuoteOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto relative">
+            <button
+              onClick={closeQuote}
+              className="absolute top-4 right-4 z-10 text-white p-2 rounded-full hover:bg-sky-700 transition-colors duration-200"
+              style={{backgroundColor: '#1393c4'}}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <Quote />
           </div>
         </div>
       )}

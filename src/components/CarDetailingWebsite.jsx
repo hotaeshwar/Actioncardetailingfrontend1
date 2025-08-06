@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, CheckCircle, Car, Clock, Calendar, ShoppingCart, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
+import Footer from '../components/Footer';
+import googlePng from '../assets/images/google png.png';
+import autoDetailingVideo from '../assets/images/Auto Detailing final.mp4';
 
 const BookingModal = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -113,6 +116,17 @@ const BookingModal = ({ isOpen, onClose }) => {
     return days;
   };
 
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 1: return selectedVehicle !== '';
+      case 2: return selectedPackage !== null;
+      case 3: return true; // Add-ons are optional
+      case 4: return selectedDate !== '' && selectedTime !== '';
+      case 5: return bookingData.firstName && bookingData.lastName && bookingData.email && bookingData.phone && bookingData.vehicleMake;
+      default: return false;
+    }
+  };
+
   const getTotalPrice = () => {
     const packagePrice = selectedPackage ? selectedPackage.price : 0;
     const addOnPrice = selectedAddOns.reduce((total, addon) => total + addon.price, 0);
@@ -195,7 +209,8 @@ const BookingModal = ({ isOpen, onClose }) => {
       'Message': bookingData.message,
       '_subject': 'New Car Wash Booking Request',
       '_replyto': bookingData.email,
-      '_captcha': 'false'
+      '_captcha': 'false',
+      '_next': window.location.origin
     };
 
     Object.keys(bookingSummary).forEach(key => {
@@ -207,9 +222,10 @@ const BookingModal = ({ isOpen, onClose }) => {
     });
 
     document.body.appendChild(formElement);
+    
+    alert('Booking submitted successfully! We will confirm your appointment within 24 hours. Redirecting to homepage...');
+    
     formElement.submit();
-
-    alert('Booking submitted successfully! We will confirm your appointment within 24 hours.');
     onClose();
   };
 
@@ -241,8 +257,8 @@ const BookingModal = ({ isOpen, onClose }) => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>VEHICLE TYPE</h2>
-              <p className="text-sm sm:text-base" style={{ color: '#1393c4' }}>Select vehicle type below.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">VEHICLE TYPE</h2>
+              <p className="text-white/80 text-sm sm:text-base">Select vehicle type below.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {vehicleTypes.map((vehicle) => (
@@ -251,21 +267,13 @@ const BookingModal = ({ isOpen, onClose }) => {
                   onClick={() => handleVehicleSelect(vehicle)}
                   className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     selectedVehicle.id === vehicle.id
-                      ? 'text-white'
-                      : 'hover:border-opacity-70'
+                      ? 'border-white bg-white/20 text-white'
+                      : 'border-white/30 hover:border-white/70 text-white/80 hover:text-white'
                   }`}
-                  style={{
-                    borderColor: '#1393c4',
-                    backgroundColor: selectedVehicle.id === vehicle.id ? '#1393c4' : '#f0f9ff'
-                  }}
                 >
                   <div className="text-center">
-                    <vehicle.icon className={`w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 ${
-                      selectedVehicle.id === vehicle.id ? 'text-white' : ''
-                    }`} style={{ color: selectedVehicle.id === vehicle.id ? 'white' : '#1393c4' }} />
-                    <h3 className={`font-semibold text-sm sm:text-base ${
-                      selectedVehicle.id === vehicle.id ? 'text-white' : ''
-                    }`} style={{ color: selectedVehicle.id === vehicle.id ? 'white' : '#1393c4' }}>{vehicle.name}</h3>
+                    <vehicle.icon className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-white" />
+                    <h3 className="font-semibold text-sm sm:text-base">{vehicle.name}</h3>
                   </div>
                 </div>
               ))}
@@ -277,33 +285,31 @@ const BookingModal = ({ isOpen, onClose }) => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>WASH PACKAGES</h2>
-              <p className="text-sm sm:text-base" style={{ color: '#1393c4' }}>Which wash is best for your vehicle?</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">WASH PACKAGES</h2>
+              <p className="text-white/80 text-sm sm:text-base">Which wash is best for your vehicle?</p>
             </div>
             <div className="grid grid-cols-1 gap-6 max-h-96 overflow-y-auto">
               {washPackages.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className="rounded-xl border-2 p-4 sm:p-6 hover:shadow-xl transition-all duration-300"
-                  style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}
+                  className="bg-white rounded-xl border-2 border-white/30 p-4 sm:p-6 hover:shadow-xl transition-all duration-300"
                 >
                   <div className="text-center mb-4">
-                    <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: '#1393c4' }}>{pkg.name} ({pkg.duration})</h3>
-                    <div className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>
+                    <h3 className="text-lg sm:text-xl font-bold text-[#1393c4] mb-2">{pkg.name} ({pkg.duration})</h3>
+                    <div className="text-2xl sm:text-3xl font-bold text-[#1393c4] mb-2">
                       {pkg.price}<span className="text-lg">.00 CAD</span>
                     </div>
                   </div>
                   <div className="space-y-2 mb-4 max-h-32 overflow-y-auto">
                     {pkg.features.map((feature, index) => (
-                      <p key={index} className="text-xs sm:text-sm leading-relaxed" style={{ color: '#1393c4' }}>
+                      <p key={index} className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                         {feature}
                       </p>
                     ))}
                   </div>
                   <button
                     onClick={() => handlePackageSelect(pkg)}
-                    className="w-full text-white py-2 sm:py-3 px-4 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base hover:opacity-90"
-                    style={{ backgroundColor: '#1393c4' }}
+                    className="w-full bg-[#1393c4] hover:bg-[#1393c4]/90 text-white py-2 sm:py-3 px-4 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base"
                   >
                     Book Now
                   </button>
@@ -317,24 +323,23 @@ const BookingModal = ({ isOpen, onClose }) => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>ADD-ON OPTIONS</h2>
-              <p className="text-sm sm:text-base" style={{ color: '#1393c4' }}>Add services to your package.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">ADD-ON OPTIONS</h2>
+              <p className="text-white/80 text-sm sm:text-base">Add services to your package.</p>
             </div>
             <div className="space-y-3 max-h-80 overflow-y-auto">
               {addOnOptions.map((addon) => (
                 <div
                   key={addon.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl border-2 hover:border-opacity-70 transition-colors duration-300"
-                  style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-white rounded-xl border-2 border-white/30 hover:border-white/70 transition-colors duration-300"
                 >
                   <div className="flex-1 mb-3 sm:mb-0">
-                    <h3 className="font-semibold text-sm sm:text-base mb-1" style={{ color: '#1393c4' }}>{addon.name}</h3>
-                    <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm" style={{ color: '#1393c4' }}>
+                    <h3 className="font-semibold text-[#1393c4] text-sm sm:text-base mb-1">{addon.name}</h3>
+                    <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-600">
                       <span className="flex items-center">
                         <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         {addon.duration}
                       </span>
-                      <span className="font-semibold" style={{ color: '#1393c4' }}>
+                      <span className="font-semibold text-[#1393c4]">
                         {addon.price === 0 ? '0.00 CAD' : `${addon.price}.00 CAD`}
                       </span>
                     </div>
@@ -343,12 +348,9 @@ const BookingModal = ({ isOpen, onClose }) => {
                     onClick={() => handleAddOnToggle(addon)}
                     className={`px-3 sm:px-4 py-2 rounded-full font-semibold transition-colors duration-300 text-xs sm:text-sm ${
                       selectedAddOns.find(item => item.id === addon.id)
-                        ? 'text-white'
-                        : 'text-white hover:opacity-90'
+                        ? 'bg-[#1393c4] text-white'
+                        : 'border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
                     }`}
-                    style={{
-                      backgroundColor: selectedAddOns.find(item => item.id === addon.id) ? '#1393c4' : '#94c5db'
-                    }}
                   >
                     {selectedAddOns.find(item => item.id === addon.id) ? 'Selected' : 'Select'}
                   </button>
@@ -358,8 +360,7 @@ const BookingModal = ({ isOpen, onClose }) => {
             <div className="text-center">
               <button
                 onClick={handleNext}
-                className="text-white px-6 sm:px-8 py-3 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base hover:opacity-90"
-                style={{ backgroundColor: '#1393c4' }}
+                className="bg-white text-[#1393c4] px-6 sm:px-8 py-3 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base hover:bg-white/90"
               >
                 Continue
               </button>
@@ -371,27 +372,25 @@ const BookingModal = ({ isOpen, onClose }) => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>SELECT DATE AND TIME</h2>
-              <p className="text-sm sm:text-base" style={{ color: '#1393c4' }}>Choose your preferred date and time.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">SELECT DATE AND TIME</h2>
+              <p className="text-white/80 text-sm sm:text-base">Choose your preferred date and time.</p>
             </div>
             
-            <div className="rounded-xl border-2 p-4" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
+            <div className="bg-white/20 rounded-xl border-2 border-white/30 p-4">
               <div className="flex items-center justify-between mb-4">
-                <div className="text-lg font-semibold" style={{ color: '#1393c4' }}>
+                <div className="text-lg font-semibold text-white">
                   {months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                 </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
-                    className="p-2 hover:bg-blue-200 rounded-lg"
-                    style={{ color: '#1393c4' }}
+                    className="p-2 hover:bg-white/20 rounded-lg text-white"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
-                    className="p-2 hover:bg-blue-200 rounded-lg"
-                    style={{ color: '#1393c4' }}
+                    className="p-2 hover:bg-white/20 rounded-lg text-white"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -400,7 +399,7 @@ const BookingModal = ({ isOpen, onClose }) => {
 
               <div className="grid grid-cols-7 gap-1 mb-2">
                 {daysOfWeek.map(day => (
-                  <div key={day} className="text-center text-sm font-medium py-2" style={{ color: '#1393c4' }}>
+                  <div key={day} className="text-center text-sm font-medium text-white py-2">
                     {day}
                   </div>
                 ))}
@@ -424,25 +423,11 @@ const BookingModal = ({ isOpen, onClose }) => {
                         !day 
                           ? 'cursor-default' 
                           : isSelected
-                            ? 'text-white'
+                            ? 'bg-white text-[#1393c4]'
                             : isToday
-                              ? 'text-white'
-                              : 'hover:bg-blue-100'
+                              ? 'bg-white/20 text-white'
+                              : 'hover:bg-white/10 text-white/80 hover:text-white'
                       }`}
-                      style={{
-                        backgroundColor: !day 
-                          ? 'transparent'
-                          : isSelected
-                            ? '#1393c4'
-                            : isToday
-                              ? '#94c5db'
-                              : 'transparent',
-                        color: !day 
-                          ? 'transparent'
-                          : isSelected || isToday
-                            ? 'white'
-                            : '#1393c4'
-                      }}
                     >
                       {day}
                     </button>
@@ -451,8 +436,8 @@ const BookingModal = ({ isOpen, onClose }) => {
               </div>
 
               {selectedDate && (
-                <div className="border-t pt-4" style={{ borderColor: '#1393c4' }}>
-                  <h3 className="text-lg font-semibold mb-3" style={{ color: '#1393c4' }}>Available Times</h3>
+                <div className="border-t border-white/30 pt-4">
+                  <h3 className="text-lg font-semibold text-white mb-3">Available Times</h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                     {timeSlots.map(time => (
                       <button
@@ -460,14 +445,9 @@ const BookingModal = ({ isOpen, onClose }) => {
                         onClick={() => handleTimeSelect(time)}
                         className={`py-2 px-3 text-sm rounded-lg border transition-colors duration-200 ${
                           selectedTime === time
-                            ? 'text-white'
-                            : 'bg-white hover:bg-blue-100'
+                            ? 'bg-white text-[#1393c4] border-white'
+                            : 'bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/70'
                         }`}
-                        style={{
-                          backgroundColor: selectedTime === time ? '#1393c4' : 'white',
-                          borderColor: '#1393c4',
-                          color: selectedTime === time ? 'white' : '#1393c4'
-                        }}
                       >
                         {time}
                       </button>
@@ -483,111 +463,104 @@ const BookingModal = ({ isOpen, onClose }) => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{ color: '#1393c4' }}>BOOKING SUMMARY</h2>
-              <p className="text-sm sm:text-base" style={{ color: '#1393c4' }}>Please provide us with your contact information.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">BOOKING SUMMARY</h2>
+              <p className="text-white/80 text-sm sm:text-base">Please provide us with your contact information.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              <div className="rounded-xl p-3 sm:p-4 text-center border" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
-                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: '#1393c4' }} />
-                <div className="text-xs mb-1" style={{ color: '#1393c4' }}>Date</div>
-                <div className="font-semibold text-xs sm:text-sm" style={{ color: '#1393c4' }}>{selectedDate || '?'}</div>
+              <div className="bg-white/20 rounded-xl p-3 sm:p-4 text-center border border-white/30">
+                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-white mx-auto mb-2" />
+                <div className="text-xs text-white/80 mb-1">Date</div>
+                <div className="font-semibold text-xs sm:text-sm text-white">{selectedDate || '?'}</div>
               </div>
-              <div className="rounded-xl p-3 sm:p-4 text-center border" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
-                <Clock className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: '#1393c4' }} />
-                <div className="text-xs mb-1" style={{ color: '#1393c4' }}>Time</div>
-                <div className="font-semibold text-xs sm:text-sm" style={{ color: '#1393c4' }}>{selectedTime || '?'}</div>
+              <div className="bg-white/20 rounded-xl p-3 sm:p-4 text-center border border-white/30">
+                <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-white mx-auto mb-2" />
+                <div className="text-xs text-white/80 mb-1">Time</div>
+                <div className="font-semibold text-xs sm:text-sm text-white">{selectedTime || '?'}</div>
               </div>
-              <div className="rounded-xl p-3 sm:p-4 text-center border" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
-                <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: '#1393c4' }} />
-                <div className="text-xs mb-1" style={{ color: '#1393c4' }}>Total</div>
-                <div className="font-bold text-sm sm:text-lg" style={{ color: '#1393c4' }}>{getTotalPrice()}.00 CAD</div>
+              <div className="bg-white/20 rounded-xl p-3 sm:p-4 text-center border border-white/30">
+                <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-white mx-auto mb-2" />
+                <div className="text-xs text-white/80 mb-1">Total</div>
+                <div className="font-bold text-sm sm:text-lg text-white">{getTotalPrice()}.00 CAD</div>
               </div>
             </div>
 
-            <div className="rounded-xl border-2 p-4 max-h-80 overflow-y-auto" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
+            <div className="bg-white/20 rounded-xl border-2 border-white/30 p-4 max-h-80 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>First name *</label>
+                  <label className="block text-xs font-medium text-white mb-1">First name *</label>
                   <input
                     type="text"
                     name="firstName"
                     value={bookingData.firstName}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder-white/60 text-sm"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>Last name *</label>
+                  <label className="block text-xs font-medium text-white mb-1">Last name *</label>
                   <input
                     type="text"
                     name="lastName"
                     value={bookingData.lastName}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder-white/60 text-sm"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>Email *</label>
+                  <label className="block text-xs font-medium text-white mb-1">Email *</label>
                   <input
                     type="email"
                     name="email"
                     value={bookingData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder-white/60 text-sm"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>Phone *</label>
+                  <label className="block text-xs font-medium text-white mb-1">Phone *</label>
                   <input
                     type="tel"
                     name="phone"
                     value={bookingData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder-white/60 text-sm"
                     required
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>Vehicle Make and Model *</label>
+                  <label className="block text-xs font-medium text-white mb-1">Vehicle Make and Model *</label>
                   <input
                     type="text"
                     name="vehicleMake"
                     value={bookingData.vehicleMake}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder-white/60 text-sm"
                     required
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#1393c4' }}>Message</label>
+                  <label className="block text-xs font-medium text-white mb-1">Message</label>
                   <textarea
                     name="message"
                     value={bookingData.message}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent resize-none bg-white text-sm"
-                    style={{ borderColor: '#1393c4', color: '#1393c4' }}
+                    className="w-full px-3 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent resize-none bg-white/10 text-white placeholder-white/60 text-sm"
                   />
                 </div>
               </div>
 
               <div className="mt-4 text-center">
-                <p className="text-xs mb-3 leading-relaxed" style={{ color: '#1393c4' }}>
+                <p className="text-xs text-white/80 mb-3 leading-relaxed">
                   We will confirm your appointment within 24 hours.
                 </p>
                 <button
                   onClick={handleSubmit}
-                  className="text-white px-6 py-3 rounded-full font-semibold text-sm transition-colors duration-300 hover:opacity-90"
-                  style={{ backgroundColor: '#1393c4' }}
+                  className="bg-white text-[#1393c4] px-6 py-3 rounded-full font-semibold text-sm transition-colors duration-300 hover:bg-white/90"
                 >
                   Confirm Booking
                 </button>
@@ -609,36 +582,32 @@ const BookingModal = ({ isOpen, onClose }) => {
       
       <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
         <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-blue-100" style={{ backgroundColor: '#f0f9ff' }}>
-            <h1 className="text-lg sm:text-xl font-bold" style={{ color: '#1393c4' }}>A La Carte Package Form</h1>
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#1393c4]/20 bg-[#1393c4]/10">
+            <h1 className="text-lg sm:text-xl font-bold text-[#1393c4]">A La Carte Package Form</h1>
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-blue-200 rounded-full transition-colors duration-300"
+              className="p-2 hover:bg-[#1393c4]/20 rounded-full transition-colors duration-300"
             >
-              <X className="w-5 h-5" style={{ color: '#1393c4' }} />
+              <X className="w-5 h-5 text-[#1393c4]" />
             </button>
           </div>
 
-          <div className="flex items-center justify-center py-4 px-4 border-b border-blue-100" style={{ backgroundColor: '#f0f9ff' }}>
+          <div className="flex items-center justify-center py-4 px-4 bg-[#1393c4]/10 border-b border-[#1393c4]/20">
             <div className="flex items-center w-full max-w-lg">
               {[1, 2, 3, 4, 5].map((step) => (
                 <React.Fragment key={step}>
                   <div className="flex-1 flex items-center">
                     <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mx-auto ${
                       step <= currentStep 
-                        ? 'text-white shadow-lg' 
-                        : 'bg-white border-2'
-                    }`} style={{
-                      backgroundColor: step <= currentStep ? '#1393c4' : 'white',
-                      borderColor: step <= currentStep ? '#1393c4' : '#1393c4',
-                      color: step <= currentStep ? 'white' : '#1393c4'
-                    }}>
+                        ? 'bg-[#1393c4] text-white shadow-lg' 
+                        : 'bg-white text-[#1393c4] border-2 border-[#1393c4]/30'
+                    }`}>
                       {step < currentStep ? <Check className="w-3 h-3 sm:w-4 sm:h-4" /> : step}
                     </div>
                   </div>
                   {step < 5 && (
                     <div className="flex-1 flex items-center px-1 sm:px-2">
-                      <div className={`w-full h-1 rounded-full`} style={{ backgroundColor: step < currentStep ? '#1393c4' : '#94c5db' }} />
+                      <div className={`w-full h-1 rounded-full ${step < currentStep ? 'bg-[#1393c4]' : 'bg-[#1393c4]/30'}`} />
                     </div>
                   )}
                 </React.Fragment>
@@ -646,23 +615,39 @@ const BookingModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(90vh-200px)] bg-[#1393c4]">
             {renderStep()}
           </div>
 
-          {currentStep > 1 && currentStep < 5 && (
-            <div className="flex justify-between p-4 sm:p-6 border-t border-blue-100" style={{ backgroundColor: '#f0f9ff' }}>
+          <div className="flex justify-between p-4 sm:p-6 border-t border-[#1393c4]/20 bg-white">
+            <button
+              onClick={handlePrev}
+              disabled={currentStep === 1}
+              className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
+                currentStep === 1
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-white border-2 border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white shadow-md hover:shadow-lg'
+              }`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span>Previous</span>
+            </button>
+            
+            {currentStep < 5 && (
               <button
-                onClick={handlePrev}
-                className="flex items-center px-4 py-2 hover:opacity-70 transition-colors duration-300"
-                style={{ color: '#1393c4' }}
+                onClick={handleNext}
+                disabled={!isStepValid()}
+                className={`flex items-center space-x-2 py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
+                  !isStepValid()
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#1393c4] text-white hover:bg-[#1393c4]/90 shadow-md hover:shadow-lg'
+                }`}
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                <span className="text-sm">Previous</span>
+                <span>Next</span>
+                <ChevronRight className="w-5 h-5" />
               </button>
-              <div></div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -673,6 +658,108 @@ const CarDetailingWebsite = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(Array(5).fill(false));
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    // Video handling with responsive sizing like Hero component
+    const video = videoRef.current;
+    
+    if (video) {
+      // Essential settings only
+      video.muted = true;
+      video.defaultMuted = true;
+      video.volume = 0;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
+      
+      // Minimal preload for faster start
+      video.preload = 'none';
+      
+      // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
+      const adjustVideoFit = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Mobile screens (below 768px) - Force 16:10 aspect ratio
+        if (width < 768) {
+          const idealHeight = width / (16/10); // Calculate 16:10 height
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          
+          // Center the video container vertically in viewport
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
+        else if (width >= 768 && width < 1024) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // iPad Pro: 1024x1366 - 16:10 cinematic 
+        else if (width >= 1024 && width < 1280) {
+          const idealHeight = width / (16/10);
+          
+          video.style.objectFit = 'cover';
+          video.style.width = '100vw';
+          video.style.height = `${idealHeight}px`;
+          video.style.objectPosition = 'center center';
+          video.style.top = '50%';
+          video.style.left = '0';
+          video.style.transform = 'translateY(-50%)';
+          video.style.position = 'absolute';
+        }
+        // Desktop and Laptop screens (1280px and above) - Full screen as original
+        else {
+          video.style.objectFit = 'cover';
+          video.style.objectPosition = 'center center';
+          video.style.height = '100vh';
+          video.style.width = '100vw';
+          video.style.top = '0';
+          video.style.left = '0';
+          video.style.transform = 'none';
+          video.style.position = 'absolute';
+        }
+      };
+      
+      // Apply initial adjustments
+      adjustVideoFit();
+      
+      // Reapply on orientation change
+      window.addEventListener('resize', adjustVideoFit);
+      window.addEventListener('orientationchange', adjustVideoFit);
+      
+      // Simple autoplay with minimal error handling
+      const playVideo = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          // Single fallback attempt
+          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+        }
+      };
+      
+      // Start playing immediately
+      playVideo();
+      
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', adjustVideoFit);
+        window.removeEventListener('orientationchange', adjustVideoFit);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -690,7 +777,7 @@ const CarDetailingWebsite = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    handleScroll(); // Check on initial render
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -704,12 +791,30 @@ const CarDetailingWebsite = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+      {/* Hero Section with Video */}
       <section className="relative">
-        <div className="relative w-full h-screen overflow-hidden bg-gray-900">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/10"></div>
+        {/* Video Container with responsive sizing */}
+        <div className="relative w-full h-screen sm:h-auto sm:aspect-video lg:h-screen overflow-hidden">
+          <video 
+            ref={videoRef}
+            autoPlay 
+            muted 
+            loop 
+            playsInline
+            preload="none"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              objectPosition: 'center center'
+            }}
+          >
+            <source src={autoDetailingVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
         
+        {/* Hero Content - positioned below video with reduced spacing */}
         <div className={`animate-section transition-all duration-1000 ease-in-out ${isVisible[0] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="bg-white py-8 sm:py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -721,48 +826,48 @@ const CarDetailingWebsite = () => {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section with reduced spacing */}
       <section className={`animate-section py-8 sm:py-12 bg-white transition-all duration-1000 ease-in-out ${isVisible[1] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style={{ color: '#1393c4' }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
               About Us
             </h2>
           </div>
           
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
-              <p className="text-base leading-relaxed" style={{ color: '#1393c4' }}>
+              <p className="text-base text-sky-400 leading-relaxed">
                 Action car detailing is made up of a team of experts who can handle any size vehicles in any condition. We are dedicated to getting the job done right, there is no better place in Winnipeg to get your car detailed. Quality products, quality work and quality service is our promise.
               </p>
               
-              <p className="text-base leading-relaxed" style={{ color: '#1393c4' }}>
+              <p className="text-base text-sky-400 leading-relaxed">
                 We are passionate about cars that's why we take our time with each vehicle. Our chemical and allergy-free interior cleaning methods will leave your car's interior spotless and scentless- the way it should be.
               </p>
               
-              <div className="p-4 rounded-lg border-l-4" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
-                <p className="text-base font-medium" style={{ color: '#1393c4' }}>
+              <div className="bg-sky-50 p-4 rounded-lg border-l-4 border-sky-600">
+                <p className="text-base text-sky-400 font-medium">
                   Action car Detailing offers a very thorough, deep cleaning of interior and exterior. We specialize in paint correction, ceramic coating and complete interior reconditioning. In Business for 14 years. Better Business Bureau accredited with an A+ rating. We are MPI accredited.
                 </p>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 rounded-lg" style={{ backgroundColor: '#f0f9ff' }}>
-                <div className="text-2xl font-bold mb-1" style={{ color: '#1393c4' }}>14+</div>
-                <div className="text-sm" style={{ color: '#1393c4' }}>Years Experience</div>
+              <div className="text-center p-4 bg-sky-50 rounded-lg">
+                <div className="text-2xl font-bold text-sky-400 mb-1">14+</div>
+                <div className="text-sky-400 text-sm">Years Experience</div>
               </div>
-              <div className="text-center p-4 rounded-lg" style={{ backgroundColor: '#f0f9ff' }}>
-                <div className="text-2xl font-bold mb-1" style={{ color: '#1393c4' }}>A+</div>
-                <div className="text-sm" style={{ color: '#1393c4' }}>BBB Rating</div>
+              <div className="text-center p-4 bg-sky-50 rounded-lg">
+                <div className="text-2xl font-bold text-sky-400 mb-1">A+</div>
+                <div className="text-sky-400 text-sm">BBB Rating</div>
               </div>
-              <div className="text-center p-4 rounded-lg" style={{ backgroundColor: '#f0f9ff' }}>
-                <CheckCircle className="w-6 h-6 mx-auto mb-1" style={{ color: '#1393c4' }} />
-                <div className="text-sm" style={{ color: '#1393c4' }}>MPI Accredited</div>
+              <div className="text-center p-4 bg-sky-50 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-sky-400 mx-auto mb-1" />
+                <div className="text-sky-400 text-sm">MPI Accredited</div>
               </div>
-              <div className="text-center p-4 rounded-lg" style={{ backgroundColor: '#f0f9ff' }}>
-                <Star className="w-6 h-6 mx-auto mb-1" style={{ color: '#1393c4' }} />
-                <div className="text-sm" style={{ color: '#1393c4' }}>Premium Service</div>
+              <div className="text-center p-4 bg-sky-50 rounded-lg">
+                <Star className="w-6 h-6 text-sky-400 mx-auto mb-1" />
+                <div className="text-sky-400 text-sm">Premium Service</div>
               </div>
             </div>
           </div>
@@ -773,18 +878,19 @@ const CarDetailingWebsite = () => {
       <section className={`animate-section py-12 sm:py-16 bg-white transition-all duration-1000 ease-in-out ${isVisible[2] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style={{ color: '#1393c4' }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
               OUR EXCLUSIVE 5-STEP SYSTEM
             </h2>
-            <p className="text-base max-w-3xl mx-auto" style={{ color: '#1393c4' }}>
+            <p className="text-sky-400 text-base max-w-3xl mx-auto">
               Our proven process ensures your vehicle receives the most thorough cleaning possible
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="text-white p-6 rounded-xl shadow-lg" style={{ backgroundColor: '#1393c4' }}>
+            {/* Step 1 */}
+            <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-lg mr-3" style={{ color: '#1393c4' }}>
+                <div className="w-10 h-10 bg-white text-sky-600 rounded-full flex items-center justify-center font-bold text-lg mr-3">
                   1
                 </div>
                 <h3 className="text-xl font-bold">Step 1:</h3>
@@ -794,9 +900,10 @@ const CarDetailingWebsite = () => {
               </p>
             </div>
 
-            <div className="text-white p-6 rounded-xl shadow-lg" style={{ backgroundColor: '#1393c4' }}>
+            {/* Step 2 */}
+            <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-lg mr-3" style={{ color: '#1393c4' }}>
+                <div className="w-10 h-10 bg-white text-sky-600 rounded-full flex items-center justify-center font-bold text-lg mr-3">
                   2
                 </div>
                 <h3 className="text-xl font-bold">Step 2:</h3>
@@ -806,9 +913,10 @@ const CarDetailingWebsite = () => {
               </p>
             </div>
 
-            <div className="text-white p-6 rounded-xl shadow-lg" style={{ backgroundColor: '#1393c4' }}>
+            {/* Step 3 */}
+            <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg">
               <div className="flex items-center mb-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-lg mr-3" style={{ color: '#1393c4' }}>
+                <div className="w-10 h-10 bg-white text-sky-600 rounded-full flex items-center justify-center font-bold text-lg mr-3">
                   3
                 </div>
                 <h3 className="text-xl font-bold">Step 3:</h3>
@@ -818,9 +926,10 @@ const CarDetailingWebsite = () => {
               </p>
             </div>
 
-            <div className="text-white p-6 rounded-xl shadow-lg md:col-span-2 lg:col-span-1" style={{ backgroundColor: '#1393c4' }}>
+            {/* Step 4 */}
+            <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg md:col-span-2 lg:col-span-1">
               <div className="flex items-center mb-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-lg mr-3" style={{ color: '#1393c4' }}>
+                <div className="w-10 h-10 bg-white text-sky-600 rounded-full flex items-center justify-center font-bold text-lg mr-3">
                   4
                 </div>
                 <h3 className="text-xl font-bold">Step 4:</h3>
@@ -830,9 +939,10 @@ const CarDetailingWebsite = () => {
               </p>
             </div>
 
-            <div className="text-white p-6 rounded-xl shadow-lg md:col-span-2 lg:col-span-2" style={{ backgroundColor: '#1393c4' }}>
+            {/* Step 5 */}
+            <div className="bg-sky-600 text-white p-6 rounded-xl shadow-lg md:col-span-2 lg:col-span-2">
               <div className="flex items-center mb-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-lg mr-3" style={{ color: '#1393c4' }}>
+                <div className="w-10 h-10 bg-white text-sky-600 rounded-full flex items-center justify-center font-bold text-lg mr-3">
                   5
                 </div>
                 <h3 className="text-xl font-bold">Step 5:</h3>
@@ -846,13 +956,13 @@ const CarDetailingWebsite = () => {
       </section>
 
       {/* Services Section */}
-      <section className={`animate-section py-12 sm:py-16 transition-all duration-1000 ease-in-out ${isVisible[3] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ backgroundColor: '#f0f9ff' }}>
+      <section className={`animate-section py-12 sm:py-16 bg-sky-50 transition-all duration-1000 ease-in-out ${isVisible[3] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style={{ color: '#1393c4' }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
               Our Services
             </h2>
-            <p className="text-base max-w-3xl mx-auto" style={{ color: '#1393c4' }}>
+            <p className="text-sky-400 text-base max-w-3xl mx-auto">
               Comprehensive detailing services to keep your vehicle in pristine condition
             </p>
           </div>
@@ -875,13 +985,13 @@ const CarDetailingWebsite = () => {
                 features: ["Interior deep clean", "Exterior polish", "Paint protection", "Quality guarantee"]
               }
             ].map((service, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4" style={{ borderColor: '#1393c4' }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: '#1393c4' }}>{service.title}</h3>
-                <p className="mb-4 text-sm" style={{ color: '#1393c4' }}>{service.description}</p>
+              <div key={index} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4 border-sky-600">
+                <h3 className="text-xl font-bold text-sky-400 mb-3">{service.title}</h3>
+                <p className="text-sky-400 mb-4 text-sm">{service.description}</p>
                 <ul className="space-y-2">
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center text-sm" style={{ color: '#1393c4' }}>
-                      <CheckCircle className="w-4 h-4 mr-2 flex-shrink-0" style={{ color: '#1393c4' }} />
+                    <li key={idx} className="flex items-center text-sky-400 text-sm">
+                      <CheckCircle className="w-4 h-4 text-sky-400 mr-2 flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -893,12 +1003,11 @@ const CarDetailingWebsite = () => {
           <div className="text-center mt-8">
             <button 
               onClick={openBookingModal}
-              className="text-white px-8 py-4 rounded-lg text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:opacity-90"
-              style={{ backgroundColor: '#1393c4' }}
+              className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Book Now
             </button>
-            <p className="mt-3 text-sm" style={{ color: '#1393c4' }}>
+            <p className="text-sky-500 mt-3 text-sm">
               Customize your own detailing package with our interactive booking form
             </p>
           </div>
@@ -909,15 +1018,17 @@ const CarDetailingWebsite = () => {
       <section className={`animate-section py-12 sm:py-16 bg-white transition-all duration-1000 ease-in-out ${isVisible[4] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4" style={{ color: '#1393c4' }}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sky-400 mb-4">
               Read some of our Reviews
             </h2>
             
-            <div className="inline-flex items-center justify-center bg-white border-2 rounded-full p-1 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer" style={{ borderColor: '#1393c4' }}>
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0f9ff' }}>
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded bg-blue-500 flex items-center justify-center text-white font-bold">
-                  G
-                </div>
+            <div className="inline-flex items-center justify-center bg-white border-2 border-sky-500 rounded-full p-1 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-sky-100 rounded-full flex items-center justify-center">
+                <img 
+                  src={googlePng} 
+                  alt="Google Reviews" 
+                  className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                />
               </div>
             </div>
           </div>
@@ -940,21 +1051,24 @@ const CarDetailingWebsite = () => {
                 review: "The 5-step system really works. My interior was completely transformed. Worth every penny!"
               }
             ].map((review, index) => (
-              <div key={index} className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4' }}>
+              <div key={index} className="bg-sky-50 p-6 rounded-xl border-l-4 border-sky-600">
                 <div className="flex items-center mb-3">
                   <div className="flex">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-current" style={{ color: '#1393c4' }} />
+                      <Star key={i} className="w-4 h-4 text-sky-400 fill-current" />
                     ))}
                   </div>
                 </div>
-                <p className="mb-3 italic text-sm" style={{ color: '#1393c4' }}>"{review.review}"</p>
-                <p className="font-semibold text-sm" style={{ color: '#1393c4' }}>- {review.name}</p>
+                <p className="text-sky-400 mb-3 italic text-sm">"{review.review}"</p>
+                <p className="font-semibold text-sky-400 text-sm">- {review.name}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Booking Modal */}
       <BookingModal isOpen={isBookingModalOpen} onClose={closeBookingModal} />

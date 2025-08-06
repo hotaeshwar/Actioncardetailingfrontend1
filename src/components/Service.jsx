@@ -71,11 +71,14 @@ import paintProtectionVideo from '../assets/images/PPFHomepage.mp4';
 import dentRepairVideo from '../assets/images/Dent Repair.mp4';
 import dentRepairImage from '../assets/images/dent repair.png';
 
-// Import videos
+// Import videos - ONLY the original 4 car washing videos
 import carwashing1 from '../assets/images/carwashing1.mp4';
 import carwashing2 from '../assets/images/carwashing2.mp4';
 import carwashing3 from '../assets/images/carwashing3.mp4';
 import carwashing4 from '../assets/images/carwashing4.mp4';
+
+// Import the new award icon - BIGGER VERSION
+import awardHome from '../assets/images/Awardhome.png';
 
 // Custom Hook for Scroll Animations
 const useScrollAnimation = () => {
@@ -117,7 +120,7 @@ const useScrollAnimation = () => {
 const AnimatedSection = ({ children, animationId, delay = 0, className = "" }) => {
   const { visibleElements, registerElement } = useScrollAnimation();
   const elementRef = useRef(null);
-  
+
   useEffect(() => {
     registerElement(elementRef.current);
   }, [registerElement]);
@@ -128,11 +131,10 @@ const AnimatedSection = ({ children, animationId, delay = 0, className = "" }) =
     <div
       ref={elementRef}
       data-animate-id={animationId}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible 
-          ? 'opacity-100 translate-y-0 scale-100' 
+      className={`transition-all duration-1000 ease-out ${isVisible
+          ? 'opacity-100 translate-y-0 scale-100'
           : 'opacity-0 translate-y-8 scale-95'
-      } ${className}`}
+        } ${className}`}
       style={{
         transitionDelay: isVisible ? `${delay}ms` : '0ms'
       }}
@@ -162,44 +164,35 @@ const Service = ({ setCurrentView }) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const cardModalRef = useRef(null);
 
+  // NEW: Blue card modal state for "Your Vehicle Deserves The Best" section
+  const [isBlueCardModalOpen, setIsBlueCardModalOpen] = useState(false);
+  const [selectedBlueCard, setSelectedBlueCard] = useState(null);
+  const blueCardModalRef = useRef(null);
+
   // Scroll animation hook
   const { visibleElements, registerElement } = useScrollAnimation();
 
   // Updated data arrays using imported assets
   const carImages = [car1, car2, car3, car4, car5];
 
+  // CLEANED VIDEO ARRAY - Only original 4 car washing videos
   const videos = [
     {
       src: carwashing1,
-      title: "Premium Detailing #1",
+      title: "Premium Detailing",
       description: "Complete exterior detailing"
     },
     {
       src: carwashing2,
-      title: "Paint Correction",
-      description: "Professional polishing services"
+      title: "Complete Exterior and Interior Detailing",
+      description: "Professional Detailing  services"
     },
     {
       src: carwashing3,
       title: "Interior Detailing",
       description: "Deep cleaning and protection"
     },
-    {
-      src: carwashing4,
-      title: "Ceramic Coating",
-      description: "Long-lasting paint protection"
-    },
-    // Add the new video entries
-    {
-      src: paintProtectionVideo,
-      title: "Paint Protection Film",
-      description: "Advanced paint protection installation"
-    },
-    {
-      src: dentRepairVideo,
-      title: "Dent Repair",
-      description: "Professional paintless dent removal"
-    }
+
   ];
 
   // Professional service data with custom auto detailing
@@ -362,46 +355,81 @@ const Service = ({ setCurrentView }) => {
     }
   };
 
-  // Updated card data with imported images for blue card design
+  // Updated card data with imported images for blue card design - USING NEW AWARD ICON
   const blueCardData = [
     {
       id: 'licensed-insured',
       title: 'Licensed & Insured',
       description: 'We got it covered! Our company is fully licensed and insured with over 14 years experience in the service industry.',
+      fullDescription: 'Our company is fully licensed and insured with over 14 years experience in the service industry. We maintain comprehensive coverage to protect both our customers and our team during all service operations.',
       image: licensedInsuredImg,
-      tag: 'Premium Service'
+      tag: 'Premium Service',
+      features: [
+        'Comprehensive liability insurance coverage',
+        'Licensed professionals with 14+ years experience',
+        'Bonded and insured for customer protection',
+        'Industry-certified operations'
+      ]
     },
     {
       id: 'professional-installation',
       title: 'Professional Installation',
       description: 'Our experienced detailing and installation team has the knowledge and ability to provide superior service on any make and model.',
+      fullDescription: 'Our experienced detailing and installation team has the knowledge and ability to provide superior service on any make and model. We use industry-leading techniques and tools to ensure perfect results every time.',
       image: professionalInstallationImg,
-      tag: 'Premium Service'
+      tag: 'Premium Service',
+      features: [
+        'Expert installation on all vehicle makes and models',
+        'Industry-leading techniques and equipment',
+        'Precision workmanship guaranteed',
+        'Ongoing professional training and certification'
+      ]
     },
     {
       id: 'certified-experts',
       title: 'Certified Experts',
       description: 'All our installers have been extensively trained. We really believe in the quality of our work and our people.',
+      fullDescription: 'All our installers have been extensively trained and certified in the latest automotive detailing and protection techniques. We really believe in the quality of our work and our people, which is why we invest heavily in ongoing education and training.',
       image: certifiedExpertsImg,
-      tag: 'Premium Service'
+      tag: 'Premium Service',
+      features: [
+        'Extensively trained and certified technicians',
+        'Ongoing education in latest techniques',
+        'Quality-focused team culture',
+        'Proven track record of excellence'
+      ]
     },
     {
       id: 'quality-guarantee',
       title: 'Quality Guarantee',
       description: 'We guarantee our customers the best installation services and manufacture warranty options in the industry.',
+      fullDescription: 'We guarantee our customers the best installation services and manufacture warranty options in the industry. Our commitment to quality means we stand behind every job with comprehensive warranties and satisfaction guarantees.',
       image: qualityGuaranteeImg,
-      tag: 'Premium Service'
+      tag: 'Premium Service',
+      features: [
+        'Best-in-class installation warranties',
+        'Comprehensive manufacturer guarantees',
+        '100% satisfaction promise',
+        'Quality workmanship backed by years of experience'
+      ]
     },
     {
       id: 'keeping-customers-happy',
       title: 'Keeping Customers Happy',
       description: 'Our company is responsive, friendly, and provides timely, relevant information whenever our customers need it.',
+      fullDescription: 'Our company is responsive, friendly, and provides timely, relevant information whenever our customers need it. We pride ourselves on exceptional customer service and building lasting relationships with every client.',
       image: keepingCustomersHappyImg,
-      tag: 'Premium Service'
+      tag: 'Premium Service',
+      features: [
+        'Responsive customer service team',
+        'Friendly and professional staff',
+        'Timely communication and updates',
+        'Customer satisfaction is our priority'
+      ]
     }
   ];
 
-  // Card data for Why Choose Us section - UPDATED with larger award logo sizing
+  // Card data for Why Choose Us section - UPDATED with BIGGER award logo sizing
   const cardData = {
     'card5': {
       frontTitle: 'Reputable Since 2011',
@@ -431,7 +459,7 @@ const Service = ({ setCurrentView }) => {
     'card7': {
       frontTitle: 'Award Winning',
       icon: faStar,
-      customImage: awardLogo, // Use award png image for Award Winning
+      customImage: awardHome, // Use NEW BIGGER award home image for Award Winning
       backTitle: 'Award Winning',
       backContent: 'Winner of Consumer Choice Award 2025 in Auto Detailing Category. This prestigious award recognizes our outstanding service and customer satisfaction.',
       features: [
@@ -515,6 +543,19 @@ const Service = ({ setCurrentView }) => {
     }
   };
 
+  // NEW: Blue card modal handlers
+  const openBlueCardModal = (cardData) => {
+    setSelectedBlueCard(cardData);
+    setIsBlueCardModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeBlueCardModal = () => {
+    setIsBlueCardModalOpen(false);
+    setSelectedBlueCard(null);
+    document.body.style.overflow = 'auto';
+  };
+
   // Card modal handlers
   const closeCardModal = () => {
     setIsCardModalOpen(false);
@@ -543,6 +584,10 @@ const Service = ({ setCurrentView }) => {
 
   const nextSlide = useCallback(() => {
     goToSlide((currentSlide + 1) % videos.length);
+  }, [currentSlide, videos.length, goToSlide]);
+
+  const prevSlide = useCallback(() => {
+    goToSlide((currentSlide - 1 + videos.length) % videos.length);
   }, [currentSlide, videos.length, goToSlide]);
 
   // Service modal handlers
@@ -576,9 +621,12 @@ const Service = ({ setCurrentView }) => {
       if (cardModalRef.current && !cardModalRef.current.contains(event.target) && event.target.classList.contains('card-modal-backdrop')) {
         closeCardModal();
       }
+      if (blueCardModalRef.current && !blueCardModalRef.current.contains(event.target) && event.target.classList.contains('blue-card-modal-backdrop')) {
+        closeBlueCardModal();
+      }
     };
 
-    if (isModalOpen || isCardModalOpen) {
+    if (isModalOpen || isCardModalOpen || isBlueCardModalOpen) {
       setTimeout(() => {
         document.addEventListener('mousedown', handleClickOutside);
         document.addEventListener('touchstart', handleClickOutside);
@@ -589,37 +637,39 @@ const Service = ({ setCurrentView }) => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [isModalOpen, isCardModalOpen]);
+  }, [isModalOpen, isCardModalOpen, isBlueCardModalOpen]);
 
   // Close modals with escape key
   useEffect(() => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape') {
+        if (isBlueCardModalOpen) closeBlueCardModal();
         if (isCardModalOpen) closeCardModal();
         if (isModalOpen) closeModal();
       }
     };
 
-    if (isModalOpen || isCardModalOpen) {
+    if (isModalOpen || isCardModalOpen || isBlueCardModalOpen) {
       document.addEventListener('keydown', handleEscKey);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscKey);
     };
-  }, [isModalOpen, isCardModalOpen]);
+  }, [isModalOpen, isCardModalOpen, isBlueCardModalOpen]);
 
   // Listen for window resize to handle screen size changes
   useEffect(() => {
     const handleResize = () => {
-      if (!isMobile && isCardModalOpen) {
+      if (!isMobile && (isCardModalOpen || isBlueCardModalOpen)) {
         closeCardModal();
+        closeBlueCardModal();
       }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isMobile, isCardModalOpen]);
+  }, [isMobile, isCardModalOpen, isBlueCardModalOpen]);
 
   // Effects - Optimized video management
   useEffect(() => {
@@ -686,12 +736,12 @@ const Service = ({ setCurrentView }) => {
     const serviceData = servicesData[title];
 
     return (
-      <AnimatedSection 
-        animationId={`service-card-${index}`} 
+      <AnimatedSection
+        animationId={`service-card-${index}`}
         delay={index * 100}
         className="group cursor-pointer bg-gradient-to-br from-sky-50 via-sky-100 to-sky-50 backdrop-blur-lg rounded-2xl shadow-xl shadow-sky-300/30 hover:shadow-2xl hover:shadow-sky-500/30 transition-all duration-500 p-6 sm:p-8 text-center transform hover:-translate-y-3 hover:scale-105 relative overflow-hidden border border-sky-200/50"
       >
-        <div 
+        <div
           onClick={() => openModal(title)}
           className="w-full h-full"
         >
@@ -806,15 +856,18 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // New Blue Card Component matching the second image design - FIXED VERSION
+  // UPDATED Blue Card Component with Modal Click Handler and Fixed Height
   const renderBlueCard = (cardData, index = 0) => (
-    <AnimatedSection 
-      animationId={`blue-card-${index}`} 
+    <AnimatedSection
+      animationId={`blue-card-${index}`}
       delay={index * 120}
       className="group cursor-pointer transform transition-all duration-500 hover:-translate-y-2 hover:scale-105"
     >
-      <div className="relative bg-gradient-to-br from-sky-400 via-sky-500 to-sky-600 rounded-2xl sm:rounded-3xl shadow-2xl shadow-sky-900/50 group-hover:shadow-3xl group-hover:shadow-sky-500/50 overflow-hidden w-full h-full min-h-[280px] sm:min-h-[320px] md:min-h-[360px] lg:min-h-[400px] p-4 sm:p-6 md:p-8">
-        
+      <div
+        onClick={() => openBlueCardModal(cardData)}
+        className="relative bg-gradient-to-br from-[#1393c4] via-[#1393c4] to-[#0f7ba8] rounded-2xl sm:rounded-3xl shadow-2xl shadow-[#1393c4]/50 group-hover:shadow-3xl group-hover:shadow-[#1393c4]/60 overflow-hidden w-full aspect-square p-4 sm:p-6 md:p-8 fixed-card-height"
+      >
+
         {/* Decorative Circle - Top Right */}
         <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-white/30 flex items-center justify-center opacity-80">
           <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/50 rounded-full"></div>
@@ -824,54 +877,43 @@ const Service = ({ setCurrentView }) => {
         <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 w-2 h-2 sm:w-3 sm:h-3 bg-white/40 rounded-full opacity-60"></div>
         <div className="absolute top-1/3 right-6 sm:right-8 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/30 rounded-full opacity-50"></div>
         <div className="absolute bottom-1/4 right-1/4 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white/25 rounded-full opacity-40"></div>
-        
+
         {/* Shine Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"></div>
-        
-        {/* Content Container - Proper Flex Layout */}
-        <div className="relative z-10 flex flex-col h-full justify-between text-center">
-          
+
+        {/* Content Container - Fixed Height Layout */}
+        <div className="relative z-10 flex flex-col h-full justify-between text-center fixed-content-layout">
+
           {/* Top Section - Icon */}
           <div className="flex-shrink-0 flex justify-center pt-2 sm:pt-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/20 border border-white/30 group-hover:scale-110 transition-all duration-500">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/20 border border-white/30 group-hover:scale-110 transition-all duration-500">
               <img
                 src={cardData.image}
                 alt={cardData.title}
-                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 object-contain group-hover:scale-110 transition-transform duration-300"
+                className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain group-hover:scale-110 transition-transform duration-300"
                 style={{ filter: 'brightness(0) invert(1)' }}
                 onError={(e) => {
                   console.log(`Failed to load image: ${cardData.image}`);
-                  // Fallback to a simple icon or placeholder
                   e.target.style.display = 'none';
                 }}
               />
             </div>
           </div>
 
-          {/* Middle Section - Title and Description */}
-          <div className="flex-grow flex flex-col justify-center px-2 sm:px-4">
-            {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-2 sm:mb-3 md:mb-4 drop-shadow-lg leading-tight group-hover:scale-105 transition-transform duration-300">
+          {/* Middle Section - Title (Fixed Height) */}
+          <div className="flex-grow flex flex-col justify-center px-1 sm:px-2 card-title-section">
+            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white mb-1 sm:mb-2 drop-shadow-lg leading-tight group-hover:scale-105 transition-transform duration-300 card-title-text">
               {cardData.title}
             </h3>
 
-            {/* Description - Hidden on mobile, visible on larger screens */}
-            <p className="hidden sm:block text-xs sm:text-sm md:text-base text-white/85 leading-relaxed drop-shadow-md group-hover:text-white/95 transition-colors duration-300 px-1 md:px-2">
-              {cardData.description}
+            {/* Description - Visible on larger screens with fixed lines */}
+            <p className="hidden lg:block text-xs text-white/85 leading-relaxed drop-shadow-md group-hover:text-white/95 transition-colors duration-300 px-1 card-description-text">
+              {cardData.description.length > 60 ? `${cardData.description.substring(0, 60)}...` : cardData.description}
             </p>
           </div>
 
-          {/* Bottom Section - Hover Text and Tag */}
-          <div className="flex-shrink-0 pb-2 sm:pb-4">
-            {/* Hover Text */}
-            <div className="opacity-70 group-hover:opacity-100 transition-all duration-300 mb-2 sm:mb-3">
-              <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm font-medium">
-                <span className="mr-1 sm:mr-2">Hover for details</span>
-                <FontAwesomeIcon icon={faArrowRight} className="text-xs transform group-hover:translate-x-1 transition-transform duration-300" />
-              </div>
-            </div>
-
-            {/* Premium Service Tag */}
+          {/* Bottom Section - Tag */}
+          <div className="flex-shrink-0 pb-2 sm:pb-3">
             <div className="scale-90 group-hover:scale-100 transition-all duration-500 opacity-80 group-hover:opacity-100">
               <span className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 bg-white/25 backdrop-blur-sm rounded-full text-white text-xs sm:text-sm border border-white/30 shadow-lg font-medium">
                 {cardData.tag}
@@ -887,8 +929,8 @@ const Service = ({ setCurrentView }) => {
   );
 
   const renderSparkleCard = (id, icon, title, description, index = 0) => (
-    <AnimatedSection 
-      animationId={`sparkle-card-${index}`} 
+    <AnimatedSection
+      animationId={`sparkle-card-${index}`}
       delay={index * 150}
       className="group min-h-[16rem] sm:min-h-[18rem] md:min-h-[20rem] lg:min-h-[24rem] xl:min-h-[26rem] relative perspective-1000"
     >
@@ -927,19 +969,19 @@ const Service = ({ setCurrentView }) => {
     </AnimatedSection>
   );
 
-  // Complete Flip Card Component with proper front/back sides and animation - UPDATED with larger award logo
+  // FIXED Complete Flip Card Component - CONSISTENT BACK SIDE LAYOUT
   const renderFlipCard = (id, frontTitle, iconOrComponent, backTitle, backContent, index = 0) => {
     const isFlipped = flippedCards.has(id);
     const icon = typeof iconOrComponent === 'object' && !React.isValidElement(iconOrComponent) ? iconOrComponent : faThumbsUp;
 
     return (
-      <AnimatedSection 
-        animationId={`flip-card-${index}`} 
+      <AnimatedSection
+        animationId={`flip-card-${index}`}
         delay={index * 120}
-        className="flip-card-container group relative cursor-pointer touch-manipulation"
+        className="flip-card-container group relative cursor-pointer touch-manipulation fixed-flip-card-height"
         style={{
           perspective: '1000px',
-          minHeight: '20rem'
+          height: '20rem' // FIXED HEIGHT
         }}
       >
         <div
@@ -953,29 +995,29 @@ const Service = ({ setCurrentView }) => {
             e.stopPropagation();
             handleFlipCard(id);
           }}
-          className={`flip-card-inner relative w-full transition-transform duration-700 transform-gpu ${isFlipped ? 'mobile-flip-card-flipped' : ''} ${!isMobile ? 'group-hover:rotate-y-180' : ''}`}
+          className={`flip-card-inner relative w-full h-full transition-transform duration-700 transform-gpu ${isFlipped ? 'mobile-flip-card-flipped' : ''} ${!isMobile ? 'group-hover:rotate-y-180' : ''}`}
           style={{
             transformStyle: isMobile ? 'flat' : 'preserve-3d',
-            minHeight: '20rem'
+            height: '20rem' // FIXED HEIGHT
           }}
         >
           {/* Front Side */}
           <div
-            className="flip-card-front w-full rounded-xl sm:rounded-2xl shadow-2xl shadow-sky-900/50 overflow-hidden"
+            className="flip-card-front w-full h-full rounded-xl sm:rounded-2xl shadow-2xl shadow-sky-900/50 overflow-hidden"
             style={{
               backfaceVisibility: 'hidden',
-              minHeight: '20rem',
+              height: '20rem', // FIXED HEIGHT
               position: isMobile ? 'relative' : 'absolute'
             }}
           >
-            <div className="w-full h-full bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 relative mirror-card" style={{ minHeight: '20rem' }}>
+            <div className="w-full h-full bg-gradient-to-br from-sky-500 via-sky-600 to-sky-700 relative mirror-card">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out skew-x-12 mirror-shine"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 opacity-70"></div>
               <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 mirror-reflection"></div>
               <div className="absolute bottom-0 right-0 w-1/4 h-2/3 bg-gradient-to-l from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-200"></div>
               <div className="absolute inset-0 rounded-xl sm:rounded-2xl border-2 border-white/20 group-hover:border-white/40 transition-all duration-500"></div>
 
-              <div className="relative w-full h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center z-10" style={{ minHeight: '20rem' }}>
+              <div className="relative w-full h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center z-10">
                 <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border border-white/30 rounded-full flex items-center justify-center">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/30 rounded-full transition-opacity duration-300"></div>
                 </div>
@@ -986,13 +1028,12 @@ const Service = ({ setCurrentView }) => {
                       <img
                         src={cardData[id].customImage}
                         alt={frontTitle}
-                        className={`object-contain ${
-                          id === 'card7' ? 
-                            // Award Winning card - Make it match navbar size
-                            'w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36' :
+                        className={`object-contain ${id === 'card7' ?
+                            // Award Winning card - BIGGER SIZE using awardHome
+                            'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40' :
                             // Other cards - Regular size
                             'w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20'
-                        }`}
+                          }`}
                         onError={(e) => {
                           console.log(`${frontTitle} image failed to load, using fallback icon`);
                           e.target.style.display = 'none';
@@ -1000,16 +1041,16 @@ const Service = ({ setCurrentView }) => {
                         }}
                       />
                     ) : (
-                      <FontAwesomeIcon 
-                        icon={icon} 
+                      <FontAwesomeIcon
+                        icon={icon}
                         className="text-2xl sm:text-3xl md:text-4xl text-white"
                       />
                     )}
                     {/* Fallback FontAwesome icon - hidden by default when images are present */}
                     {cardData[id]?.customImage && (
-                      <FontAwesomeIcon 
-                        icon={icon} 
-                        className="text-2xl sm:text-3xl md:text-4xl text-white" 
+                      <FontAwesomeIcon
+                        icon={icon}
+                        className="text-2xl sm:text-3xl md:text-4xl text-white"
                         style={{ display: 'none' }}
                       />
                     )}
@@ -1030,40 +1071,37 @@ const Service = ({ setCurrentView }) => {
             </div>
           </div>
 
-          {/* Back Side - Show only on very large desktop screens */}
+          {/* Back Side - FIXED CONSISTENT LAYOUT */}
           <div
-            className={`flip-card-back ${isMobile ? 'hidden' : 'hidden xl:block'} w-full rounded-xl sm:rounded-2xl shadow-2xl shadow-sky-900/50 overflow-hidden`}
+            className={`flip-card-back ${isMobile ? 'hidden' : 'hidden xl:block'} w-full h-full rounded-xl sm:rounded-2xl shadow-2xl shadow-sky-900/50 overflow-hidden`}
             style={{
               backfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
               position: 'absolute',
-              minHeight: '20rem'
+              height: '20rem' // FIXED HEIGHT
             }}
           >
-            <div className="w-full h-full bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 p-4 xs:p-5 sm:p-6 md:p-8 relative overflow-hidden mirror-card" style={{ minHeight: '20rem' }}>
+            <div className="w-full h-full bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 relative overflow-hidden mirror-card">
+              {/* Background Effects */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out skew-x-12 mirror-shine delay-300"></div>
-
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 opacity-70"></div>
-
               <div className="absolute inset-0 rounded-xl sm:rounded-2xl border-2 border-white/20 group-hover:border-white/40 transition-all duration-500"></div>
 
+              {/* Decorative Elements */}
               <div className="absolute top-0 right-0 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full -translate-y-10 sm:-translate-y-16 translate-x-10 sm:translate-x-16"></div>
               <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-sky-400/20 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
 
-              <div className="flex flex-col h-full justify-center items-center text-center relative z-10" style={{ minHeight: '20rem' }}>
-                <div className="mb-3 xs:mb-4 sm:mb-6 md:mb-8">
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto shadow-2xl shadow-black/40 border border-white/30 mirror-element">
+              {/* CONSISTENT CONTENT LAYOUT */}
+              <div className="flex flex-col h-full justify-center items-center text-center relative z-10 p-6">
+
+                {/* Icon/Image Container - CONSISTENT SIZE */}
+                <div className="mb-4">
+                  <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto shadow-2xl shadow-black/40 border border-white/30 mirror-element">
                     {cardData[id]?.customImage ? (
                       <img
                         src={cardData[id].customImage}
                         alt={backTitle}
-                        className={`object-contain ${
-                          id === 'card7' ? 
-                            // Award Winning card back - Make it match navbar size
-                            'w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32' :
-                            // Other cards - Regular size
-                            'w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-22 xl:h-22'
-                        }`}
+                        className="w-14 h-14 object-contain"
                         onError={(e) => {
                           console.log(`${backTitle} back image failed to load, using fallback icon`);
                           e.target.style.display = 'none';
@@ -1071,27 +1109,34 @@ const Service = ({ setCurrentView }) => {
                         }}
                       />
                     ) : (
-                      <FontAwesomeIcon 
-                        icon={icon} 
-                        className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white"
+                      <FontAwesomeIcon
+                        icon={icon}
+                        className="text-2xl text-white"
                       />
                     )}
                     {/* Fallback FontAwesome icon - hidden by default when images are present */}
                     {cardData[id]?.customImage && (
-                      <FontAwesomeIcon 
-                        icon={icon} 
-                        className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white" 
+                      <FontAwesomeIcon
+                        icon={icon}
+                        className="text-2xl text-white"
                         style={{ display: 'none' }}
                       />
                     )}
                   </div>
                 </div>
 
-                <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-cyan-400 mb-2 xs:mb-3 sm:mb-4 drop-shadow-lg leading-tight px-1">{backTitle}</h3>
+                {/* Title - CONSISTENT SIZE */}
+                <h3 className="text-xl font-bold text-cyan-400 mb-3 drop-shadow-lg leading-tight px-2">
+                  {backTitle}
+                </h3>
 
-                <p className="text-xs xs:text-sm sm:text-base md:text-lg text-cyan-300/90 max-w-xs leading-relaxed drop-shadow-md px-1">{backContent}</p>
+                {/* Content - CONSISTENT SIZE AND SPACING */}
+                <p className="text-sm text-cyan-300/90 leading-relaxed drop-shadow-md px-2 max-w-sm text-center">
+                  {backContent}
+                </p>
 
-                <div className="mt-3 xs:mt-4 sm:mt-6 md:mt-8 w-8 sm:w-12 md:w-16 lg:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-white/50 to-white/20 rounded-full shadow-lg"></div>
+                {/* Decorative Line - CONSISTENT */}
+                <div className="mt-4 w-12 h-0.5 bg-gradient-to-r from-white/50 to-white/20 rounded-full shadow-lg"></div>
               </div>
             </div>
           </div>
@@ -1259,7 +1304,7 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // Card Modal Component for small screens - UPDATED with larger award logo
+  // FIXED Card Modal Component for ACTION CAR DETAILING cards - NO LOGO, CONSISTENT HEIGHT
   const CardModal = () => {
     if (!isCardModalOpen || !selectedCard) return null;
 
@@ -1270,8 +1315,8 @@ const Service = ({ setCurrentView }) => {
 
         <div
           ref={cardModalRef}
-          className="relative bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 rounded-2xl shadow-3xl max-w-sm w-full mx-auto overflow-hidden transform transition-all duration-500 opacity-100 scale-100 border-2 border-white/20"
-          style={{ maxHeight: '85vh' }}
+          className="relative bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 rounded-2xl shadow-3xl max-w-sm w-full mx-auto overflow-hidden transform transition-all duration-500 opacity-100 scale-100 border-2 border-white/20 fixed-modal-height"
+          style={{ maxHeight: '85vh', height: 'auto' }}
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -1285,49 +1330,11 @@ const Service = ({ setCurrentView }) => {
               <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
             </button>
 
-            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto mb-4 shadow-xl shadow-black/40 border border-white/30">
-              {selectedCard.customImage ? (
-                <img
-                  src={selectedCard.customImage}
-                  alt={selectedCard.backTitle}
-                  className={`object-contain ${
-                    selectedCard.frontTitle === 'Award Winning' ? 
-                      // Award Winning modal - Make it larger
-                      'w-14 h-14' :
-                      // Other cards - Regular size
-                      'w-10 h-10'
-                  }`}
-                  style={{ filter: 'brightness(0) invert(1)' }}
-                  onError={(e) => {
-                    console.log(`Modal ${selectedCard.backTitle} image failed to load`);
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                />
-              ) : selectedCard.frontTitle === 'Award Winning' ? (
-                <img
-                  src={awardLogo}
-                  alt="Award"
-                  className="w-12 h-12 object-contain"
-                  onError={(e) => {
-                    console.log('Modal award logo failed to load');
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                />
-              ) : null}
-              {/* Fallback FontAwesome icons - hidden by default when images are present */}
-              <FontAwesomeIcon 
-                icon={selectedCard.icon} 
-                className="text-2xl text-white" 
-                style={{ display: selectedCard.customImage || selectedCard.frontTitle === 'Award Winning' ? 'none' : 'block' }}
-              />
-            </div>
-
-            <h2 className="text-xl font-bold text-cyan-400 mb-2 drop-shadow-lg">{selectedCard.backTitle}</h2>
+            {/* REMOVED LOGO SECTION - Just show title without icon */}
+            <h2 className="text-xl font-bold text-cyan-400 mb-2 drop-shadow-lg pt-4">{selectedCard.backTitle}</h2>
           </div>
 
-          <div className="p-6 overflow-y-auto" style={{ maxHeight: '60vh' }}>
+          <div className="p-6 overflow-y-auto modal-content-scroll" style={{ maxHeight: '60vh' }}>
             <p className="text-cyan-300/90 text-base leading-relaxed mb-6 drop-shadow-md">
               {selectedCard.backContent}
             </p>
@@ -1369,16 +1376,100 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
+  // NEW: Blue Card Modal Component for "Your Vehicle Deserves The Best" section
+  const BlueCardModal = () => {
+    if (!isBlueCardModalOpen || !selectedBlueCard) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 blue-card-modal-backdrop">
+        <div className="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+
+        <div
+          ref={blueCardModalRef}
+          className="relative bg-gradient-to-br from-[#1393c4] via-[#1393c4] to-[#0f7ba8] rounded-2xl shadow-3xl max-w-md w-full mx-auto overflow-hidden transform transition-all duration-500 opacity-100 scale-100 border-2 border-white/20"
+          style={{ maxHeight: '90vh' }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <div className="relative p-6 text-center border-b border-white/20">
+            <button
+              onClick={closeBlueCardModal}
+              className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg"
+              aria-label="Close modal"
+            >
+              <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
+            </button>
+
+            {/* Icon and Title */}
+            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto mb-4 shadow-xl shadow-black/40 border border-white/30">
+              <img
+                src={selectedBlueCard.image}
+                alt={selectedBlueCard.title}
+                className="w-10 h-10 object-contain"
+                style={{ filter: 'brightness(0) invert(1)' }}
+                onError={(e) => {
+                  console.log(`Modal ${selectedBlueCard.title} image failed to load`);
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+
+            <h2 className="text-xl font-bold text-white mb-2 drop-shadow-lg">{selectedBlueCard.title}</h2>
+          </div>
+
+          <div className="p-6 overflow-y-auto" style={{ maxHeight: '70vh' }}>
+            <p className="text-white/90 text-base leading-relaxed mb-6 drop-shadow-md">
+              {selectedBlueCard.fullDescription}
+            </p>
+
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center">
+              <div className="w-4 h-4 bg-white/30 rounded-full mr-3"></div>
+              Key Features
+            </h3>
+
+            <ul className="space-y-3 mb-6">
+              {selectedBlueCard.features.map((feature, index) => (
+                <li key={index} className="flex items-start p-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                  <FontAwesomeIcon icon={faCheck} className="text-white mt-1 mr-3 text-sm flex-shrink-0" />
+                  <span className="text-white/90 text-sm leading-relaxed">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+              <div className="text-center">
+                <span className="inline-block px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm border border-white/30 shadow-lg font-medium">
+                  {selectedBlueCard.tag}
+                </span>
+                <div className="w-12 h-0.5 bg-gradient-to-r from-white/50 to-white/20 rounded-full mx-auto mt-3"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-white/20 p-4 bg-white/5">
+            <button
+              onClick={closeBlueCardModal}
+              className="w-full py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all duration-300 font-semibold backdrop-blur-sm border border-white/30"
+            >
+              Perfect!
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       {/* CHOOSE YOUR SERVICE Section */}
-      <AnimatedSection 
-        animationId="service-hero" 
+      <AnimatedSection
+        animationId="service-hero"
         className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <AnimatedSection 
-            animationId="service-hero-title" 
+          <AnimatedSection
+            animationId="service-hero-title"
             className="text-center mb-8 sm:mb-10 lg:mb-16"
           >
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 relative">
@@ -1407,8 +1498,8 @@ const Service = ({ setCurrentView }) => {
       <SectionDivider animationId="divider-1" />
 
       {/* FREE PAINT EVALUATION Banner */}
-      <AnimatedSection 
-        animationId="paint-evaluation" 
+      <AnimatedSection
+        animationId="paint-evaluation"
         className="relative py-8 md:py-12 lg:py-16 xl:py-20 overflow-hidden bg-white"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -1428,13 +1519,13 @@ const Service = ({ setCurrentView }) => {
       <SectionDivider animationId="divider-2" />
 
       {/* PERFECT SOLUTIONS FOR ALL VEHICLES Section */}
-      <AnimatedSection 
-        animationId="perfect-solutions" 
+      <AnimatedSection
+        animationId="perfect-solutions"
         className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <AnimatedSection 
-            animationId="perfect-solutions-title" 
+          <AnimatedSection
+            animationId="perfect-solutions-title"
             className="text-center mb-8 sm:mb-10 lg:mb-16"
           >
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 relative">
@@ -1448,9 +1539,9 @@ const Service = ({ setCurrentView }) => {
             </p>
           </AnimatedSection>
 
-          {/* Video Slider - Mobile Optimized */}
-          <AnimatedSection 
-            animationId="video-slider" 
+          {/* Video Slider - Mobile Optimized with Navigation */}
+          <AnimatedSection
+            animationId="video-slider"
             delay={200}
             className="relative max-w-6xl mx-auto rounded-3xl shadow-3xl shadow-black/50 overflow-hidden border-4 border-white/20"
           >
@@ -1512,15 +1603,52 @@ const Service = ({ setCurrentView }) => {
               ))}
             </div>
 
-            {/* Video indicators - Mobile friendly */}
+            {/* Previous Button */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              aria-label="Previous video"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              aria-label="Next video"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Play/Pause Button */}
+            <button
+              onClick={handlePlayPause}
+              className="absolute top-4 left-4 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              aria-label={isPlaying ? "Pause video" : "Play video"}
+            >
+              {isPlaying ? (
+                <FontAwesomeIcon icon={faPause} className="text-white text-sm sm:text-base group-hover:text-cyan-400 transition-colors duration-300" />
+              ) : (
+                <FontAwesomeIcon icon={faPlay} className="text-white text-sm sm:text-base group-hover:text-cyan-400 transition-colors duration-300 ml-0.5" />
+              )}
+            </button>
+
+            {/* Video indicators - Mobile friendly with click functionality */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
               {videos.map((_, index) => (
-                <div
+                <button
                   key={index}
+                  onClick={() => goToSlide(index)}
                   className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${currentSlide === index
                     ? 'bg-white scale-125'
                     : 'bg-white/50 hover:bg-white/75'
                     }`}
+                  aria-label={`Go to video ${index + 1}`}
                 />
               ))}
             </div>
@@ -1532,8 +1660,8 @@ const Service = ({ setCurrentView }) => {
       <SectionDivider animationId="divider-3" />
 
       {/* QUALITY SERVICE & YOUR VEHICLE DESERVES THE BEST - Combined Section */}
-      <AnimatedSection 
-        animationId="quality-service-combined" 
+      <AnimatedSection
+        animationId="quality-service-combined"
         className="py-4 md:py-6 lg:py-8 relative overflow-hidden bg-white"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -1543,7 +1671,7 @@ const Service = ({ setCurrentView }) => {
               QUALITY SERVICE
             </span>
           </h2>
-          
+
           {/* YOUR VEHICLE DESERVES THE BEST - No gap */}
           <div className="mb-8 sm:mb-10 lg:mb-16">
             <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-1">
@@ -1560,35 +1688,47 @@ const Service = ({ setCurrentView }) => {
         </div>
       </AnimatedSection>
 
-      {/* Blue Cards Grid - Separate Section */}
-      <AnimatedSection 
-        animationId="blue-cards-grid" 
-        className="pb-8 md:pb-12 lg:pb-16 xl:pb-20 relative overflow-hidden bg-white -mt-4"
+      {/* Blue Cards Grid - Custom 3-2 Layout */}
+      <AnimatedSection
+        animationId="blue-cards-grid"
+        className="pb-8 md:pb-12 lg:pb-16 xl:pb-20 relative overflow-hidden bg-white -mt-4 blue-cards-container"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Custom Grid Layout - 3 on top, 2 on bottom */}
+          <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
 
-          {/* Blue Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
-            {blueCardData.map((card, index) => (
-              <div key={card.id || `blue-card-${index}`}>
-                {renderBlueCard(card, index)}
-              </div>
-            ))}
+            {/* Top Row - 3 Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center">
+              {blueCardData.slice(0, 3).map((card, index) => (
+                <div key={card.id || `blue-card-top-${index}`} className="w-full max-w-xs lg:max-w-sm">
+                  {renderBlueCard(card, index)}
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Row - 2 Cards Centered */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center max-w-2xl mx-auto">
+              {blueCardData.slice(3, 5).map((card, index) => (
+                <div key={card.id || `blue-card-bottom-${index}`} className="w-full max-w-xs lg:max-w-sm">
+                  {renderBlueCard(card, index + 3)}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </AnimatedSection>
-
+      <VideoCarousel />
       {/* Section Divider */}
       <SectionDivider animationId="divider-4" />
 
       {/* WHY CHOOSE ACTION CAR DETAILING Section - Enhanced Flip Cards with Modal Support */}
-      <AnimatedSection 
-        animationId="why-choose" 
+      <AnimatedSection
+        animationId="why-choose"
         className="py-8 md:py-12 lg:py-16 xl:py-20 relative bg-white"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <AnimatedSection 
-            animationId="why-choose-title" 
+          <AnimatedSection
+            animationId="why-choose-title"
             className="text-center mb-8 sm:mb-10 lg:mb-16"
           >
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 relative">
@@ -1608,14 +1748,16 @@ const Service = ({ setCurrentView }) => {
           </div>
         </div>
       </AnimatedSection>
-     
-      <VideoCarousel />
-      
+
       {/* Service Modal */}
       <ServiceModal />
+      <BusinessDescription setCurrentView={setCurrentView} />
 
-      {/* Card Modal for Small Screens */}
+      {/* FIXED Card Modal for Small Screens - ACTION CAR DETAILING */}
       <CardModal />
+
+      {/* NEW Blue Card Modal for "Your Vehicle Deserves The Best" section */}
+      <BlueCardModal />
 
       {/* Custom Styles */}
       <style jsx>{`
@@ -1771,38 +1913,104 @@ const Service = ({ setCurrentView }) => {
           transform: rotateY(180deg) !important;
         }
         
+        /* FIXED FLIP CARD HEIGHT STYLES - NO ELONGATION */
+        .fixed-flip-card-height {
+          height: 20rem !important;
+          min-height: 20rem !important;
+          max-height: 20rem !important;
+        }
+        
         .flip-card-container {
-          min-height: 20rem;
+          height: 20rem !important;
+          min-height: 20rem !important;
+          max-height: 20rem !important;
           display: block;
         }
         
         .flip-card-inner {
           width: 100%;
-          min-height: 20rem;
+          height: 20rem !important;
+          min-height: 20rem !important;
+          max-height: 20rem !important;
           position: relative;
         }
         
         .flip-card-front,
         .flip-card-back {
           width: 100%;
-          min-height: 20rem;
+          height: 20rem !important;
+          min-height: 20rem !important;
+          max-height: 20rem !important;
           border-radius: 0.75rem;
+        }
+        
+        /* FIXED MODAL HEIGHT STYLES */
+        .fixed-modal-height {
+          max-height: 85vh !important;
+          height: auto !important;
+        }
+        
+        .modal-content-scroll {
+          max-height: 60vh !important;
+          overflow-y: auto !important;
+        }
+        
+        /* FIXED BLUE CARD HEIGHT STYLES */
+        .fixed-card-height {
+          height: auto !important;
+          min-height: 280px !important;
+          max-height: 350px !important;
+        }
+        
+        .fixed-content-layout {
+          height: 100% !important;
+          min-height: 280px !important;
+        }
+        
+        .card-title-section {
+          flex-grow: 1 !important;
+          min-height: 60px !important;
+          max-height: 120px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+        }
+        
+        .card-title-text {
+          line-height: 1.2 !important;
+          word-wrap: break-word !important;
+          hyphens: auto !important;
+        }
+        
+        .card-description-text {
+          line-height: 1.3 !important;
+          display: -webkit-box !important;
+          -webkit-line-clamp: 2 !important;
+          -webkit-box-orient: vertical !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
         }
         
         @media (max-width: 1399px) {
           .flip-card-container {
+            height: 20rem !important;
             min-height: 20rem !important;
+            max-height: 20rem !important;
           }
           
           .flip-card-inner {
             transform-style: flat !important;
+            height: 20rem !important;
             min-height: 20rem !important;
+            max-height: 20rem !important;
           }
           
           .flip-card-front {
             position: relative !important;
             display: block !important;
+            height: 20rem !important;
             min-height: 20rem !important;
+            max-height: 20rem !important;
           }
           
           .flip-card-back {
@@ -1838,12 +2046,25 @@ const Service = ({ setCurrentView }) => {
           }
           
           .flip-card-container {
+            height: 18rem !important;
             min-height: 18rem !important;
+            max-height: 18rem !important;
           }
           
           .flip-card-inner,
           .flip-card-front {
+            height: 18rem !important;
             min-height: 18rem !important;
+            max-height: 18rem !important;
+          }
+          
+          .fixed-card-height {
+            min-height: 250px !important;
+            max-height: 300px !important;
+          }
+          
+          .fixed-content-layout {
+            min-height: 250px !important;
           }
         }
         
@@ -2059,146 +2280,346 @@ const Service = ({ setCurrentView }) => {
           }
         }
 
-        /* Blue Cards Responsive Design - FIXED for All Devices */
+        /* Square Blue Cards Responsive Design - 3-2 Layout with Vivid Azure */
         
-        /* Mobile Phones (320px - 640px) */
-        @media (max-width: 640px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-            gap: 1.5rem !important;
-            max-width: 90vw;
-            margin: 0 auto;
+        /* Custom aspect-square utility for perfect squares */
+        .aspect-square {
+          aspect-ratio: 1 / 1;
+        }
+        
+        /* Add blue-cards-container class for targeting */
+        .blue-cards-container {
+          width: 100%;
+        }
+        
+        /* Mobile Phones (320px - 479px) */
+        @media (max-width: 479px) {
+          .blue-cards-container .grid {
+            gap: 1rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 280px !important;
+            width: 100% !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 280px !important;
+            max-height: 280px !important;
+          }
+          
+          .blue-cards-container h3 {
+            font-size: 0.875rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          .blue-cards-container .text-xs {
+            font-size: 0.75rem !important;
           }
         }
         
-        /* Small Tablets & iPad Mini (641px - 768px) */
+        /* Small Mobile (480px - 640px) */
+        @media (min-width: 480px) and (max-width: 640px) {
+          .blue-cards-container .grid {
+            gap: 1.25rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 300px !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 300px !important;
+            max-height: 300px !important;
+          }
+        }
+        
+        /* Small Tablets (641px - 768px) */
         @media (min-width: 641px) and (max-width: 768px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          .blue-cards-container .grid {
             gap: 1.5rem !important;
-            max-width: 95vw;
-            margin: 0 auto;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 280px !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 280px !important;
+            max-height: 280px !important;
+          }
+          
+          /* Top row - 3 cards in 2 columns on small tablets */
+          .blue-cards-container .grid.lg\\:grid-cols-3 {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          
+          .blue-cards-container .grid.lg\\:grid-cols-3 > :nth-child(3) {
+            grid-column: span 2 !important;
+            justify-self: center !important;
           }
         }
         
-        /* iPad Air & iPad Pro Portrait (769px - 1024px) */
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 2rem !important;
-            max-width: 95vw;
-            margin: 0 auto;
+        /* iPad Mini Portrait (769px - 834px) */
+        @media (min-width: 769px) and (max-width: 834px) {
+          .blue-cards-container .grid {
+            gap: 1.5rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 220px !important;
+          }
+          
+          .blue-cards-container .lg\\:max-w-sm {
+            max-width: 240px !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 220px !important;
+            max-height: 240px !important;
+          }
+          
+          .blue-cards-container h3 {
+            font-size: 0.875rem !important;
           }
         }
         
-        /* iPad Pro Landscape & Small Desktop (1025px - 1279px) */
-        @media (min-width: 1025px) and (max-width: 1279px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        /* iPad Air/Pro Portrait (835px - 1024px) */
+        @media (min-width: 835px) and (max-width: 1024px) {
+          .blue-cards-container .grid {
             gap: 2rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 240px !important;
+          }
+          
+          .blue-cards-container .lg\\:max-w-sm {
+            max-width: 260px !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 240px !important;
+            max-height: 260px !important;
           }
         }
         
-        /* Large Desktop (1280px+) */
-        @media (min-width: 1280px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-            gap: 2rem !important;
+        /* iPad Pro Landscape & Desktop (1025px+) */
+        @media (min-width: 1025px) {
+          .blue-cards-container .grid {
+            gap: 2.5rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 280px !important;
+          }
+          
+          .blue-cards-container .lg\\:max-w-sm {
+            max-width: 320px !important;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 280px !important;
+            max-height: 320px !important;
           }
         }
 
-        /* Card Height Management */
-        .blue-card-container {
-          min-height: 280px;
-        }
-        
-        @media (min-width: 640px) {
-          .blue-card-container {
-            min-height: 320px;
+        /* Specific iPad Device Targeting for Square Cards */
+        @media only screen 
+          and (min-device-width: 768px) 
+          and (max-device-width: 834px) 
+          and (-webkit-min-device-pixel-ratio: 1) {
+          /* iPad Mini */
+          .blue-cards-container .grid.lg\\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(200px, 1fr)) !important;
+            justify-content: center;
           }
-        }
-        
-        @media (min-width: 768px) {
-          .blue-card-container {
-            min-height: 360px;
+          
+          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
+            grid-template-columns: repeat(2, minmax(200px, 240px)) !important;
+            justify-content: center;
           }
-        }
-        
-        @media (min-width: 1024px) {
-          .blue-card-container {
-            min-height: 400px;
+          
+          .blue-cards-container .aspect-square {
+            min-height: 200px !important;
+            max-height: 220px !important;
           }
         }
 
-        /* Image Loading and Error Handling */
-        .card-image-container img {
-          transition: all 0.3s ease;
-        }
-        
-        .card-image-container img:hover {
-          transform: scale(1.1);
+        @media only screen 
+          and (min-device-width: 768px) 
+          and (max-device-width: 1024px) 
+          and (-webkit-min-device-pixel-ratio: 2) {
+          /* iPad Air/Pro */
+          .blue-cards-container .grid.lg\\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(220px, 1fr)) !important;
+            justify-content: center;
+          }
+          
+          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
+            grid-template-columns: repeat(2, minmax(220px, 260px)) !important;
+            justify-content: center;
+          }
+          
+          .blue-cards-container .aspect-square {
+            min-height: 220px !important;
+            max-height: 240px !important;
+          }
         }
 
-        /* Text Overflow Management */
-        .card-title {
+        /* Enhanced Card Content for Square Layout */
+        .blue-cards-container .aspect-square .flex.flex-col {
+          height: 100% !important;
+        }
+        
+        .blue-cards-container h3 {
           word-wrap: break-word;
           hyphens: auto;
           overflow-wrap: break-word;
+          text-align: center;
         }
         
-        .card-description {
+        .blue-cards-container p {
           display: -webkit-box;
-          -webkit-line-clamp: 3;
+          -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
+          line-height: 1.3;
         }
 
-        /* Hover Effects for Touch Devices */
-        @media (hover: none) and (pointer: coarse) {
-          .group:hover .group-hover\\:scale-105 {
-            transform: scale(1.02) !important;
-          }
-          
-          .group:hover .group-hover\\:translate-x-1 {
-            transform: translateX(2px) !important;
-          }
+        /* Vivid Azure Color Enhancements */
+        .bg-vivid-azure {
+          background: linear-gradient(135deg, #1393c4 0%, #0f7ba8 100%);
+        }
+        
+        .shadow-vivid-azure {
+          box-shadow: 0 25px 50px -12px rgba(19, 147, 196, 0.5);
+        }
+        
+        .shadow-vivid-azure-hover {
+          box-shadow: 0 35px 60px -12px rgba(19, 147, 196, 0.6);
         }
 
-        /* Performance Improvements */
-        .blue-card-container * {
+        /* Performance optimizations for square cards */
+        .blue-cards-container * {
           will-change: transform, opacity;
           backface-visibility: hidden;
+          transform: translateZ(0);
         }
 
-        /* Specific iPad Fixes */
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-          .blue-card-container {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
+        /* Animation improvements */
+        .blue-cards-container .group:hover {
+          transform: translateY(-8px) scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+          .blue-cards-container .group:hover {
+            transform: translateY(-4px) scale(1.02);
+          }
+        }
+
+        /* Ensure proper spacing and centering */
+        .blue-cards-container .flex.flex-col {
+          align-items: center;
+          width: 100%;
+        }
+        
+        .blue-cards-container .grid {
+          width: 100%;
+          place-items: center;
+        }
+
+        /* Text visibility improvements */
+        .blue-cards-container .text-white {
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .blue-cards-container .drop-shadow-lg {
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+        }
+
+        /* Enhanced Card Content Responsiveness */
+        .blue-cards-container .flex-grow {
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          min-height: 0 !important;
+        }
+        
+        .blue-cards-container h3 {
+          line-height: 1.2 !important;
+          margin-bottom: 0.75rem !important;
+          word-wrap: break-word !important;
+          hyphens: auto !important;
+        }
+        
+        .blue-cards-container p {
+          line-height: 1.4 !important;
+          display: -webkit-box !important;
+          -webkit-line-clamp: 3 !important;
+          -webkit-box-orient: vertical !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        }
+
+        /* Show description on larger tablets and desktop */
+        @media (min-width: 769px) {
+          .blue-cards-container p.hidden {
+            display: block !important;
+          }
+        }
+
+        /* Video Navigation Button Styles */
+        .video-nav-btn {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .video-nav-btn:hover {
+          transform: scale(1.1);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-nav-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Enhanced touch targets for mobile */
+        @media (max-width: 768px) {
+          .video-nav-btn {
+            width: 3rem !important;
+            height: 3rem !important;
+            min-width: 44px;
+            min-height: 44px;
           }
           
-          .card-image-container {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
+          .video-nav-btn svg {
+            width: 1.25rem !important;
+            height: 1.25rem !important;
           }
         }
 
-        /* Fix for iPad Mini specifically */
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(3, minmax(240px, 1fr)) !important;
-            gap: 1.5rem !important;
-            justify-content: center;
-          }
+        /* Video indicator enhancements */
+        .video-indicators button {
+          min-width: 44px;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
         }
-
-        /* Fix for iPad Air/Pro */
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5 {
-            grid-template-columns: repeat(3, minmax(260px, 1fr)) !important;
-            gap: 2rem !important;
-          }
+        
+        .video-indicators button:hover {
+          transform: scale(1.2);
+        }
+        
+        .video-indicators button:focus-visible {
+          outline: 2px solid #0ea5e9;
+          outline-offset: 2px;
+          border-radius: 50%;
         }
       `}</style>
     </>

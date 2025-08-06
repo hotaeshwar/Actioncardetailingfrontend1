@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Shield, Sun, Zap, Wifi, CheckCircle, Play } from 'lucide-react';
 import Footer from '../components/Footer';
+import Quote from '../components/Quote';
 // Import Window Tint Video
 import windowTintVideo from '../assets/images/window tint (1).mp4';
 
 const WindowTintingSite = () => {
   const [selectedTint, setSelectedTint] = useState(35);
   const [selectedFilm, setSelectedFilm] = useState('prime-cs');
+  const [showQuote, setShowQuote] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -111,6 +113,31 @@ const WindowTintingSite = () => {
     }
   }, []);
 
+  // Scroll animation for cards
+  useEffect(() => {
+    const cards = document.querySelectorAll('.animate-card');
+    const animatedCards = new Set();
+    
+    const handleScroll = () => {
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        if (rect.top < windowHeight * 0.85 && !animatedCards.has(card)) {
+          animatedCards.add(card);
+          setTimeout(() => {
+            card.classList.add('animate-fade-in');
+          }, index * 150);
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check on initial load
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const tintOptions = [5, 20, 35, 50, 70];
   
   const filmTypes = {
@@ -145,6 +172,79 @@ const WindowTintingSite = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <style jsx>{`
+        .animate-card {
+          opacity: 0;
+          transform: translateY(60px);
+          transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .animate-card.animate-fade-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.75);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          padding: 1rem;
+        }
+
+        .modal-content {
+          background: white;
+          border-radius: 12px;
+          padding: 2rem;
+          max-width: 500px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9) translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+
+        .modal-close {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: #666;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+          background-color: #f3f4f6;
+          color: #333;
+        }
+      `}</style>
+      
       {/* Hero Section with Video */}
       <section className="bg-white">
         {/* Hero Video - with responsive container similar to Hero component */}
@@ -208,6 +308,7 @@ const WindowTintingSite = () => {
               Before It Happens
             </p>
             <button 
+              onClick={() => setShowQuote(true)}
               className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:opacity-90"
               style={{backgroundColor: '#1393c4'}}
             >
@@ -230,6 +331,7 @@ const WindowTintingSite = () => {
                   src="https://actioncardetailing.ca/wp-content/uploads/2021/05/action1.jpg.webp" 
                   alt="Tint Levels"
                   className="w-full rounded-lg shadow-xl"
+                  style={{height: '500px', objectFit: 'cover'}}
                 />
               </div>
             </div>
@@ -244,36 +346,36 @@ const WindowTintingSite = () => {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
                   <div className="flex items-center mb-3">
                     <Sun className="text-white mr-3" size={24} />
-                    <h4 className="font-bold">Superior Heat Rejection</h4>
+                    <h4 className="font-bold text-white">Superior Heat Rejection</h4>
                   </div>
-                  <p className="text-blue-100">Our multilayer nano-ceramic particle technology blocks up to 98% of the infrared heat</p>
+                  <p className="text-white">Our multilayer nano-ceramic particle technology blocks up to 98% of the infrared heat</p>
                 </div>
 
-                <div className="p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
                   <div className="flex items-center mb-3">
                     <Shield className="text-white mr-3" size={24} />
-                    <h4 className="font-bold">UV Ray Protection</h4>
+                    <h4 className="font-bold text-white">UV Ray Protection</h4>
                   </div>
-                  <p className="text-blue-100">XPEL PRIME XR PLUS provides SPF 1,000 protection that effectively blocks over 99% of harmful UV rays</p>
+                  <p className="text-white">XPEL PRIME XR PLUS provides SPF 1,000 protection that effectively blocks over 99% of harmful UV rays</p>
                 </div>
 
-                <div className="p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
                   <div className="flex items-center mb-3">
                     <Zap className="text-white mr-3" size={24} />
-                    <h4 className="font-bold">Greater Clarity</h4>
+                    <h4 className="font-bold text-white">Greater Clarity</h4>
                   </div>
-                  <p className="text-blue-100">Advanced nano construction in XPEL PRIMETM XR provides superior performance without reducing outbound visibility</p>
+                  <p className="text-white">Advanced nano construction in XPEL PRIMETM XR provides superior performance without reducing outbound visibility</p>
                 </div>
 
-                <div className="p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
                   <div className="flex items-center mb-3">
                     <Wifi className="text-white mr-3" size={24} />
-                    <h4 className="font-bold">Crystal Clear Signal</h4>
+                    <h4 className="font-bold text-white">Crystal Clear Signal</h4>
                   </div>
-                  <p className="text-blue-100">In the digital world, clear communication is key. PRIME XR PLUS construction will not interfere with radio, cellular, or Bluetooth signals</p>
+                  <p className="text-white">In the digital world, clear communication is key. PRIME XR PLUS construction will not interfere with radio, cellular, or Bluetooth signals</p>
                 </div>
               </div>
             </div>
@@ -289,7 +391,7 @@ const WindowTintingSite = () => {
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>1</div>
               <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Film</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -315,7 +417,7 @@ const WindowTintingSite = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>2</div>
               <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Coverage</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -346,7 +448,7 @@ const WindowTintingSite = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>3</div>
               <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Shade</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -391,7 +493,7 @@ const WindowTintingSite = () => {
         </div>
       </section>
 
-      {/* What Film Section */}
+      {/* What Film Section - Film Cards Only */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{color: '#1393c4'}}>
@@ -405,8 +507,8 @@ const WindowTintingSite = () => {
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {Object.entries(filmTypes).map(([key, film]) => (
-              <div key={key} className={`rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${selectedFilm === key ? 'ring-4' : ''}`} 
+            {Object.entries(filmTypes).map(([key, film], index) => (
+              <div key={key} className={`animate-card rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${selectedFilm === key ? 'ring-4' : ''}`} 
                    style={{
                      background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
                      ringColor: selectedFilm === key ? '#1393c4' : 'transparent'
@@ -451,21 +553,6 @@ const WindowTintingSite = () => {
                       </div>
                     ))}
                   </div>
-
-                  <button 
-                    onClick={() => setSelectedFilm(key)}
-                    className={`w-full mt-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                      selectedFilm === key 
-                        ? 'text-white' 
-                        : 'hover:opacity-80'
-                    }`}
-                    style={{
-                      backgroundColor: selectedFilm === key ? '#1393c4' : '#f0f9ff',
-                      color: selectedFilm === key ? 'white' : '#1393c4'
-                    }}
-                  >
-                    Select Film
-                  </button>
                 </div>
               </div>
             ))}
@@ -484,7 +571,7 @@ const WindowTintingSite = () => {
           </p>
 
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="text-center">
+            <div className="animate-card text-center">
               <h3 className="text-2xl font-bold mb-8" style={{color: '#1393c4'}}>TWO FRONTS ONLY:</h3>
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <img 
@@ -493,6 +580,7 @@ const WindowTintingSite = () => {
                   className="w-full max-w-md mx-auto mb-6"
                 />
                 <button 
+                  onClick={() => setShowQuote(true)}
                   className="text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90"
                   style={{backgroundColor: '#1393c4'}}
                 >
@@ -501,7 +589,7 @@ const WindowTintingSite = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="animate-card text-center">
               <h3 className="text-2xl font-bold mb-8" style={{color: '#1393c4'}}>SIDES AND BACK:</h3>
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <img 
@@ -510,6 +598,7 @@ const WindowTintingSite = () => {
                   className="w-full max-w-md mx-auto mb-6"
                 />
                 <button 
+                  onClick={() => setShowQuote(true)}
                   className="text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90"
                   style={{backgroundColor: '#1393c4'}}
                 >
@@ -533,13 +622,11 @@ const WindowTintingSite = () => {
 
           <div className="text-center mb-12">
             <div className="p-8 rounded-xl shadow-xl inline-block" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)'}}>
-              <h3 className="text-2xl font-bold mb-4" style={{color: '#1393c4'}}>PRIME</h3>
-              <h4 className="text-xl mb-6" style={{color: '#1393c4'}}>Window Tint Simulator</h4>
-              <p className="mb-6" style={{color: '#1393c4'}}>Select a vehicle type and color. Then see how the different tint percentages, or as we call it Variable Light Transfers (VLT's), could look on the front, sides, and back of your vehicle.</p>
               <img 
                 src="https://actioncardetailing.ca/wp-content/uploads/2021/05/image10.png.webp" 
                 alt="Window Tint Simulator"
-                className="w-full max-w-2xl mx-auto rounded-lg"
+                className="w-full max-w-4xl mx-auto rounded-lg"
+                style={{height: '600px', objectFit: 'cover'}}
               />
             </div>
           </div>
@@ -554,7 +641,7 @@ const WindowTintingSite = () => {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
                 1
               </div>
@@ -571,7 +658,7 @@ const WindowTintingSite = () => {
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
                 2
               </div>
@@ -588,7 +675,7 @@ const WindowTintingSite = () => {
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="animate-card text-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
                 3
               </div>
@@ -609,24 +696,32 @@ const WindowTintingSite = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{color: '#1393c4'}}>
             Ready to Transform Your Vehicle?
           </h2>
-          <p className="text-xl mb-12 max-w-2xl mx-auto">
+          <p className="text-xl mb-12 max-w-2xl mx-auto" style={{color: '#1393c4'}}>
             Experience the ultimate in UV protection, heat rejection, and style with our professional window tinting services.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white px-8 py-4 rounded-full text-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105" style={{color: '#1393c4'}}>
-              Get Free Quote
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white transition-all duration-300 transform hover:scale-105" style={{'&:hover': {color: '#1393c4'}}}>
-              Call Now
-            </button>
-          </div>
         </div>
       </section>
+
+      {/* Quote Modal */}
+      {showQuote && (
+        <div className="modal-overlay" onClick={() => setShowQuote(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close"
+              onClick={() => setShowQuote(false)}
+              aria-label="Close modal"
+            >
+              ×
+            </button>
+            <Quote isOpen={showQuote} onClose={() => setShowQuote(false)} />
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <Footer />
