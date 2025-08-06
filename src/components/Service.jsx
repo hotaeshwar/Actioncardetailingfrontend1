@@ -1715,7 +1715,7 @@ const Service = ({ setCurrentView }) => {
           </div>
         </div>
       </AnimatedSection>
-      <VideoCarousel />
+      
       {/* Section Divider */}
       <SectionDivider animationId="divider-4" />
 
