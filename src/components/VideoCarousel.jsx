@@ -6,78 +6,33 @@ const VideoCardCarousel = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
-  const [videoErrors, setVideoErrors] = useState({});
   const videoRefs = useRef([]);
   const intervalRef = useRef(null);
 
-  // Updated video paths that work in both development and production
+  // Import your video files - using the same approach as your working code
+  // Replace these paths with your actual video imports
+  const carwashing1 = '/assets/images/carasoul1.MP4';
+  const carwashing2 = '/assets/images/carasoul2.MP4';
+  const carwashing3 = '/assets/images/carasoul3.MP4';
+
+  // Video array using the same structure as your working code
   const videos = [
     {
-      // Try multiple possible paths for each video
-      src: [
-        '/assets/images/carasoul1.MP4',    // Production path
-        '/src/assets/images/carasoul1.MP4', // Development path
-        './assets/images/carasoul1.MP4',   // Relative path
-        'assets/images/carasoul1.MP4'      // Alternative relative path
-      ],
+      src: carwashing1,
       title: "Premium Detailing",
       description: "Complete exterior detailing"
     },
     {
-      src: [
-        '/assets/images/carasoul2.MP4',
-        '/src/assets/images/carasoul2.MP4',
-        './assets/images/carasoul2.MP4',
-        'assets/images/carasoul2.MP4'
-      ],
+      src: carwashing2,
       title: "Complete Exterior and Interior Detailing",
       description: "Professional Detailing services"
     },
     {
-      src: [
-        '/assets/images/carasoul3.MP4',
-        '/src/assets/images/carasoul3.MP4',
-        './assets/images/carasoul3.MP4',
-        'assets/images/carasoul3.MP4'
-      ],
+      src: carwashing3,
       title: "Interior Detailing",
       description: "Deep cleaning and protection"
     },
   ];
-
-  // Function to find working video source
-  const findWorkingVideoSource = useCallback(async (srcArray) => {
-    for (const src of srcArray) {
-      try {
-        const response = await fetch(src, { method: 'HEAD' });
-        if (response.ok) {
-          return src;
-        }
-      } catch (error) {
-        // Continue to next source
-        continue;
-      }
-    }
-    return null;
-  }, []);
-
-  // Initialize working video sources
-  const [workingVideoSources, setWorkingVideoSources] = useState({});
-
-  useEffect(() => {
-    const initializeVideoSources = async () => {
-      const sources = {};
-      for (let i = 0; i < videos.length; i++) {
-        const workingSrc = await findWorkingVideoSource(videos[i].src);
-        if (workingSrc) {
-          sources[i] = workingSrc;
-        }
-      }
-      setWorkingVideoSources(sources);
-    };
-
-    initializeVideoSources();
-  }, [findWorkingVideoSource, videos]);
 
   // Memoize callback functions to prevent unnecessary re-renders
   const goToSlide = useCallback((index) => {
@@ -109,7 +64,7 @@ const VideoCardCarousel = () => {
   useEffect(() => {
     const interval = isMobileDevice ? 10000 : 8000;
 
-    if (isPlaying && Object.keys(workingVideoSources).length > 0) {
+    if (isPlaying) {
       intervalRef.current = setInterval(() => {
         nextSlide();
       }, interval);
@@ -120,32 +75,26 @@ const VideoCardCarousel = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPlaying, nextSlide, isMobileDevice, workingVideoSources]);
+  }, [isPlaying, nextSlide, isMobileDevice]);
 
   // Handle video playback
   const handlePlayPause = useCallback(() => {
     const currentVideo = videoRefs.current[currentSlide];
-    if (currentVideo && workingVideoSources[currentSlide]) {
+    if (currentVideo) {
       if (isPlaying) {
         currentVideo.pause();
       } else {
         currentVideo.play().catch(error => {
           console.log("Play failed:", error);
-          setVideoErrors(prev => ({...prev, [currentSlide]: true}));
         });
       }
       setIsPlaying(!isPlaying);
     }
-  }, [currentSlide, isPlaying, workingVideoSources]);
+  }, [currentSlide, isPlaying]);
 
-  // Enhanced video loading and playback with better error handling
+  // Optimized video loading and playback - Same approach as your working code
   useEffect(() => {
     const playCurrentVideo = async () => {
-      if (!workingVideoSources[currentSlide]) {
-        setIsVideoLoaded(false);
-        return;
-      }
-
       try {
         // Pause all other videos
         videoRefs.current.forEach((video, index) => {
@@ -156,10 +105,7 @@ const VideoCardCarousel = () => {
         });
 
         const currentVideo = videoRefs.current[currentSlide];
-        if (currentVideo && isPlaying) {
-          // Reset error state
-          setVideoErrors(prev => ({...prev, [currentSlide]: false}));
-          
+        if (currentVideo) {
           if (isMobileDevice) {
             currentVideo.load();
             await new Promise(resolve => {
@@ -168,47 +114,39 @@ const VideoCardCarousel = () => {
                 resolve();
               };
               currentVideo.addEventListener('loadeddata', onLoadedData);
-              setTimeout(resolve, 3000); // Fallback timeout
+              setTimeout(resolve, 2000); // Fallback timeout
             });
           }
 
           try {
-            await currentVideo.play();
-            setIsVideoLoaded(true);
+            if (isPlaying) {
+              await currentVideo.play();
+              setIsVideoLoaded(true);
+            }
           } catch (playError) {
             console.log("Video play failed:", playError);
-            setIsVideoLoaded(false);
-            setVideoErrors(prev => ({...prev, [currentSlide]: true}));
+            // Retry logic similar to your working code
+            setTimeout(async () => {
+              try {
+                if (isPlaying) {
+                  await currentVideo.play();
+                  setIsVideoLoaded(true);
+                }
+              } catch (retryError) {
+                console.log("Video play retry failed:", retryError);
+                setIsVideoLoaded(false);
+              }
+            }, 500);
           }
         }
       } catch (error) {
         console.log("Video management error:", error);
         setIsVideoLoaded(false);
-        setVideoErrors(prev => ({...prev, [currentSlide]: true}));
       }
     };
 
     playCurrentVideo();
-  }, [currentSlide, isMobileDevice, isPlaying, workingVideoSources]);
-
-  // If no working video sources found, show message
-  if (Object.keys(workingVideoSources).length === 0) {
-    return (
-      <div className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="relative max-w-6xl mx-auto rounded-3xl shadow-3xl shadow-black/50 overflow-hidden border-4 border-white/20">
-            <div className="relative aspect-video bg-black flex items-center justify-center">
-              <div className="text-center text-white">
-                <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-lg mb-2">Loading videos...</p>
-                <p className="text-sm text-white/70">Please ensure video files are properly uploaded to your server</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, [currentSlide, isMobileDevice, isPlaying]);
 
   return (
     <div className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white">
@@ -216,84 +154,61 @@ const VideoCardCarousel = () => {
         {/* Video Carousel */}
         <div className="relative max-w-6xl mx-auto rounded-3xl shadow-3xl shadow-black/50 overflow-hidden border-4 border-white/20">
           <div className="relative aspect-video bg-black">
-            {videos.map((video, index) => {
-              const workingSrc = workingVideoSources[index];
-              const hasError = videoErrors[index];
-              
-              return (
-                <div
-                  key={index}
-                  className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                >
-                  {workingSrc && !hasError ? (
-                    <>
-                      <video
-                        ref={el => videoRefs.current[index] = el}
-                        src={workingSrc}
-                        className="w-full h-full object-cover"
-                        muted
-                        loop
-                        playsInline
-                        preload={index === 0 ? "auto" : isMobileDevice ? "none" : "metadata"}
-                        onLoadedData={() => {
-                          if (index === currentSlide) {
-                            setIsVideoLoaded(true);
-                            setVideoErrors(prev => ({...prev, [index]: false}));
-                          }
-                        }}
-                        onError={(e) => {
-                          console.log(`Video ${index} error:`, e);
-                          setIsVideoLoaded(false);
-                          setVideoErrors(prev => ({...prev, [index]: true}));
-                        }}
-                        onWaiting={() => {
-                          console.log(`Video ${index} buffering...`);
-                        }}
-                        onCanPlay={() => {
-                          if (index === currentSlide) {
-                            console.log(`Video ${index} can play`);
-                          }
-                        }}
-                        style={{
-                          willChange: 'transform',
-                          backfaceVisibility: 'hidden',
-                          transform: 'translateZ(0)',
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
-                    </>
-                  ) : (
-                    // Fallback content when video is not available
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
-                      <div className="text-center text-white p-8">
-                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Play className="w-8 h-8" />
-                        </div>
-                        <h3 className="text-xl font-semibold mb-2">{video.title}</h3>
-                        <p className="text-white/80">{video.description}</p>
-                        <p className="text-sm text-white/60 mt-2">Video temporarily unavailable</p>
-                      </div>
-                    </div>
-                  )}
+            {videos.map((video, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              >
+                <video
+                  ref={el => videoRefs.current[index] = el}
+                  src={video.src}
+                  className="w-full h-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  preload={index === 0 ? "auto" : isMobileDevice ? "none" : "metadata"}
+                  onLoadedData={() => {
+                    if (index === currentSlide) {
+                      setIsVideoLoaded(true);
+                    }
+                  }}
+                  onError={(e) => {
+                    console.log(`Video ${index} error:`, e);
+                    setIsVideoLoaded(false);
+                  }}
+                  onWaiting={() => {
+                    console.log(`Video ${index} buffering...`);
+                  }}
+                  onCanPlay={() => {
+                    if (index === currentSlide) {
+                      console.log(`Video ${index} can play`);
+                    }
+                  }}
+                  style={{
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden',
+                    transform: 'translateZ(0)',
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
 
-                  {/* Loading indicator */}
-                  {workingSrc && !hasError && !isVideoLoaded && index === currentSlide && (
-                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
-                      <div className="text-center">
-                        <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-white/70 text-sm">Loading video...</p>
-                      </div>
+                {/* Loading indicator for mobile */}
+                {isMobileDevice && !isVideoLoaded && index === currentSlide && (
+                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-white/70 text-sm">Loading video...</p>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Previous Button */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group video-nav-btn"
             aria-label="Previous video"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" />
@@ -302,7 +217,7 @@ const VideoCardCarousel = () => {
           {/* Next Button */}
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group video-nav-btn"
             aria-label="Next video"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" />
@@ -321,8 +236,8 @@ const VideoCardCarousel = () => {
             )}
           </button>
 
-          {/* Video indicators */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+          {/* Video indicators - Mobile friendly with click functionality */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20 video-indicators">
             {videos.map((_, index) => (
               <button
                 key={index}
@@ -330,13 +245,79 @@ const VideoCardCarousel = () => {
                 className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${currentSlide === index
                   ? 'bg-white scale-125'
                   : 'bg-white/50 hover:bg-white/75'
-                  }`}
+                }`}
                 aria-label={`Go to video ${index + 1}`}
               />
             ))}
           </div>
         </div>
       </div>
+
+      {/* Styles - Same as your working code */}
+      <style jsx>{`
+        .shadow-3xl {
+          box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Video Navigation Button Styles */
+        .video-nav-btn {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .video-nav-btn:hover {
+          transform: scale(1.1);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-nav-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Enhanced touch targets for mobile */
+        @media (max-width: 768px) {
+          .video-nav-btn {
+            width: 3rem !important;
+            height: 3rem !important;
+            min-width: 44px;
+            min-height: 44px;
+          }
+          
+          .video-nav-btn svg {
+            width: 1.25rem !important;
+            height: 1.25rem !important;
+          }
+        }
+
+        /* Video indicator enhancements */
+        .video-indicators button {
+          min-width: 12px;
+          min-height: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .video-indicators button:hover {
+          transform: scale(1.2);
+        }
+        
+        .video-indicators button:focus-visible {
+          outline: 2px solid #0ea5e9;
+          outline-offset: 2px;
+          border-radius: 50%;
+        }
+
+        /* Performance optimizations */
+        * {
+          will-change: transform, opacity;
+          backface-visibility: hidden;
+          transform: translateZ(0);
+        }
+      `}</style>
     </div>
   );
 };
