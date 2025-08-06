@@ -1,275 +1,255 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const VideoCardCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [autoplayEnabled, setAutoplayEnabled] = useState(false);
-  const [videosReady, setVideosReady] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
   const videoRefs = useRef([]);
   const intervalRef = useRef(null);
 
-  // Video sources - replace with your actual video paths
+  // Video data with titles and descriptions
   const videos = [
-    '/src/assets/images/carasoul1.MP4',
-    '/src/assets/images/carasoul2.MP4',
-    '/src/assets/images/carasoul3.MP4',
-    '/src/assets/images/carasoul4.MP4',
-    '/src/assets/images/carasoul5.MP4',
-    '/src/assets/images/carasoul6.MP4'
+    {
+      src: '/src/assets/images/carasoul1.MP4',
+      title: "Premium Detailing",
+      description: "Complete exterior detailing"
+    },
+    {
+      src: '/src/assets/images/carasoul2.MP4',
+      title: "Complete Exterior and Interior Detailing",
+      description: "Professional Detailing services"
+    },
+    {
+      src: '/src/assets/images/carasoul3.MP4',
+      title: "Interior Detailing",
+      description: "Deep cleaning and protection"
+    },
+    {
+      src: '/src/assets/images/carasoul4.MP4',
+      title: "Paint Correction",
+      description: "Restoring your vehicle's shine"
+    },
+    {
+      src: '/src/assets/images/carasoul5.MP4',
+      title: "Ceramic Coating",
+      description: "Long-lasting protection"
+    },
+    {
+      src: '/src/assets/images/carasoul6.MP4',
+      title: "Window Tinting",
+      description: "UV protection and privacy"
+    }
   ];
 
-  // Test autoplay capability on component mount
-  useEffect(() => {
-    const testAutoplay = async () => {
-      try {
-        // Create a test video element to check autoplay support
-        const testVideo = document.createElement('video');
-        testVideo.muted = true;
-        testVideo.playsInline = true;
-        testVideo.volume = 0;
-        
-        // Try to play an empty video
-        testVideo.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMWF2YzEAAAAIZnJlZQAACKtmZGF0AAAAAFmdHJla2AAAKHZ0cmFrAAAAXGJlZHNhAAAARGRkZHNhAAAAKGFkdHNhAAAAgGZnZXBhAAAAUgAAAAAAAAABAAAAAQAAAA==';
-        
-        await testVideo.play();
-        testVideo.remove();
-        setAutoplayEnabled(true);
-        console.log('Autoplay is supported');
-      } catch (error) {
-        console.log('Autoplay is blocked by browser, will use click-to-play fallback');
-        setAutoplayEnabled(false);
-      }
-    };
-
-    testAutoplay();
+  // Memoize callback functions to prevent unnecessary re-renders
+  const goToSlide = useCallback((index) => {
+    setCurrentSlide(index);
+    setIsPlaying(true);
   }, []);
 
-  // Start carousel auto-advance
+  const nextSlide = useCallback(() => {
+    goToSlide((currentSlide + 1) % videos.length);
+  }, [currentSlide, videos.length, goToSlide]);
+
+  const prevSlide = useCallback(() => {
+    goToSlide((currentSlide - 1 + videos.length) % videos.length);
+  }, [currentSlide, videos.length, goToSlide]);
+
+  // Check device type
   useEffect(() => {
-    if (autoplayEnabled && videosReady) {
+    const checkDeviceType = () => {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobileDevice(isMobile || window.innerWidth < 768);
+    };
+
+    checkDeviceType();
+    window.addEventListener('resize', checkDeviceType);
+    return () => window.removeEventListener('resize', checkDeviceType);
+  }, []);
+
+  // Auto-advance slides
+  useEffect(() => {
+    const interval = isMobileDevice ? 10000 : 8000;
+
+    if (isPlaying) {
       intervalRef.current = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
-      }, 6000);
+        nextSlide();
+      }, interval);
     }
-    
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [videos.length, autoplayEnabled, videosReady]);
+  }, [isPlaying, nextSlide, isMobileDevice]);
 
   // Handle video playback
-  useEffect(() => {
-    const currentVideo = videoRefs.current[currentIndex];
-    
+  const handlePlayPause = useCallback(() => {
+    const currentVideo = videoRefs.current[currentSlide];
     if (currentVideo) {
-      // Pause all other videos
-      videoRefs.current.forEach((video, index) => {
-        if (video && index !== currentIndex) {
-          video.pause();
-          video.currentTime = 0;
-        }
-      });
-
-      // Play current video
-      if (currentVideo.readyState >= 3) {
-        playCurrentVideo();
+      if (isPlaying) {
+        currentVideo.pause();
+      } else {
+        currentVideo.play().catch(error => {
+          console.log("Play failed:", error);
+        });
       }
+      setIsPlaying(!isPlaying);
     }
-  }, [currentIndex, autoplayEnabled]);
+  }, [currentSlide, isPlaying]);
 
-  const playCurrentVideo = async () => {
-    const currentVideo = videoRefs.current[currentIndex];
-    if (!currentVideo) return;
-
-    try {
-      currentVideo.currentTime = 0;
-      await currentVideo.play();
-      console.log(`Video ${currentIndex} playing`);
-    } catch (error) {
-      console.log(`Video ${currentIndex} autoplay failed:`, error.name);
-      // Don't show error to user, just silently fail
-    }
-  };
-
-  // Enable autoplay on any user interaction
-  const enableAutoplay = async () => {
-    if (!autoplayEnabled) {
-      setAutoplayEnabled(true);
-      await playCurrentVideo();
-      
-      // Start the interval
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
-        }, 6000);
-      }
-    }
-  };
-
-  const goToSlide = async (index) => {
-    await enableAutoplay();
-    setCurrentIndex(index);
-  };
-
-  const goToPrevious = async () => {
-    await enableAutoplay();
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? videos.length - 1 : prevIndex - 1
-    );
-  };
-
-  const goToNext = async () => {
-    await enableAutoplay();
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
-  };
-
-  const handleVideoCanPlay = (index) => {
-    console.log(`Video ${index} can play`);
-    if (index === videos.length - 1) {
-      setVideosReady(true);
-    }
-    
-    // If this is the current video and autoplay is enabled, try to play it
-    if (index === currentIndex && autoplayEnabled) {
-      playCurrentVideo();
-    }
-  };
-
-  const handleVideoError = (index, error) => {
-    console.error(`Video ${index} error:`, error);
-  };
-
-  // Handle page visibility change to restart videos when page becomes visible
+  // Optimized video loading and playback
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && autoplayEnabled) {
-        setTimeout(() => {
-          playCurrentVideo();
-        }, 100);
+    const playCurrentVideo = async () => {
+      try {
+        // Pause all other videos
+        videoRefs.current.forEach((video, index) => {
+          if (video && index !== currentSlide) {
+            video.pause();
+            video.currentTime = 0;
+          }
+        });
+
+        const currentVideo = videoRefs.current[currentSlide];
+        if (currentVideo && isPlaying) {
+          if (isMobileDevice) {
+            currentVideo.load();
+            await new Promise(resolve => {
+              const onLoadedData = () => {
+                currentVideo.removeEventListener('loadeddata', onLoadedData);
+                resolve();
+              };
+              currentVideo.addEventListener('loadeddata', onLoadedData);
+              setTimeout(resolve, 2000); // Fallback timeout
+            });
+          }
+
+          try {
+            await currentVideo.play();
+            setIsVideoLoaded(true);
+          } catch (playError) {
+            console.log("Video play failed, retrying:", playError);
+            setTimeout(async () => {
+              try {
+                await currentVideo.play();
+              } catch (retryError) {
+                console.log("Video play retry failed:", retryError);
+              }
+            }, 500);
+          }
+        }
+      } catch (error) {
+        console.log("Video management error:", error);
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [currentIndex, autoplayEnabled]);
+    playCurrentVideo();
+  }, [currentSlide, isMobileDevice, isPlaying]);
 
   return (
-    <div 
-      className="w-full bg-gray-50 py-4 sm:py-6 md:py-8 lg:py-12 px-3 sm:px-4 md:px-6 lg:px-8"
-      onClick={enableAutoplay}
-    >
-      {/* Main container */}
-      <div className="max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto relative">
-        {/* Single Card container */}
-        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl bg-white shadow-xl shadow-gray-300/50 hover:shadow-2xl hover:shadow-gray-400/30 transition-shadow duration-300">
-          <div 
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
+    <div className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+
+        {/* Video Carousel */}
+        <div className="relative max-w-6xl mx-auto rounded-3xl shadow-3xl shadow-black/50 overflow-hidden border-4 border-white/20">
+          <div className="relative aspect-video bg-black">
             {videos.map((video, index) => (
               <div
                 key={index}
-                className="w-full flex-shrink-0"
+                className={`absolute inset-0 transition-opacity duration-1000 ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
-                {/* Video Card */}
-                <div className="w-full h-72 sm:h-80 md:h-96 lg:h-[32rem] xl:h-[36rem] bg-black overflow-hidden flex items-center justify-center relative">
-                  <video
-                    ref={(el) => (videoRefs.current[index] = el)}
-                    className="w-full h-full object-cover"
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    onCanPlay={() => handleVideoCanPlay(index)}
-                    onError={(e) => handleVideoError(index, e.target.error)}
-                    onLoadedMetadata={() => console.log(`Video ${index} metadata loaded`)}
-                    style={{ 
-                      // Ensure videos are optimized for autoplay
-                      pointerEvents: 'none'
-                    }}
-                  >
-                    <source src={video} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10">
-                    {/* Show play button only if autoplay is not enabled and this is the current video */}
-                    {!autoplayEnabled && index === currentIndex && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            enableAutoplay();
-                          }}
-                          className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110"
-                        >
-                          <div className="w-0 h-0 border-l-[16px] sm:border-l-[18px] md:border-l-[24px] lg:border-l-[28px] border-l-gray-800 border-t-[10px] sm:border-t-[12px] md:border-t-[15px] lg:border-t-[17px] border-t-transparent border-b-[10px] sm:border-b-[12px] md:border-b-[15px] lg:border-b-[17px] border-b-transparent ml-1"></div>
-                        </button>
-                      </div>
-                    )}
+                <video
+                  ref={el => videoRefs.current[index] = el}
+                  src={video.src}
+                  className="w-full h-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  preload={index === 0 ? "auto" : isMobileDevice ? "none" : "metadata"}
+                  onLoadedData={() => {
+                    if (index === currentSlide) {
+                      setIsVideoLoaded(true);
+                    }
+                  }}
+                  onError={(e) => {
+                    console.log(`Video ${index} error:`, e);
+                  }}
+                  onWaiting={() => {
+                    console.log(`Video ${index} buffering...`);
+                  }}
+                  onCanPlay={() => {
+                    if (index === currentSlide) {
+                      console.log(`Video ${index} can play`);
+                    }
+                  }}
+                  style={{
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden',
+                    transform: 'translateZ(0)',
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
 
-                    {/* Autoplay indicator */}
-                    {autoplayEnabled && index === currentIndex && (
-                      <div className="absolute bottom-3 sm:bottom-4 md:bottom-5 lg:bottom-6 left-3 sm:left-4 md:left-5 lg:left-6 bg-green-500/80 text-white px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded text-xs sm:text-sm font-medium backdrop-blur-sm">
-                        Auto Playing
-                      </div>
-                    )}
+                {/* Loading indicator for mobile */}
+                {isMobileDevice && !isVideoLoaded && index === currentSlide && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
                   </div>
-
-                  {/* Card number badge */}
-                  <div className="absolute top-3 sm:top-4 md:top-5 lg:top-6 right-3 sm:right-4 md:right-5 lg:right-6 bg-black/80 text-white px-2.5 sm:px-3 md:px-4 lg:px-5 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm md:text-base font-bold backdrop-blur-md">
-                    {index + 1} / {videos.length}
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Navigation arrows */}
-        <button
-          onClick={goToPrevious}
-          className="absolute -left-5 sm:-left-6 md:-left-8 lg:-left-10 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white/95 hover:bg-white rounded-full shadow-xl backdrop-blur-sm transition-all duration-200 hover:scale-110 flex items-center justify-center group"
-        >
-          <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <button
-          onClick={goToNext}
-          className="absolute -right-5 sm:-right-6 md:-right-8 lg:-right-10 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white/95 hover:bg-white rounded-full shadow-xl backdrop-blur-sm transition-all duration-200 hover:scale-110 flex items-center justify-center group"
-        >
-          <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        {/* Subtle autoplay hint for first-time visitors */}
-        {!autoplayEnabled && (
-          <div className="absolute top-4 sm:top-5 md:top-6 lg:top-8 left-4 sm:left-5 md:left-6 lg:left-8 bg-blue-500/90 text-white px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-medium animate-pulse backdrop-blur-sm">
-            Tap anywhere to start
-          </div>
-        )}
-      </div>
-
-      {/* Dot indicators */}
-      <div className="flex justify-center items-center gap-2 sm:gap-3 md:gap-4 mt-6 sm:mt-8 md:mt-10 lg:mt-12">
-        {videos.map((_, index) => (
+          {/* Previous Button */}
           <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`transition-all duration-300 rounded-full ${
-              index === currentIndex
-                ? 'w-8 sm:w-10 md:w-12 lg:w-14 h-2.5 sm:h-3 md:h-3.5 lg:h-4 bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg'
-                : 'w-2.5 sm:w-3 md:w-3.5 lg:w-4 h-2.5 sm:h-3 md:h-3.5 lg:h-4 bg-gray-300 hover:bg-gray-400'
-            }`}
-          />
-        ))}
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+            aria-label="Previous video"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" />
+          </button>
+
+          {/* Next Button */}
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+            aria-label="Next video"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" />
+          </button>
+
+          {/* Play/Pause Button */}
+          <button
+            onClick={handlePlayPause}
+            className="absolute top-4 left-4 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+            aria-label={isPlaying ? "Pause video" : "Play video"}
+          >
+            {isPlaying ? (
+              <Pause className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:text-cyan-400 transition-colors duration-300" />
+            ) : (
+              <Play className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:text-cyan-400 transition-colors duration-300 ml-0.5" />
+            )}
+          </button>
+
+          {/* Video indicators */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+            {videos.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${currentSlide === index
+                  ? 'bg-white scale-125'
+                  : 'bg-white/50 hover:bg-white/75'
+                  }`}
+                aria-label={`Go to video ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
