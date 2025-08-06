@@ -126,7 +126,7 @@ const ActionCarAbout = () => {
           </video>
         </div>
         
-        <div className="absolute bottom-0 left-0 right-0 flex-col items-center justify-end px-1 xs:px-2 sm:px-4 lg:px-8 pb-3 xs:pb-4 sm:pb-6 lg:pb-8 z-20 hidden sm:flex">
+        <div className="absolute bottom-0 left-0 right-0 flex-col items-center justify-end px-1 xs:px-2 sm:px-4 lg:px-8 pb-3 xs:pb-4 sm:pb-6 lg:pb-8 z-20 hidden xl:flex">
           <div className="text-center w-full max-w-full overflow-hidden">
             <h1 
               className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 lg:mb-4 leading-tight whitespace-nowrap"
@@ -329,23 +329,6 @@ const ActionCarAbout = () => {
           </div>
         </div>
       </section>
-
-      {/* Custom Styles */}
-      <style jsx global>{`
-        @media (min-width: 475px) {
-          .xs\\:text-4xl {
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-          }
-          .xs\\:text-xl {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-          }
-          .xs\\:min-h-\\[80px\\] {
-            min-height: 80px;
-          }
-        }
-      `}</style>
 
       <Footer />
     </div>
