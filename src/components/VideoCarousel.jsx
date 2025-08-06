@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
 
+// You'll need to import your video files like this:
+// import carwashing1 from '/src/assets/images/carasoul1.MP4';
+// import carwashing2 from '/src/assets/images/carasoul2.MP4';  
+// import carwashing3 from '/src/assets/images/carasoul3.MP4';
+
+// For demo purposes, using placeholder variables
+const carwashing1 = '/src/assets/images/carasoul1.MP4';
+const carwashing2 = '/src/assets/images/carasoul2.MP4';
+const carwashing3 = '/src/assets/images/carasoul3.MP4';
+
 const VideoCardCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -9,38 +19,23 @@ const VideoCardCarousel = () => {
   const videoRefs = useRef([]);
   const intervalRef = useRef(null);
 
-  // Video data with titles and descriptions
+  // CLEANED VIDEO ARRAY - Only original 4 car washing videos
   const videos = [
     {
-      src: '/src/assets/images/carasoul1.MP4',
+      src: carwashing1,
       title: "Premium Detailing",
       description: "Complete exterior detailing"
     },
     {
-      src: '/src/assets/images/carasoul2.MP4',
+      src: carwashing2,
       title: "Complete Exterior and Interior Detailing",
       description: "Professional Detailing services"
     },
     {
-      src: '/src/assets/images/carasoul3.MP4',
+      src: carwashing3,
       title: "Interior Detailing",
       description: "Deep cleaning and protection"
     },
-    {
-      src: '/src/assets/images/carasoul4.MP4',
-      title: "Paint Correction",
-      description: "Restoring your vehicle's shine"
-    },
-    {
-      src: '/src/assets/images/carasoul5.MP4',
-      title: "Ceramic Coating",
-      description: "Long-lasting protection"
-    },
-    {
-      src: '/src/assets/images/carasoul6.MP4',
-      title: "Window Tinting",
-      description: "UV protection and privacy"
-    }
   ];
 
   // Memoize callback functions to prevent unnecessary re-renders
@@ -101,7 +96,7 @@ const VideoCardCarousel = () => {
     }
   }, [currentSlide, isPlaying]);
 
-  // Optimized video loading and playback
+  // Optimized video loading and playback with error handling
   useEffect(() => {
     const playCurrentVideo = async () => {
       try {
@@ -115,6 +110,45 @@ const VideoCardCarousel = () => {
 
         const currentVideo = videoRefs.current[currentSlide];
         if (currentVideo && isPlaying) {
+          // Check if video source exists and is loadable
+          const canPlayVideo = await new Promise((resolve) => {
+            const testVideo = document.createElement('video');
+            testVideo.preload = 'metadata';
+            testVideo.muted = true;
+            
+            const onCanPlay = () => {
+              cleanup();
+              resolve(true);
+            };
+            
+            const onError = () => {
+              cleanup();
+              resolve(false);
+            };
+            
+            const cleanup = () => {
+              testVideo.removeEventListener('canplay', onCanPlay);
+              testVideo.removeEventListener('error', onError);
+              testVideo.src = '';
+            };
+            
+            testVideo.addEventListener('canplay', onCanPlay);
+            testVideo.addEventListener('error', onError);
+            testVideo.src = videos[currentSlide].src;
+            
+            // Timeout fallback
+            setTimeout(() => {
+              cleanup();
+              resolve(false);
+            }, 3000);
+          });
+
+          if (!canPlayVideo) {
+            console.log(`Video ${currentSlide} not available, skipping playback`);
+            setIsVideoLoaded(false);
+            return;
+          }
+
           if (isMobileDevice) {
             currentVideo.load();
             await new Promise(resolve => {
@@ -131,23 +165,18 @@ const VideoCardCarousel = () => {
             await currentVideo.play();
             setIsVideoLoaded(true);
           } catch (playError) {
-            console.log("Video play failed, retrying:", playError);
-            setTimeout(async () => {
-              try {
-                await currentVideo.play();
-              } catch (retryError) {
-                console.log("Video play retry failed:", retryError);
-              }
-            }, 500);
+            console.log("Video play failed:", playError);
+            setIsVideoLoaded(false);
           }
         }
       } catch (error) {
         console.log("Video management error:", error);
+        setIsVideoLoaded(false);
       }
     };
 
     playCurrentVideo();
-  }, [currentSlide, isMobileDevice, isPlaying]);
+  }, [currentSlide, isMobileDevice, isPlaying, videos]);
 
   return (
     <div className="py-8 md:py-12 lg:py-16 xl:py-20 relative overflow-hidden bg-white">
@@ -177,6 +206,7 @@ const VideoCardCarousel = () => {
                   }}
                   onError={(e) => {
                     console.log(`Video ${index} error:`, e);
+                    setIsVideoLoaded(false);
                   }}
                   onWaiting={() => {
                     console.log(`Video ${index} buffering...`);
@@ -194,10 +224,13 @@ const VideoCardCarousel = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
 
-                {/* Loading indicator for mobile */}
-                {isMobileDevice && !isVideoLoaded && index === currentSlide && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
-                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                {/* Loading indicator or error state */}
+                {(!isVideoLoaded || (isMobileDevice && !isVideoLoaded)) && index === currentSlide && (
+                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-white/70 text-sm">Loading video...</p>
+                    </div>
                   </div>
                 )}
               </div>
