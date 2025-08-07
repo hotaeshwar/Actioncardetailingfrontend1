@@ -80,7 +80,7 @@ import carwashing4 from '../assets/images/carwashing4.mp4';
 // Import the new award icon - BIGGER VERSION
 import awardHome from '../assets/images/Awardhome.png';
 
-// Custom Hook for Scroll Animations
+// Custom Hook for Scroll Animations - FIXED to prevent modal auto-opening
 const useScrollAnimation = () => {
   const [visibleElements, setVisibleElements] = useState(new Set());
   const observerRef = useRef(null);
@@ -132,8 +132,8 @@ const AnimatedSection = ({ children, animationId, delay = 0, className = "" }) =
       ref={elementRef}
       data-animate-id={animationId}
       className={`transition-all duration-1000 ease-out ${isVisible
-          ? 'opacity-100 translate-y-0 scale-100'
-          : 'opacity-0 translate-y-8 scale-95'
+        ? 'opacity-100 translate-y-0 scale-100'
+        : 'opacity-0 translate-y-8 scale-95'
         } ${className}`}
       style={{
         transitionDelay: isVisible ? `${delay}ms` : '0ms'
@@ -158,11 +158,12 @@ const Service = ({ setCurrentView }) => {
   const [selectedService, setSelectedService] = useState(null);
   const modalRef = useRef(null);
 
-  // Flip card state and modal state for small screens
+  // Flip card state and modal state for small screens - FIXED
   const [flippedCards, setFlippedCards] = useState(new Set());
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const cardModalRef = useRef(null);
+  const [modalOpenedByScroll, setModalOpenedByScroll] = useState(false); // NEW: Track if modal was opened by scroll
 
   // NEW: Blue card modal state for "Your Vehicle Deserves The Best" section
   const [isBlueCardModalOpen, setIsBlueCardModalOpen] = useState(false);
@@ -518,14 +519,18 @@ const Service = ({ setCurrentView }) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Flip card handler
-  const handleFlipCard = (cardId) => {
+  // FIXED Flip card handler - prevent auto-opening on scroll
+  const handleFlipCard = (cardId, isUserAction = true) => {
+    // Only proceed if it's a user action (click/tap) and not from scroll
+    if (!isUserAction) return;
+
     if (isMobile) {
       const cardInfo = cardData[cardId];
       if (cardInfo) {
         setTimeout(() => {
           setSelectedCard(cardInfo);
           setIsCardModalOpen(true);
+          setModalOpenedByScroll(false); // User initiated
           document.body.style.overflow = 'hidden';
         }, 50);
       }
@@ -542,11 +547,36 @@ const Service = ({ setCurrentView }) => {
     }
   };
 
-  // NEW: Blue card modal handlers
-  const openBlueCardModal = (cardData) => {
-    setSelectedBlueCard(cardData);
-    setIsBlueCardModalOpen(true);
-    document.body.style.overflow = 'hidden';
+  // NEW: Blue card modal handlers with button click effect
+  const openBlueCardModal = (cardData, event) => {
+    // Check if the premium button was clicked
+    const isPremiumButtonClick = event?.target?.closest('.premium-button') !== null;
+
+    if (isPremiumButtonClick) {
+      // Add click effect to the button
+      const button = event.target.closest('.premium-button');
+      if (button) {
+        button.style.transform = 'scale(0.95)';
+        button.style.transition = 'transform 0.1s ease';
+
+        // Reset button after animation
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 150);
+      }
+
+      // Delay modal opening to show button effect
+      setTimeout(() => {
+        setSelectedBlueCard(cardData);
+        setIsBlueCardModalOpen(true);
+        document.body.style.overflow = 'hidden';
+      }, 200);
+    } else {
+      // Regular card click - open modal immediately
+      setSelectedBlueCard(cardData);
+      setIsBlueCardModalOpen(true);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const closeBlueCardModal = () => {
@@ -555,10 +585,11 @@ const Service = ({ setCurrentView }) => {
     document.body.style.overflow = 'auto';
   };
 
-  // Card modal handlers
+  // FIXED Card modal handlers
   const closeCardModal = () => {
     setIsCardModalOpen(false);
     setSelectedCard(null);
+    setModalOpenedByScroll(false);
     document.body.style.overflow = 'auto';
   };
 
@@ -611,9 +642,12 @@ const Service = ({ setCurrentView }) => {
     }
   };
 
-  // Close modals when clicking outside
+  // FIXED Close modals when clicking outside - prevent auto-opening
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Only handle clicks, not scroll events
+      if (event.type !== 'mousedown' && event.type !== 'touchstart') return;
+
       if (modalRef.current && !modalRef.current.contains(event.target) && event.target.classList.contains('modal-backdrop')) {
         closeModal();
       }
@@ -855,41 +889,40 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // UPDATED Blue Card Component with Modal Click Handler and Fixed Height
+  // FIXED Blue Card Component with Perfect iPad Alignment
   const renderBlueCard = (cardData, index = 0) => (
     <AnimatedSection
       animationId={`blue-card-${index}`}
       delay={index * 120}
-      className="group cursor-pointer transform transition-all duration-500 hover:-translate-y-2 hover:scale-105"
+      className="group cursor-pointer w-full"
     >
       <div
-        onClick={() => openBlueCardModal(cardData)}
-        className="relative bg-gradient-to-br from-[#1393c4] via-[#1393c4] to-[#0f7ba8] rounded-2xl sm:rounded-3xl shadow-2xl shadow-[#1393c4]/50 group-hover:shadow-3xl group-hover:shadow-[#1393c4]/60 overflow-hidden w-full aspect-square p-4 sm:p-6 md:p-8 fixed-card-height"
+        onClick={(e) => openBlueCardModal(cardData, e)}
+        className="relative bg-gradient-to-br from-[#1393c4] via-[#1393c4] to-[#0f7ba8] rounded-2xl sm:rounded-3xl shadow-2xl shadow-[#1393c4]/50 group-hover:shadow-3xl group-hover:shadow-[#1393c4]/60 overflow-hidden w-full aspect-square transition-all duration-500"
       >
-
         {/* Decorative Circle - Top Right */}
-        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-white/30 flex items-center justify-center opacity-80">
-          <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white/50 rounded-full"></div>
+        <div className="absolute top-4 right-4 w-8 h-8 rounded-full border-2 border-white/30 flex items-center justify-center opacity-80">
+          <div className="w-3 h-3 bg-white/50 rounded-full"></div>
         </div>
 
         {/* Decorative Small Circles */}
-        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 w-2 h-2 sm:w-3 sm:h-3 bg-white/40 rounded-full opacity-60"></div>
-        <div className="absolute top-1/3 right-6 sm:right-8 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/30 rounded-full opacity-50"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white/25 rounded-full opacity-40"></div>
+        <div className="absolute bottom-6 left-6 w-3 h-3 bg-white/40 rounded-full opacity-60"></div>
+        <div className="absolute top-1/3 right-8 w-2 h-2 bg-white/30 rounded-full opacity-50"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-1.5 h-1.5 bg-white/25 rounded-full opacity-40"></div>
 
         {/* Shine Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"></div>
 
-        {/* Content Container - Fixed Height Layout */}
-        <div className="relative z-10 flex flex-col h-full justify-between text-center fixed-content-layout">
+        {/* Content Container - FIXED STANDARDIZED LAYOUT */}
+        <div className="relative z-10 flex flex-col h-full justify-center text-center p-6">
 
-          {/* Top Section - Icon */}
-          <div className="flex-shrink-0 flex justify-center pt-2 sm:pt-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/20 border border-white/30 group-hover:scale-110 transition-all duration-500">
+          {/* Icon Section - STANDARDIZED */}
+          <div className="flex-shrink-0 flex justify-center pt-2">
+            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/20 border border-white/30 group-hover:scale-110 transition-all duration-500">
               <img
                 src={cardData.image}
                 alt={cardData.title}
-                className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 object-contain group-hover:scale-110 transition-transform duration-300"
+                className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
                 style={{ filter: 'brightness(0) invert(1)' }}
                 onError={(e) => {
                   console.log(`Failed to load image: ${cardData.image}`);
@@ -899,22 +932,17 @@ const Service = ({ setCurrentView }) => {
             </div>
           </div>
 
-          {/* Middle Section - Title (Fixed Height) */}
-          <div className="flex-grow flex flex-col justify-center px-1 sm:px-2 card-title-section">
-            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white mb-1 sm:mb-2 drop-shadow-lg leading-tight group-hover:scale-105 transition-transform duration-300 card-title-text">
+          {/* Title Section - STANDARDIZED */}
+          <div className="flex-grow flex flex-col justify-center py-4">
+            <h3 className="text-lg font-bold text-white mb-2 drop-shadow-lg leading-tight group-hover:scale-105 transition-transform duration-300">
               {cardData.title}
             </h3>
-
-            {/* Description - Visible on larger screens with fixed lines */}
-            <p className="hidden lg:block text-xs text-white/85 leading-relaxed drop-shadow-md group-hover:text-white/95 transition-colors duration-300 px-1 card-description-text">
-              {cardData.description.length > 60 ? `${cardData.description.substring(0, 60)}...` : cardData.description}
-            </p>
           </div>
 
-          {/* Bottom Section - Tag */}
-          <div className="flex-shrink-0 pb-2 sm:pb-3">
+          {/* Tag Section - STANDARDIZED */}
+          <div className="flex-shrink-0 pb-2">
             <div className="scale-90 group-hover:scale-100 transition-all duration-500 opacity-80 group-hover:opacity-100">
-              <span className="inline-block px-2 py-1 sm:px-3 sm:py-1.5 bg-white/25 backdrop-blur-sm rounded-full text-white text-xs sm:text-sm border border-white/30 shadow-lg font-medium">
+              <span className="inline-block px-4 py-2 bg-white/25 backdrop-blur-sm rounded-full text-white text-sm border border-white/30 shadow-lg font-medium">
                 {cardData.tag}
               </span>
             </div>
@@ -927,48 +955,42 @@ const Service = ({ setCurrentView }) => {
     </AnimatedSection>
   );
 
-  const renderSparkleCard = (id, icon, title, description, index = 0) => (
+  // FIXED Blue Cards Grid Section - Perfect 3-2 Layout for All iPads
+  const BlueCardsSection = () => (
     <AnimatedSection
-      animationId={`sparkle-card-${index}`}
-      delay={index * 150}
-      className="group min-h-[16rem] sm:min-h-[18rem] md:min-h-[20rem] lg:min-h-[24rem] xl:min-h-[26rem] relative perspective-1000"
+      animationId="blue-cards-grid"
+      className="pb-8 md:pb-12 lg:pb-16 xl:pb-20 relative overflow-hidden bg-white -mt-4 blue-cards-container"
     >
-      <div className="relative w-full h-full transform-gpu transition-all duration-700 group-hover:rotate-y-12 group-hover:-translate-y-2 sm:group-hover:-translate-y-4 group-hover:scale-105">
-        <div className="absolute w-full h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl shadow-sky-900/50 group-hover:shadow-3xl group-hover:shadow-sky-500/50">
-          <div className="w-full h-full bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-sky-500/30 via-transparent to-sky-600/30"></div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Custom Grid Layout - FIXED 3-2 Pattern */}
+        <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
 
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-2 h-2 sm:w-3 sm:h-3 bg-white/80 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-300 delay-100"></div>
-            <div className="absolute bottom-4 left-3 sm:bottom-8 sm:left-6 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-sky-300/80 rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-300 delay-300"></div>
-            <div className="absolute top-1/3 right-4 sm:right-8 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-sky-200/80 rounded-full opacity-40 group-hover:opacity-100 transition-opacity duration-300 delay-500"></div>
-            <div className="absolute bottom-1/3 left-2 sm:left-4 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white/70 rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-300 delay-700"></div>
-
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"></div>
-
-            <div className="absolute inset-0 rounded-xl sm:rounded-2xl border border-white/30 sm:border-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-3 xs:p-4 sm:p-6 md:p-8 z-10">
-              <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-2 xs:mb-3 sm:mb-4 md:mb-6 shadow-xl shadow-black/30 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-white/30">
-                <FontAwesomeIcon icon={icon} className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white group-hover:scale-110 transition-transform duration-700" />
+          {/* Top Row - 3 Cards - PERFECTLY ALIGNED */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center place-items-center ipad-mini-top-row">
+            {blueCardData.slice(0, 3).map((card, index) => (
+              <div key={card.id || `blue-card-top-${index}`} className="w-full max-w-xs lg:max-w-sm ipad-mini-card">
+                {renderBlueCard(card, index)}
               </div>
+            ))}
+          </div>
 
-              <h3 className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-cyan-400 mb-2 xs:mb-3 sm:mb-4 group-hover:scale-105 transition-transform duration-500 text-center drop-shadow-lg leading-tight px-1">{title}</h3>
-
-              <p className="text-xs xs:text-sm sm:text-base text-cyan-300/90 text-center max-w-xs px-1 xs:px-2 md:px-4 leading-relaxed group-hover:opacity-100 transition-all duration-500 drop-shadow-md">{description}</p>
-
-              <div className="mt-2 xs:mt-3 sm:mt-4 md:mt-6 scale-0 group-hover:scale-100 transition-all duration-500 opacity-0 group-hover:opacity-100">
-                <span className="inline-block px-2 py-1 xs:px-3 xs:py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs sm:text-sm border border-white/30 shadow-lg">
-                  Premium Service
-                </span>
+          {/* Bottom Row - 2 Cards Centered - PERFECTLY ALIGNED */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center place-items-center max-w-2xl mx-auto ipad-mini-bottom-row">
+            {blueCardData.slice(3, 5).map((card, index) => (
+              <div key={card.id || `blue-card-bottom-${index}`} className="w-full max-w-xs lg:max-w-sm ipad-mini-card">
+                {renderBlueCard(card, index + 3)}
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
     </AnimatedSection>
   );
 
-  // FIXED Complete Flip Card Component - CONSISTENT BACK SIDE LAYOUT
+  // COMPLETE IPAD BLUE CARDS COMPONENT WITH 3-2 LAYOUT FIX
+  // Replace your existing renderBlueCard function and CSS styles with this
+
+  // COMPLETE FLIP CARD COMPONENT - CONSISTENT BACK SIDE LAYOUT with BIGGER IMAGES
   const renderFlipCard = (id, frontTitle, iconOrComponent, backTitle, backContent, index = 0) => {
     const isFlipped = flippedCards.has(id);
     const icon = typeof iconOrComponent === 'object' && !React.isValidElement(iconOrComponent) ? iconOrComponent : faThumbsUp;
@@ -987,12 +1009,12 @@ const Service = ({ setCurrentView }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleFlipCard(id);
+            handleFlipCard(id, true); // Pass true to indicate user action
           }}
           onTouchStart={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleFlipCard(id);
+            handleFlipCard(id, true); // Pass true to indicate user action
           }}
           className={`flip-card-inner relative w-full h-full transition-transform duration-700 transform-gpu ${isFlipped ? 'mobile-flip-card-flipped' : ''} ${!isMobile ? 'group-hover:rotate-y-180' : ''}`}
           style={{
@@ -1022,16 +1044,16 @@ const Service = ({ setCurrentView }) => {
                 </div>
 
                 <div className="mb-4 sm:mb-6">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/30 border border-white/30 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-xl shadow-black/30 border border-white/30 group-hover:scale-110 transition-all duration-300">
                     {cardData[id]?.customImage ? (
                       <img
                         src={cardData[id].customImage}
                         alt={frontTitle}
                         className={`object-contain ${id === 'card7' ?
-                            // Award Winning card - BIGGER SIZE using awardHome
-                            'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40' :
-                            // Other cards - Regular size
-                            'w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20'
+                          // Award Winning card - EVEN BIGGER SIZE
+                          'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32' :
+                          // Other cards - BIGGER SIZE
+                          'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20'
                           }`}
                         onError={(e) => {
                           console.log(`${frontTitle} image failed to load, using fallback icon`);
@@ -1042,14 +1064,14 @@ const Service = ({ setCurrentView }) => {
                     ) : (
                       <FontAwesomeIcon
                         icon={icon}
-                        className="text-2xl sm:text-3xl md:text-4xl text-white"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white"
                       />
                     )}
                     {/* Fallback FontAwesome icon - hidden by default when images are present */}
                     {cardData[id]?.customImage && (
                       <FontAwesomeIcon
                         icon={icon}
-                        className="text-2xl sm:text-3xl md:text-4xl text-white"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white"
                         style={{ display: 'none' }}
                       />
                     )}
@@ -1144,7 +1166,7 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // Service Modal Component - Fixed version
+  // Service Modal Component - FIXED VERSION
   const ServiceModal = () => {
     if (!isModalOpen || !selectedService) return null;
 
@@ -1244,23 +1266,24 @@ const Service = ({ setCurrentView }) => {
                         />
                       )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+            {/* REMOVED TEXT OVERLAY - NO MORE TEXT ON VIDEO */}
 
+            {/* BIGGER CLOSE BUTTON - FIXED FUNCTIONALITY */}
             <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal();
+              }}
+              className="absolute top-4 right-4 w-14 h-14 sm:w-16 sm:h-16 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-50"
               aria-label="Close modal"
             >
-              <FontAwesomeIcon icon={faTimes} className="text-white text-lg sm:text-xl" />
+              <FontAwesomeIcon icon={faTimes} className="text-white text-xl sm:text-2xl" />
             </button>
-
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{selectedService.title}</h2>
-              <p className="text-base sm:text-lg opacity-90 drop-shadow-md">{selectedService.shortDescription}</p>
-            </div>
           </div>
 
           <div className="p-6 sm:p-8 max-h-64 sm:max-h-80 md:max-h-96 overflow-y-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-cyan-500">{selectedService.title}</h2>
             <p className="text-base sm:text-lg text-cyan-400 mb-6 sm:mb-8 leading-relaxed">{selectedService.fullDescription}</p>
 
             <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-cyan-500 flex items-center">
@@ -1303,7 +1326,7 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // FIXED Card Modal Component for ACTION CAR DETAILING cards - NO LOGO, CONSISTENT HEIGHT
+  // FIXED Card Modal Component for ACTION CAR DETAILING cards - BIGGER CLOSE BUTTON
   const CardModal = () => {
     if (!isCardModalOpen || !selectedCard) return null;
 
@@ -1321,15 +1344,15 @@ const Service = ({ setCurrentView }) => {
           }}
         >
           <div className="relative p-6 text-center border-b border-white/20">
+            {/* BIGGER CLOSE BUTTON */}
             <button
               onClick={closeCardModal}
-              className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg"
+              className="absolute top-3 right-3 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110"
               aria-label="Close modal"
             >
-              <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
+              <FontAwesomeIcon icon={faTimes} className="text-white text-xl" />
             </button>
 
-            {/* REMOVED LOGO SECTION - Just show title without icon */}
             <h2 className="text-xl font-bold text-cyan-400 mb-2 drop-shadow-lg pt-4">{selectedCard.backTitle}</h2>
           </div>
 
@@ -1375,7 +1398,7 @@ const Service = ({ setCurrentView }) => {
     );
   };
 
-  // NEW: Blue Card Modal Component for "Your Vehicle Deserves The Best" section
+  // NEW: Blue Card Modal Component for "Your Vehicle Deserves The Best" section - BIGGER CLOSE BUTTON
   const BlueCardModal = () => {
     if (!isBlueCardModalOpen || !selectedBlueCard) return null;
 
@@ -1392,12 +1415,13 @@ const Service = ({ setCurrentView }) => {
           }}
         >
           <div className="relative p-6 text-center border-b border-white/20">
+            {/* BIGGER CLOSE BUTTON */}
             <button
               onClick={closeBlueCardModal}
-              className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg"
+              className="absolute top-3 right-3 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110"
               aria-label="Close modal"
             >
-              <FontAwesomeIcon icon={faTimes} className="text-white text-sm" />
+              <FontAwesomeIcon icon={faTimes} className="text-white text-xl" />
             </button>
 
             {/* Icon and Title */}
@@ -1495,6 +1519,7 @@ const Service = ({ setCurrentView }) => {
 
       {/* Section Divider */}
       <SectionDivider animationId="divider-1" />
+
       {/* FREE PAINT EVALUATION Banner */}
       <AnimatedSection
         animationId="paint-evaluation"
@@ -1601,38 +1626,38 @@ const Service = ({ setCurrentView }) => {
               ))}
             </div>
 
-            {/* Previous Button */}
+            {/* Previous Button - NO BORDER, VERY SMALL */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 shadow-md hover:scale-110 z-20 group"
               aria-label="Previous video"
             >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
-            {/* Next Button */}
+            {/* Next Button - NO BORDER, VERY SMALL */}
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 shadow-md hover:scale-110 z-20 group"
               aria-label="Next video"
             >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
 
-            {/* Play/Pause Button */}
+            {/* Play/Pause Button - NO BORDER, VERY SMALL */}
             <button
               onClick={handlePlayPause}
-              className="absolute top-4 left-4 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 border border-white/30 shadow-lg hover:scale-110 z-20 group"
+              className="absolute top-4 left-4 w-5 h-5 sm:w-6 sm:h-6 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 shadow-md hover:scale-110 z-20 group"
               aria-label={isPlaying ? "Pause video" : "Play video"}
             >
               {isPlaying ? (
-                <FontAwesomeIcon icon={faPause} className="text-white text-sm sm:text-base group-hover:text-cyan-400 transition-colors duration-300" />
+                <FontAwesomeIcon icon={faPause} className="text-white text-xs group-hover:text-cyan-400 transition-colors duration-300" style={{ fontSize: '8px' }} />
               ) : (
-                <FontAwesomeIcon icon={faPlay} className="text-white text-sm sm:text-base group-hover:text-cyan-400 transition-colors duration-300 ml-0.5" />
+                <FontAwesomeIcon icon={faPlay} className="text-white text-xs group-hover:text-cyan-400 transition-colors duration-300 ml-0.5" style={{ fontSize: '8px' }} />
               )}
             </button>
 
@@ -1686,36 +1711,9 @@ const Service = ({ setCurrentView }) => {
         </div>
       </AnimatedSection>
 
-      {/* Blue Cards Grid - Custom 3-2 Layout */}
-      <AnimatedSection
-        animationId="blue-cards-grid"
-        className="pb-8 md:pb-12 lg:pb-16 xl:pb-20 relative overflow-hidden bg-white -mt-4 blue-cards-container"
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Custom Grid Layout - 3 on top, 2 on bottom */}
-          <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
+      {/* Blue Cards Grid - Custom 3-2 Layout - FIXED IPAD MINI LAYOUT */}
+      <BlueCardsSection />
 
-            {/* Top Row - 3 Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center">
-              {blueCardData.slice(0, 3).map((card, index) => (
-                <div key={card.id || `blue-card-top-${index}`} className="w-full max-w-xs lg:max-w-sm">
-                  {renderBlueCard(card, index)}
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom Row - 2 Cards Centered */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-items-center max-w-2xl mx-auto">
-              {blueCardData.slice(3, 5).map((card, index) => (
-                <div key={card.id || `blue-card-bottom-${index}`} className="w-full max-w-xs lg:max-w-sm">
-                  {renderBlueCard(card, index + 3)}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </AnimatedSection>
-      
       {/* Section Divider */}
       <SectionDivider animationId="divider-4" />
 
@@ -1757,7 +1755,7 @@ const Service = ({ setCurrentView }) => {
       {/* NEW Blue Card Modal for "Your Vehicle Deserves The Best" section */}
       <BlueCardModal />
 
-      {/* Custom Styles */}
+      {/* FIXED IPAD MINI CSS - Complete Styles */}
       <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
@@ -1952,43 +1950,224 @@ const Service = ({ setCurrentView }) => {
           max-height: 60vh !important;
           overflow-y: auto !important;
         }
+
+        /* CRITICAL IPAD MINI FIX - Blue Cards 3-2 Layout */
         
-        /* FIXED BLUE CARD HEIGHT STYLES */
-        .fixed-card-height {
+        /* Base Container */
+        .blue-cards-container {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* Standardized Card Content */
+        .blue-cards-container .aspect-square {
+          aspect-ratio: 1 / 1 !important;
+          width: 100% !important;
           height: auto !important;
-          min-height: 280px !important;
-          max-height: 350px !important;
         }
-        
-        .fixed-content-layout {
-          height: 100% !important;
-          min-height: 280px !important;
+
+        /* IPAD MINI SPECIFIC TARGETING - FORCE 3-2 LAYOUT */
+        @media (min-width: 768px) and (max-width: 834px) {
+          
+          /* Container-level targeting with higher specificity */
+          .blue-cards-container .ipad-mini-top-row {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 1rem !important;
+            justify-items: center !important;
+            place-items: center !important;
+            width: 100% !important;
+          }
+          
+          .blue-cards-container .ipad-mini-bottom-row {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1.5rem !important;
+            justify-items: center !important;
+            place-items: center !important;
+            max-width: 420px !important;
+            margin: 0 auto !important;
+            width: 100% !important;
+          }
+          
+          /* Individual card sizing for iPad Mini */
+          .blue-cards-container .ipad-mini-card {
+            max-width: 180px !important;
+            width: 100% !important;
+          }
+          
+          /* Card content adjustments for iPad Mini */
+          .blue-cards-container .w-16.h-16 {
+            width: 3.5rem !important;
+            height: 3.5rem !important;
+          }
+          
+          .blue-cards-container .w-10.h-10 {
+            width: 2.25rem !important;
+            height: 2.25rem !important;
+          }
+          
+          /* Text sizing for iPad Mini */
+          .blue-cards-container h3 {
+            font-size: 1rem !important;
+            line-height: 1.2 !important;
+            margin-bottom: 0.5rem !important;
+            padding: 0 0.25rem !important;
+          }
+          
+          .blue-cards-container span {
+            font-size: 0.75rem !important;
+            padding: 0.375rem 0.75rem !important;
+          }
+          
+          /* Card padding adjustments for iPad Mini */
+          .blue-cards-container .p-6 {
+            padding: 1rem !important;
+          }
+          
+          /* Container gap for iPad Mini */
+          .blue-cards-container .flex.flex-col.gap-6 {
+            gap: 1.5rem !important;
+          }
         }
-        
-        .card-title-section {
-          flex-grow: 1 !important;
-          min-height: 60px !important;
-          max-height: 120px !important;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: center !important;
+
+        /* High Specificity Override for iPad Mini - Ultimate Fix */
+        @media only screen and (min-width: 768px) and (max-width: 834px) {
+          
+          body .blue-cards-container .ipad-mini-top-row,
+          html .blue-cards-container .ipad-mini-top-row {
+            grid-template-columns: repeat(3, 1fr) !important;
+            display: grid !important;
+          }
+          
+          body .blue-cards-container .ipad-mini-bottom-row,
+          html .blue-cards-container .ipad-mini-bottom-row {
+            grid-template-columns: repeat(2, 1fr) !important;
+            display: grid !important;
+            max-width: 420px !important;
+            margin: 0 auto !important;
+          }
+
+          /* Ensure cards don't break layout */
+          .blue-cards-container .ipad-mini-card > div {
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 1 / 1 !important;
+          }
         }
-        
-        .card-title-text {
-          line-height: 1.2 !important;
-          word-wrap: break-word !important;
-          hyphens: auto !important;
+
+        /* iPad Mini Portrait Device Specific Targeting - Backup Fix */
+        @media only screen 
+          and (min-device-width: 768px) 
+          and (max-device-width: 834px) 
+          and (-webkit-min-device-pixel-ratio: 1) 
+          and (orientation: portrait) {
+          
+          .blue-cards-container .ipad-mini-top-row {
+            grid-template-columns: repeat(3, minmax(160px, 180px)) !important;
+            justify-content: center !important;
+          }
+          
+          .blue-cards-container .ipad-mini-bottom-row {
+            grid-template-columns: repeat(2, minmax(180px, 200px)) !important;
+            justify-content: center !important;
+          }
         }
-        
-        .card-description-text {
-          line-height: 1.3 !important;
-          display: -webkit-box !important;
-          -webkit-line-clamp: 2 !important;
-          -webkit-box-orient: vertical !important;
+
+        /* iPad Air (835px - 1024px) */
+        @media (min-width: 835px) and (max-width: 1024px) {
+          .blue-cards-container .max-w-xs {
+            max-width: 240px !important;
+          }
+          
+          .blue-cards-container .lg\\:max-w-sm {
+            max-width: 260px !important;
+          }
+          
+          .blue-cards-container .grid {
+            gap: 2rem !important;
+          }
+          
+          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
+            max-width: 560px !important;
+          }
+        }
+
+        /* iPad Pro (1025px+) */
+        @media (min-width: 1025px) {
+          .blue-cards-container .max-w-xs {
+            max-width: 280px !important;
+          }
+          
+          .blue-cards-container .lg\\:max-w-sm {
+            max-width: 300px !important;
+          }
+          
+          .blue-cards-container .grid {
+            gap: 2.5rem !important;
+          }
+          
+          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
+            max-width: 640px !important;
+          }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+          .blue-cards-container .grid {
+            gap: 1rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 300px !important;
+            width: 100% !important;
+          }
+        }
+
+        /* Small Tablets (641px - 767px) */
+        @media (min-width: 641px) and (max-width: 767px) {
+          .blue-cards-container .grid {
+            gap: 1.5rem !important;
+          }
+          
+          .blue-cards-container .max-w-xs {
+            max-width: 300px !important;
+          }
+          
+          /* Top row - 3 cards in 2 columns on small tablets */
+          .blue-cards-container .grid.lg\\:grid-cols-3 {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          
+          .blue-cards-container .grid.lg\\:grid-cols-3 > :nth-child(3) {
+            grid-column: span 2 !important;
+            justify-self: center !important;
+          }
+        }
+
+        /* Additional Fallback with Higher Specificity */
+        .blue-cards-container .grid {
+          display: grid !important;
+        }
+
+        /* Force Layout Consistency */
+        .blue-cards-container * {
+          box-sizing: border-box !important;
+        }
+
+        /* Prevent Overflow Issues */
+        .blue-cards-container .overflow-hidden {
           overflow: hidden !important;
-          text-overflow: ellipsis !important;
         }
-        
+
+        /* Ensure Proper Z-Index Stacking */
+        .blue-cards-container .relative.z-10 {
+          z-index: 10 !important;
+          position: relative !important;
+        }
+
+        /* DESKTOP SPECIFIC FIX FOR FLIP CARDS */
         @media (max-width: 1399px) {
           .flip-card-container {
             height: 20rem !important;
@@ -2015,57 +2194,7 @@ const Service = ({ setCurrentView }) => {
             display: none !important;
           }
         }
-        
-        @media (min-width: 1024px) and (max-width: 1399px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-            gap: 1.5rem !important;
-          }
-        }
-        
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 1.25rem !important;
-          }
-        }
-        
-        @media (min-width: 480px) and (max-width: 767px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 1rem !important;
-          }
-        }
-        
-        @media (max-width: 479px) {
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
-            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-            gap: 1rem !important;
-          }
-          
-          .flip-card-container {
-            height: 18rem !important;
-            min-height: 18rem !important;
-            max-height: 18rem !important;
-          }
-          
-          .flip-card-inner,
-          .flip-card-front {
-            height: 18rem !important;
-            min-height: 18rem !important;
-            max-height: 18rem !important;
-          }
-          
-          .fixed-card-height {
-            min-height: 250px !important;
-            max-height: 300px !important;
-          }
-          
-          .fixed-content-layout {
-            min-height: 250px !important;
-          }
-        }
-        
+
         @media (min-width: 1400px) {
           .flip-card-inner {
             transform-style: preserve-3d !important;
@@ -2083,43 +2212,95 @@ const Service = ({ setCurrentView }) => {
           .group:hover .flip-card-inner {
             transform: rotateY(180deg);
           }
-          
-          .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-            gap: 2rem !important;
-          }
+        }
+
+        /* ENHANCED BUTTON STATES */
+        button:active {
+          transform: scale(0.95);
         }
         
-        .mobile-flip-card-flipped {
-          transform: none !important;
+        button:disabled:active {
+          transform: none;
+        }
+
+        /* LOADING STATES */
+        .loading-spinner {
+          animation: spin 1s linear infinite;
         }
         
-        @media (max-width: 1399px) {
-          .group:hover [class*="rotate"] {
-            transform: none !important;
-          }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        
-        .mobile-flip-card-front,
-        .mobile-flip-card-back {
-          position: relative !important;
-          min-height: inherit !important;
-        }
-        
-        @media (max-width: 1399px) {
-          [style*="transform-style: preserve-3d"] {
-            transform-style: flat !important;
-          }
-          
-          .mobile-flip-card-flipped {
-            transform: none !important;
+
+        /* HIGH CONTRAST MODE SUPPORT */
+        @media (prefers-contrast: high) {
+          .flip-card-container,
+          .blue-cards-container .group {
+            border: 2px solid;
           }
           
-          .group:hover [class*="rotate-y-180"] {
-            transform: none !important;
+          .modal-close-btn {
+            border: 2px solid;
           }
         }
 
+        /* PRINT STYLES */
+        @media print {
+          .modal-backdrop,
+          .card-modal-backdrop,
+          .blue-card-modal-backdrop {
+            display: none !important;
+          }
+          
+          .flip-card-back {
+            display: block !important;
+            position: static !important;
+            transform: none !important;
+          }
+          
+          .flip-card-front {
+            display: none !important;
+          }
+        }
+
+        /* ACCESSIBILITY IMPROVEMENTS */
+        .flip-card-container:focus-within {
+          outline: 2px solid #0ea5e9;
+          outline-offset: 4px;
+          border-radius: 1rem;
+        }
+        
+        .blue-cards-container .group:focus-within {
+          outline: 2px solid #ffffff;
+          outline-offset: 4px;
+          border-radius: 1rem;
+        }
+
+        /* IMPROVED MODAL BACKDROP */
+        .modal-backdrop,
+        .card-modal-backdrop,
+        .blue-card-modal-backdrop {
+          backdrop-filter: blur(8px) saturate(180%);
+          -webkit-backdrop-filter: blur(8px) saturate(180%);
+        }
+
+        /* CARD HOVER STATES FOR BETTER UX */
+        .flip-card-container:hover {
+          z-index: 10;
+        }
+        
+        .blue-cards-container .group:hover {
+          z-index: 10;
+        }
+
+        /* SMOOTH SCROLLING FOR MODALS */
+        .modal-content-scroll {
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Performance optimizations for all elements */
         .mirror-card,
         .mirror-element,
         .mirror-shine,
@@ -2151,6 +2332,18 @@ const Service = ({ setCurrentView }) => {
           }
         }
 
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+          .group:hover .mirror-shine {
+            transform: translateX(200%) skewX(12deg);
+          }
+          
+          .cursor-pointer.touch-manipulation {
+            min-height: 44px;
+            min-width: 44px;
+          }
+        }
+
         .cursor-pointer:focus-visible {
           outline: 2px solid #0ea5e9;
           outline-offset: 2px;
@@ -2169,17 +2362,6 @@ const Service = ({ setCurrentView }) => {
         
         * {
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        @media (hover: none) and (pointer: coarse) {
-          .group:hover .mirror-shine {
-            transform: translateX(200%) skewX(12deg);
-          }
-          
-          .cursor-pointer.touch-manipulation {
-            min-height: 44px;
-            min-width: 44px;
-          }
         }
 
         /* Scroll Animation Styles */
@@ -2261,363 +2443,6 @@ const Service = ({ setCurrentView }) => {
             padding-top: clamp(2rem, 6vw, 4rem);
             padding-bottom: clamp(2rem, 6vw, 4rem);
           }
-        }
-        
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-          .scroll-animate,
-          .transition-smooth,
-          .transition-smooth-slow {
-            transition: none !important;
-            animation: none !important;
-          }
-          
-          .scroll-animate {
-            opacity: 1 !important;
-            transform: none !important;
-          }
-        }
-
-        /* Square Blue Cards Responsive Design - 3-2 Layout with Vivid Azure */
-        
-        /* Custom aspect-square utility for perfect squares */
-        .aspect-square {
-          aspect-ratio: 1 / 1;
-        }
-        
-        /* Add blue-cards-container class for targeting */
-        .blue-cards-container {
-          width: 100%;
-        }
-        
-        /* Mobile Phones (320px - 479px) */
-        @media (max-width: 479px) {
-          .blue-cards-container .grid {
-            gap: 1rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 280px !important;
-            width: 100% !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 280px !important;
-            max-height: 280px !important;
-          }
-          
-          .blue-cards-container h3 {
-            font-size: 0.875rem !important;
-            line-height: 1.2 !important;
-          }
-          
-          .blue-cards-container .text-xs {
-            font-size: 0.75rem !important;
-          }
-        }
-        
-        /* Small Mobile (480px - 640px) */
-        @media (min-width: 480px) and (max-width: 640px) {
-          .blue-cards-container .grid {
-            gap: 1.25rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 300px !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 300px !important;
-            max-height: 300px !important;
-          }
-        }
-        
-        /* Small Tablets (641px - 768px) */
-        @media (min-width: 641px) and (max-width: 768px) {
-          .blue-cards-container .grid {
-            gap: 1.5rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 280px !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 280px !important;
-            max-height: 280px !important;
-          }
-          
-          /* Top row - 3 cards in 2 columns on small tablets */
-          .blue-cards-container .grid.lg\\:grid-cols-3 {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          
-          .blue-cards-container .grid.lg\\:grid-cols-3 > :nth-child(3) {
-            grid-column: span 2 !important;
-            justify-self: center !important;
-          }
-        }
-        
-        /* iPad Mini Portrait (769px - 834px) */
-        @media (min-width: 769px) and (max-width: 834px) {
-          .blue-cards-container .grid {
-            gap: 1.5rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 220px !important;
-          }
-          
-          .blue-cards-container .lg\\:max-w-sm {
-            max-width: 240px !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 220px !important;
-            max-height: 240px !important;
-          }
-          
-          .blue-cards-container h3 {
-            font-size: 0.875rem !important;
-          }
-        }
-        
-        /* iPad Air/Pro Portrait (835px - 1024px) */
-        @media (min-width: 835px) and (max-width: 1024px) {
-          .blue-cards-container .grid {
-            gap: 2rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 240px !important;
-          }
-          
-          .blue-cards-container .lg\\:max-w-sm {
-            max-width: 260px !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 240px !important;
-            max-height: 260px !important;
-          }
-        }
-        
-        /* iPad Pro Landscape & Desktop (1025px+) */
-        @media (min-width: 1025px) {
-          .blue-cards-container .grid {
-            gap: 2.5rem !important;
-          }
-          
-          .blue-cards-container .max-w-xs {
-            max-width: 280px !important;
-          }
-          
-          .blue-cards-container .lg\\:max-w-sm {
-            max-width: 320px !important;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 280px !important;
-            max-height: 320px !important;
-          }
-        }
-
-        /* Specific iPad Device Targeting for Square Cards */
-        @media only screen 
-          and (min-device-width: 768px) 
-          and (max-device-width: 834px) 
-          and (-webkit-min-device-pixel-ratio: 1) {
-          /* iPad Mini */
-          .blue-cards-container .grid.lg\\:grid-cols-3 {
-            grid-template-columns: repeat(3, minmax(200px, 1fr)) !important;
-            justify-content: center;
-          }
-          
-          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
-            grid-template-columns: repeat(2, minmax(200px, 240px)) !important;
-            justify-content: center;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 200px !important;
-            max-height: 220px !important;
-          }
-        }
-
-        @media only screen 
-          and (min-device-width: 768px) 
-          and (max-device-width: 1024px) 
-          and (-webkit-min-device-pixel-ratio: 2) {
-          /* iPad Air/Pro */
-          .blue-cards-container .grid.lg\\:grid-cols-3 {
-            grid-template-columns: repeat(3, minmax(220px, 1fr)) !important;
-            justify-content: center;
-          }
-          
-          .blue-cards-container .grid.sm\\:grid-cols-2:last-child {
-            grid-template-columns: repeat(2, minmax(220px, 260px)) !important;
-            justify-content: center;
-          }
-          
-          .blue-cards-container .aspect-square {
-            min-height: 220px !important;
-            max-height: 240px !important;
-          }
-        }
-
-        /* Enhanced Card Content for Square Layout */
-        .blue-cards-container .aspect-square .flex.flex-col {
-          height: 100% !important;
-        }
-        
-        .blue-cards-container h3 {
-          word-wrap: break-word;
-          hyphens: auto;
-          overflow-wrap: break-word;
-          text-align: center;
-        }
-        
-        .blue-cards-container p {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.3;
-        }
-
-        /* Vivid Azure Color Enhancements */
-        .bg-vivid-azure {
-          background: linear-gradient(135deg, #1393c4 0%, #0f7ba8 100%);
-        }
-        
-        .shadow-vivid-azure {
-          box-shadow: 0 25px 50px -12px rgba(19, 147, 196, 0.5);
-        }
-        
-        .shadow-vivid-azure-hover {
-          box-shadow: 0 35px 60px -12px rgba(19, 147, 196, 0.6);
-        }
-
-        /* Performance optimizations for square cards */
-        .blue-cards-container * {
-          will-change: transform, opacity;
-          backface-visibility: hidden;
-          transform: translateZ(0);
-        }
-
-        /* Animation improvements */
-        .blue-cards-container .group:hover {
-          transform: translateY(-8px) scale(1.05);
-        }
-        
-        @media (max-width: 768px) {
-          .blue-cards-container .group:hover {
-            transform: translateY(-4px) scale(1.02);
-          }
-        }
-
-        /* Ensure proper spacing and centering */
-        .blue-cards-container .flex.flex-col {
-          align-items: center;
-          width: 100%;
-        }
-        
-        .blue-cards-container .grid {
-          width: 100%;
-          place-items: center;
-        }
-
-        /* Text visibility improvements */
-        .blue-cards-container .text-white {
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .blue-cards-container .drop-shadow-lg {
-          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
-        }
-
-        /* Enhanced Card Content Responsiveness */
-        .blue-cards-container .flex-grow {
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: center !important;
-          min-height: 0 !important;
-        }
-        
-        .blue-cards-container h3 {
-          line-height: 1.2 !important;
-          margin-bottom: 0.75rem !important;
-          word-wrap: break-word !important;
-          hyphens: auto !important;
-        }
-        
-        .blue-cards-container p {
-          line-height: 1.4 !important;
-          display: -webkit-box !important;
-          -webkit-line-clamp: 3 !important;
-          -webkit-box-orient: vertical !important;
-          overflow: hidden !important;
-          text-overflow: ellipsis !important;
-        }
-
-        /* Show description on larger tablets and desktop */
-        @media (min-width: 769px) {
-          .blue-cards-container p.hidden {
-            display: block !important;
-          }
-        }
-
-        /* Video Navigation Button Styles */
-        .video-nav-btn {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-        
-        .video-nav-btn:hover {
-          transform: scale(1.1);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .video-nav-btn:active {
-          transform: scale(0.95);
-        }
-
-        /* Enhanced touch targets for mobile */
-        @media (max-width: 768px) {
-          .video-nav-btn {
-            width: 3rem !important;
-            height: 3rem !important;
-            min-width: 44px;
-            min-height: 44px;
-          }
-          
-          .video-nav-btn svg {
-            width: 1.25rem !important;
-            height: 1.25rem !important;
-          }
-        }
-
-        /* Video indicator enhancements */
-        .video-indicators button {
-          min-width: 44px;
-          min-height: 44px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .video-indicators button:hover {
-          transform: scale(1.2);
-        }
-        
-        .video-indicators button:focus-visible {
-          outline: 2px solid #0ea5e9;
-          outline-offset: 2px;
-          border-radius: 50%;
         }
       `}</style>
     </>
