@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { CheckCircle, AlertTriangle, Droplets, Flame, Shield, Bug, Car, X, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import Footer from '../components/Footer';
+import insuranceLogo from '../assets/images/insurance.png';
+import heroBackground from '../assets/images/car6.jpg';
 
 const RemediationClaim = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -260,19 +262,19 @@ const RemediationClaim = () => {
       <section 
         className="relative h-screen flex items-center justify-center overflow-hidden"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2126&q=80')`,
+          backgroundImage: `url(${heroBackground})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+
         <div className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
           {/* Insurance Logo matching image 2 design */}
           <div className="mb-8 flex justify-center">
             <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#1393c4] rounded-full flex items-center justify-center shadow-2xl border-4 border-white">
               <img 
-                src="./src/assets/images/insurance.png" 
+                src={insuranceLogo} 
                 alt="Insurance Logo" 
                 className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
               />
