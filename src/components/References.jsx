@@ -6,7 +6,7 @@ import refMurray from '../assets/images/ref_murray1.jpg.png';
 import refRightlook from '../assets/images/ref_rightlook.jpg.png';
 import refWaverley from '../assets/images/ref_waverley.jpg.png';
 import refBestbuy from '../assets/images/ref_bestbuy-1.jpg.png';
-import Footer from '../components/Footer';
+
 
 const CarDetailingReference = () => {
   const [visibleElements, setVisibleElements] = useState(new Set());
@@ -275,13 +275,7 @@ const CarDetailingReference = () => {
         </div>
 
       </div>
-
-      {/* External Footer Component */}
-      <div className="scroll-animate">
-        <Footer />
-      </div>
-
-      {/* Bottom right corner text */}
+  {/* Bottom right corner text */}
       <div className="absolute bottom-4 right-4 text-xs opacity-70 z-10 scroll-animate scroll-animate-fade" style={{color: '#1393c4'}}>
         Delta Auto Service
       </div>
