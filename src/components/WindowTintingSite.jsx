@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import Quote from '../components/Quote';
 // Import Window Tint Video
 import windowTintVideo from '../assets/images/window tint (1).mp4';
-
+import ContactForm from '../components/ContactForm';
 const WindowTintingSite = () => {
   const [selectedTint, setSelectedTint] = useState(35);
   const [selectedFilm, setSelectedFilm] = useState('prime-cs');
@@ -14,7 +14,7 @@ const WindowTintingSite = () => {
   useEffect(() => {
     // Optimized single video handling similar to Hero component
     const video = videoRef.current;
-    
+
     if (video) {
       // Essential settings only
       video.muted = true;
@@ -22,24 +22,24 @@ const WindowTintingSite = () => {
       video.volume = 0;
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
-      
+
       // Minimal preload for faster start
       video.preload = 'none';
-      
+
       // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
       const adjustVideoFit = () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
+
         // Mobile screens (below 768px) - Force 16:10 aspect ratio
         if (width < 768) {
-          const idealHeight = width / (16/10); // Calculate 16:10 height
-          
+          const idealHeight = width / (16 / 10); // Calculate 16:10 height
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
           video.style.objectPosition = 'center center';
-          
+
           // Center the video container vertically in viewport
           video.style.top = '50%';
           video.style.left = '0';
@@ -48,8 +48,8 @@ const WindowTintingSite = () => {
         }
         // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
         else if (width >= 768 && width < 1024) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -61,8 +61,8 @@ const WindowTintingSite = () => {
         }
         // iPad Pro: 1024x1366 - 16:10 cinematic 
         else if (width >= 1024 && width < 1280) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -84,27 +84,27 @@ const WindowTintingSite = () => {
           video.style.position = 'absolute';
         }
       };
-      
+
       // Apply initial adjustments
       adjustVideoFit();
-      
+
       // Reapply on orientation change
       window.addEventListener('resize', adjustVideoFit);
       window.addEventListener('orientationchange', adjustVideoFit);
-      
+
       // Simple autoplay with minimal error handling
       const playVideo = async () => {
         try {
           await video.play();
         } catch (error) {
           // Single fallback attempt
-          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+          document.addEventListener('click', () => video.play().catch(() => { }), { once: true });
         }
       };
-      
+
       // Start playing immediately
       playVideo();
-      
+
       // Cleanup
       return () => {
         window.removeEventListener('resize', adjustVideoFit);
@@ -117,12 +117,12 @@ const WindowTintingSite = () => {
   useEffect(() => {
     const cards = document.querySelectorAll('.animate-card');
     const animatedCards = new Set();
-    
+
     const handleScroll = () => {
       cards.forEach((card, index) => {
         const rect = card.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        
+
         if (rect.top < windowHeight * 0.85 && !animatedCards.has(card)) {
           animatedCards.add(card);
           setTimeout(() => {
@@ -134,12 +134,12 @@ const WindowTintingSite = () => {
 
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // Check on initial load
-    
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const tintOptions = [5, 20, 35, 50, 70];
-  
+
   const filmTypes = {
     'prime-cs': {
       name: 'Prime Color Stable',
@@ -163,7 +163,7 @@ const WindowTintingSite = () => {
       name: 'NANO-CERAMIC (IR)',
       subtitle: 'Max UV & Heat Rejection Tint',
       description: 'There\'s no better place to start than the top. If you\'re looking for maximum performance & protection, look no further than nano-ceramic PRIME XR. Ceramic tint is designed to provide the most heat rejection possible, while reflecting harmful UV rays to keep you safe. This window tint will your vehicle cooler & more comfortable wherever you\'re headed.',
-      features: ['Nano Ceramic Technology - Blocks 85% infrared heat', 'UV Ray Protection - SPF 1000 protection from 99% harmful UV Rays'],
+      features: ['Nano Ceramic Technology - Blocks 88% infrared heat', 'UV Ray Protection - SPF 1000 protection from 99% harmful UV Rays'],
       grade: 'BEST',
       logo: 'https://actioncardetailing.ca/wp-content/uploads/2021/05/image17.png',
       carImage: 'https://actioncardetailing.ca/wp-content/uploads/2021/05/image3.jpg.webp'
@@ -244,7 +244,7 @@ const WindowTintingSite = () => {
           color: #333;
         }
       `}</style>
-      
+
       {/* Hero Section with Video */}
       <section className="bg-white">
         {/* Hero Video - with responsive container similar to Hero component */}
@@ -291,26 +291,26 @@ const WindowTintingSite = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Hero Content - positioned below video */}
         <div className="bg-white py-16 sm:py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6" style={{color: '#1393c4'}}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6" style={{ color: '#1393c4' }}>
               WINDOW TINTING
             </h1>
-            <p className="text-xl md:text-2xl mb-8" style={{color: '#1393c4'}}>
+            <p className="text-xl md:text-2xl mb-8" style={{ color: '#1393c4' }}>
               Say Goodbye to...
             </p>
-            <div className="text-lg md:text-xl font-semibold mb-8" style={{color: '#1393c4'}}>
+            <div className="text-lg md:text-xl font-semibold mb-8" style={{ color: '#1393c4' }}>
               SUN GLARE | SKIN RADIATION | UV DAMAGE | FADED INTERIORS
             </div>
-            <p className="text-xl md:text-2xl mb-12" style={{color: '#1393c4'}}>
+            <p className="text-xl md:text-2xl mb-12" style={{ color: '#1393c4' }}>
               Before It Happens
             </p>
-            <button 
+            <button
               onClick={() => setShowQuote(true)}
               className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:opacity-90"
-              style={{backgroundColor: '#1393c4'}}
+              style={{ backgroundColor: '#1393c4' }}
             >
               Get Quote Now
             </button>
@@ -323,30 +323,30 @@ const WindowTintingSite = () => {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{color: '#1393c4'}}>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{ color: '#1393c4' }}>
                 WHY WINDOW TINTING?
               </h2>
               <div className="mb-8">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/action1.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/action1.jpg.webp"
                   alt="Tint Levels"
                   className="w-full rounded-lg shadow-xl"
-                  style={{height: '500px', objectFit: 'cover'}}
+                  style={{ height: '500px', objectFit: 'cover' }}
                 />
               </div>
             </div>
             <div className="space-y-8">
-              <div className="p-6 rounded-xl" style={{backgroundColor: '#f0f9ff', borderColor: '#1393c4', borderWidth: '1px'}}>
-                <h3 className="text-2xl font-bold mb-4" style={{color: '#1393c4'}}>
+              <div className="p-6 rounded-xl" style={{ backgroundColor: '#f0f9ff', borderColor: '#1393c4', borderWidth: '1px' }}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: '#1393c4' }}>
                   Experience a New Level of Heat Rejection, UV Protection, & Good Looks
                 </h3>
-                <p className="leading-relaxed mb-6" style={{color: '#1393c4'}}>
+                <p className="leading-relaxed mb-6" style={{ color: '#1393c4' }}>
                   We recommend Ceramic window film for maximum heat rejection, glare reduction, and comfort. Gone are the days of needing dark windows to provide relief; even our ultra-light films provide extreme heat reduction, so choose your shade based on your style. All films provide +99% UV protection & Lifetime Warranty. Protect delicate interiors and your loved ones!!!
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{ backgroundColor: '#1393c4' }}>
                   <div className="flex items-center mb-3">
                     <Sun className="text-white mr-3" size={24} />
                     <h4 className="font-bold text-white">Superior Heat Rejection</h4>
@@ -354,7 +354,7 @@ const WindowTintingSite = () => {
                   <p className="text-white">Our multilayer nano-ceramic particle technology blocks up to 98% of the infrared heat</p>
                 </div>
 
-                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{ backgroundColor: '#1393c4' }}>
                   <div className="flex items-center mb-3">
                     <Shield className="text-white mr-3" size={24} />
                     <h4 className="font-bold text-white">UV Ray Protection</h4>
@@ -362,7 +362,7 @@ const WindowTintingSite = () => {
                   <p className="text-white">XPEL PRIME XR PLUS provides SPF 1,000 protection that effectively blocks over 99% of harmful UV rays</p>
                 </div>
 
-                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{ backgroundColor: '#1393c4' }}>
                   <div className="flex items-center mb-3">
                     <Zap className="text-white mr-3" size={24} />
                     <h4 className="font-bold text-white">Greater Clarity</h4>
@@ -370,7 +370,7 @@ const WindowTintingSite = () => {
                   <p className="text-white">Advanced nano construction in XPEL PRIMETM XR provides superior performance without reducing outbound visibility</p>
                 </div>
 
-                <div className="animate-card p-6 rounded-xl text-white" style={{backgroundColor: '#1393c4'}}>
+                <div className="animate-card p-6 rounded-xl text-white" style={{ backgroundColor: '#1393c4' }}>
                   <div className="flex items-center mb-3">
                     <Wifi className="text-white mr-3" size={24} />
                     <h4 className="font-bold text-white">Crystal Clear Signal</h4>
@@ -384,32 +384,32 @@ const WindowTintingSite = () => {
       </section>
 
       {/* Window Tint as Easy as 1,2,3 */}
-      <section className="py-20" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)'}}>
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
-            Window Tint as Easy as <span style={{color: '#1393c4', opacity: 0.8}}>1, 2, 3</span>:
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16" style={{ color: '#1393c4' }}>
+            Window Tint as Easy as <span style={{ color: '#1393c4', opacity: 0.8 }}>1, 2, 3</span>:
           </h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="animate-card text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>1</div>
-              <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Film</h3>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>1</div>
+              <h3 className="text-xl font-bold mb-4" style={{ color: '#1393c4' }}>Select the Film</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/filmselection-1.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/filmselection-1.jpg.webp"
                   alt="Film Selection"
                   className="w-full rounded mb-4"
                 />
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{backgroundColor: '#1393c4', opacity: 0.7}}>
+                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{ backgroundColor: '#1393c4', opacity: 0.7 }}>
                     <span>PRIME CS</span>
                     <span>GOOD</span>
                   </div>
-                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{backgroundColor: '#1393c4', opacity: 0.85}}>
+                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{ backgroundColor: '#1393c4', opacity: 0.85 }}>
                     <span>PRIME HP</span>
                     <span>BETTER</span>
                   </div>
-                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{backgroundColor: '#1393c4'}}>
+                  <div className="flex items-center justify-between text-white px-3 py-2 rounded" style={{ backgroundColor: '#1393c4' }}>
                     <span>PRIME XR</span>
                     <span>BEST</span>
                   </div>
@@ -418,11 +418,11 @@ const WindowTintingSite = () => {
             </div>
 
             <div className="animate-card text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>2</div>
-              <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Coverage</h3>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>2</div>
+              <h3 className="text-xl font-bold mb-4" style={{ color: '#1393c4' }}>Select the Coverage</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/action1.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/action1.jpg.webp"
                   alt="Coverage Selection"
                   className="w-full rounded mb-4"
                 />
@@ -430,11 +430,10 @@ const WindowTintingSite = () => {
                   {tintOptions.map((tint) => (
                     <button
                       key={tint}
-                      className={`px-3 py-2 rounded ${
-                        selectedTint === tint 
-                          ? 'text-white' 
-                          : 'hover:opacity-80'
-                      }`}
+                      className={`px-3 py-2 rounded ${selectedTint === tint
+                        ? 'text-white'
+                        : 'hover:opacity-80'
+                        }`}
                       style={{
                         backgroundColor: selectedTint === tint ? '#1393c4' : '#f0f9ff',
                         color: selectedTint === tint ? 'white' : '#1393c4'
@@ -449,15 +448,15 @@ const WindowTintingSite = () => {
             </div>
 
             <div className="animate-card text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>3</div>
-              <h3 className="text-xl font-bold mb-4" style={{color: '#1393c4'}}>Select the Shade</h3>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>3</div>
+              <h3 className="text-xl font-bold mb-4" style={{ color: '#1393c4' }}>Select the Shade</h3>
               <div className="bg-white p-6 rounded-lg shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/step3.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/step3.jpg.webp"
                   alt="Shade Selection"
                   className="w-full rounded mb-4"
                 />
-                <div className="flex justify-center space-x-2 text-sm" style={{color: '#1393c4'}}>
+                <div className="flex justify-center space-x-2 text-sm" style={{ color: '#1393c4' }}>
                   <span>5%</span>
                   <span>20%</span>
                   <span>35%</span>
@@ -472,19 +471,19 @@ const WindowTintingSite = () => {
           {/* Video Section */}
           <div className="text-center">
             <div className="relative inline-block max-w-2xl mx-auto">
-              <img 
-                src="https://actioncardetailing.ca/wp-content/uploads/2021/05/step3.jpg.webp" 
+              <img
+                src="https://actioncardetailing.ca/wp-content/uploads/2021/05/step3.jpg.webp"
                 alt="XPEL PRIME Window Film Video"
                 className="w-full rounded-lg shadow-2xl"
               />
-              <a 
-                href="https://youtu.be/RPLIOjXU_oQ" 
-                target="_blank" 
+              <a
+                href="https://youtu.be/RPLIOjXU_oQ"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="absolute inset-0 flex items-center justify-center rounded-lg hover:opacity-75 transition-all duration-300"
-                style={{backgroundColor: 'rgba(19, 147, 196, 0.5)'}}
+                style={{ backgroundColor: 'rgba(19, 147, 196, 0.5)' }}
               >
-                <div className="w-20 h-20 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300" style={{backgroundColor: '#1393c4'}}>
+                <div className="w-20 h-20 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300" style={{ backgroundColor: '#1393c4' }}>
                   <Play className="text-white ml-1" size={32} />
                 </div>
               </a>
@@ -496,60 +495,60 @@ const WindowTintingSite = () => {
       {/* What Film Section - Film Cards Only */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{color: '#1393c4'}}>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4" style={{ color: '#1393c4' }}>
             1. WHAT FILM?
           </h2>
-          <p className="text-center max-w-4xl mx-auto mb-16 leading-relaxed" style={{color: '#1393c4'}}>
+          <p className="text-center max-w-4xl mx-auto mb-16 leading-relaxed" style={{ color: '#1393c4' }}>
             Many shops offering window tint will quote you pricing based on their lowest grade film just to get you in the door. Once there, they educate you on films and upsell you after you realize the kind of film you desire and the number of windows you really need (eg Cal legal), thus you end up spending much more then you originally thought.
           </p>
-          <p className="text-center max-w-4xl mx-auto mb-16 font-semibold" style={{color: '#1393c4'}}>
+          <p className="text-center max-w-4xl mx-auto mb-16 font-semibold" style={{ color: '#1393c4' }}>
             We are straight forward with all of our Pricing and Options as we treat our clients as we like to be treated; no surprises! The Color Stable, Ceramic or Nano Ceramic choice simply comes down to budget as both films lines we carry are quality, lifetime warrantied products.
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {Object.entries(filmTypes).map(([key, film], index) => (
-              <div key={key} className={`animate-card rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${selectedFilm === key ? 'ring-4' : ''}`} 
-                   style={{
-                     background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
-                     ringColor: selectedFilm === key ? '#1393c4' : 'transparent'
-                   }}>
+              <div key={key} className={`animate-card rounded-xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${selectedFilm === key ? 'ring-4' : ''}`}
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+                  ringColor: selectedFilm === key ? '#1393c4' : 'transparent'
+                }}>
                 <div className="p-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold mb-2" style={{color: '#1393c4'}}>{film.name}</h3>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: '#1393c4' }}>{film.name}</h3>
                     <div className="mb-4">
-                      <img 
-                        src={film.logo} 
+                      <img
+                        src={film.logo}
                         alt={`${film.name} Logo`}
                         className="h-16 mx-auto mb-2"
                       />
                     </div>
-                    <p className="font-semibold" style={{color: '#1393c4'}}>{film.subtitle}</p>
+                    <p className="font-semibold" style={{ color: '#1393c4' }}>{film.subtitle}</p>
                   </div>
 
                   <div className="mb-6">
-                    <img 
-                      src="https://actioncardetailing.ca/wp-content/uploads/2021/05/xpel.png.webp" 
+                    <img
+                      src="https://actioncardetailing.ca/wp-content/uploads/2021/05/xpel.png.webp"
                       alt="XPEL Logo"
                       className="w-24 mx-auto mb-4"
                     />
-                    <img 
-                      src={film.carImage} 
+                    <img
+                      src={film.carImage}
                       alt={`${film.name} Car`}
                       className="w-full rounded-lg"
                     />
                   </div>
 
-                  <div className={`text-center text-4xl font-black mb-6`} style={{color: '#1393c4'}}>
+                  <div className={`text-center text-4xl font-black mb-6`} style={{ color: '#1393c4' }}>
                     {film.grade}
                   </div>
 
-                  <p className="text-sm leading-relaxed mb-6" style={{color: '#1393c4'}}>{film.description}</p>
+                  <p className="text-sm leading-relaxed mb-6" style={{ color: '#1393c4' }}>{film.description}</p>
 
                   <div className="space-y-3">
                     {film.features.map((feature, index) => (
                       <div key={index} className="flex items-start space-x-2">
-                        <CheckCircle className="mt-0.5 flex-shrink-0" style={{color: '#1393c4'}} size={16} />
-                        <span className="text-sm" style={{color: '#1393c4'}}>{feature}</span>
+                        <CheckCircle className="mt-0.5 flex-shrink-0" style={{ color: '#1393c4' }} size={16} />
+                        <span className="text-sm" style={{ color: '#1393c4' }}>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -561,28 +560,28 @@ const WindowTintingSite = () => {
       </section>
 
       {/* What Coverage Section */}
-      <section className="py-20" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)'}}>
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8" style={{color: '#1393c4'}}>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8" style={{ color: '#1393c4' }}>
             2. WHAT COVERAGE?
           </h2>
-          <p className="text-center max-w-4xl mx-auto mb-16 leading-relaxed" style={{color: '#1393c4'}}>
+          <p className="text-center max-w-4xl mx-auto mb-16 leading-relaxed" style={{ color: '#1393c4' }}>
             For maximum UV Protection, heat rejection, and comfort we recommend doing as much as the budget allows. A chain is only as strong as its weakest link and for highest levels of interior protection consider all glass. Many think that factory "privacy" glass is a protective tint but unfortunately it is shaded for looks only and does not help with UV or Heat.
           </p>
 
           <div className="grid md:grid-cols-2 gap-12">
             <div className="animate-card text-center">
-              <h3 className="text-2xl font-bold mb-8" style={{color: '#1393c4'}}>TWO FRONTS ONLY:</h3>
+              <h3 className="text-2xl font-bold mb-8" style={{ color: '#1393c4' }}>TWO FRONTS ONLY:</h3>
               <div className="bg-white p-8 rounded-xl shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/side.png.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/side.png.webp"
                   alt="Two Fronts Only"
                   className="w-full max-w-md mx-auto mb-6"
                 />
-                <button 
+                <button
                   onClick={() => setShowQuote(true)}
                   className="text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90"
-                  style={{backgroundColor: '#1393c4'}}
+                  style={{ backgroundColor: '#1393c4' }}
                 >
                   Get A Quote
                 </button>
@@ -590,17 +589,17 @@ const WindowTintingSite = () => {
             </div>
 
             <div className="animate-card text-center">
-              <h3 className="text-2xl font-bold mb-8" style={{color: '#1393c4'}}>SIDES AND BACK:</h3>
+              <h3 className="text-2xl font-bold mb-8" style={{ color: '#1393c4' }}>SIDES AND BACK:</h3>
               <div className="bg-white p-8 rounded-xl shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/side_back.png.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/side_back.png.webp"
                   alt="Sides and Back"
                   className="w-full max-w-md mx-auto mb-6"
                 />
-                <button 
+                <button
                   onClick={() => setShowQuote(true)}
                   className="text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90"
-                  style={{backgroundColor: '#1393c4'}}
+                  style={{ backgroundColor: '#1393c4' }}
                 >
                   Get A Quote
                 </button>
@@ -610,84 +609,79 @@ const WindowTintingSite = () => {
         </div>
       </section>
 
-      {/* Choose Your Shade Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8" style={{color: '#1393c4'}}>
-            3. Choose Your Shade
-          </h2>
-          <p className="text-center max-w-4xl mx-auto mb-16 leading-relaxed" style={{color: '#1393c4'}}>
-            This is where your style and personal preference gets to take control. We can stay consistent all around or mix the shades up a bit. Tint shades are so subjective as everyone has different taste so we take the time to determine what is best for you. There are local laws that dictate what the state allows on front doors and windshield so please ask and we will be happy to educate you. CLICK on the box below to experience the interactive Xpel Simulator
-          </p>
-
-          <div className="text-center mb-12">
-            <div className="p-8 rounded-xl shadow-xl inline-block" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)'}}>
-              <img 
-                src="https://actioncardetailing.ca/wp-content/uploads/2021/05/image10.png.webp" 
-                alt="Window Tint Simulator"
-                className="w-full max-w-4xl mx-auto rounded-lg"
-                style={{height: '600px', objectFit: 'cover'}}
-              />
-            </div>
-          </div>
+      <div className="text-center mb-12">
+        <div className="p-8 rounded-xl shadow-xl w-full" style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)' }}>
+          <a
+            href="https://www.xpel.com/automotive-window-tint-simulator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:opacity-80 transition-opacity duration-300"
+          >
+            <img
+              src="https://actioncardetailing.ca/wp-content/uploads/2021/05/image10.png.webp"
+              alt="Window Tint Simulator - Click to access XPEL interactive simulator"
+              className="w-full max-w-4xl mx-auto rounded-lg cursor-pointer"
+              style={{ height: '400px', objectFit: 'contain' }}
+            />
+          </a>
         </div>
-      </section>
+      </div>
 
       {/* Our Tinting Process */}
-      <section className="py-20" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)'}}>
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16" style={{ color: '#1393c4' }}>
             OUR TINTING PROCESS
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="animate-card text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>
                 1
               </div>
-              <h3 className="text-2xl font-bold mb-6" style={{color: '#1393c4'}}>WE PREP</h3>
+              <h3 className="text-2xl font-bold mb-6" style={{ color: '#1393c4' }}>WE PREP</h3>
               <div className="bg-white rounded-xl overflow-hidden mb-6 shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/prep.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/prep.jpg.webp"
                   alt="We Prep"
                   className="w-full h-48 object-cover"
                 />
               </div>
-              <p className="leading-relaxed" style={{color: '#1393c4'}}>
+              <p className="leading-relaxed" style={{ color: '#1393c4' }}>
                 Using Xpels DAP software and the best patterns available we computer cut all film for a precise fit. We then thermally shrink each panel onto the glass and shave all edges for a smooth install.
               </p>
             </div>
 
             <div className="animate-card text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>
                 2
               </div>
-              <h3 className="text-2xl font-bold mb-6" style={{color: '#1393c4'}}>WE PLOT</h3>
+              <h3 className="text-2xl font-bold mb-6" style={{ color: '#1393c4' }}>WE PLOT</h3>
               <div className="bg-white rounded-xl overflow-hidden mb-6 shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/plot.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/plot.jpg.webp"
                   alt="We Plot"
                   className="w-full h-48 object-cover"
                 />
               </div>
-              <p className="leading-relaxed" style={{color: '#1393c4'}}>
+              <p className="leading-relaxed" style={{ color: '#1393c4' }}>
                 Using Xpels DAP software and the best patterns available we computer cut all film for a precise fit. We then thermally shrink each panel onto the glass and shave all edges for a smooth install.
               </p>
             </div>
 
             <div className="animate-card text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)'}}>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0ea5e9 100%)' }}>
                 3
               </div>
-              <h3 className="text-2xl font-bold mb-6" style={{color: '#1393c4'}}>WE EXECUTE</h3>
+              <h3 className="text-2xl font-bold mb-6" style={{ color: '#1393c4' }}>WE EXECUTE</h3>
               <div className="bg-white rounded-xl overflow-hidden mb-6 shadow-lg">
-                <img 
-                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/execute.jpg.webp" 
+                <img
+                  src="https://actioncardetailing.ca/wp-content/uploads/2021/05/execute.jpg.webp"
                   alt="We Execute"
                   className="w-full h-48 object-cover"
                 />
               </div>
-              <p className="leading-relaxed" style={{color: '#1393c4'}}>
+              <p className="leading-relaxed" style={{ color: '#1393c4' }}>
                 We don't take short cuts and aren't a "volume" shop that rushes the jobs in and out to remain profitable; Rather one that goes the extra mile to help you choose the right film, make the install as dust-free as possible, and return the vehicle cleaner than we received it. We want you to find value in how we treat both you and your vehicle, ultimately earning your repeat and referral business.
               </p>
             </div>
@@ -698,20 +692,20 @@ const WindowTintingSite = () => {
       {/* Call to Action */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{color: '#1393c4'}}>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={{ color: '#1393c4' }}>
             Ready to Transform Your Vehicle?
           </h2>
-          <p className="text-xl mb-12 max-w-2xl mx-auto" style={{color: '#1393c4'}}>
+          <p className="text-xl mb-12 max-w-2xl mx-auto" style={{ color: '#1393c4' }}>
             Experience the ultimate in UV protection, heat rejection, and style with our professional window tinting services.
           </p>
         </div>
       </section>
-
+    <ContactForm />
       {/* Quote Modal */}
       {showQuote && (
         <div className="modal-overlay" onClick={() => setShowQuote(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button 
+            <button
               className="modal-close"
               onClick={() => setShowQuote(false)}
               aria-label="Close modal"

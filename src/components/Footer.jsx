@@ -2,6 +2,8 @@ import React from 'react';
 import { FaFacebook, FaInstagram } from 'react-icons/fa';
 import actionCarLogo from '../assets/images/action car logo.png';
 import awardLogo from '../assets/images/award png.png';
+// Import the new award icon - BIGGER VERSION
+import awardHome from '../assets/images/Awardhome.png';
 
 const Footer = () => {
   return (
@@ -67,10 +69,16 @@ const Footer = () => {
               <p className="mb-1 sm:mb-2 text-sm sm:text-base">Sunday | Closed</p>
             </div>
             
-            {/* Logo with white background */}
-            <div className="flex flex-col items-center justify-center mt-2 sm:mt-0">
+            {/* Logo and Award section with white background */}
+            <div className="flex flex-col items-center justify-center mt-2 sm:mt-0 space-y-4">
+              {/* Logo */}
               <div className="bg-white rounded-xl p-4 shadow-lg">
                 <img src={actionCarLogo} alt="Action Car Detailing" className="w-36 sm:w-40 md:w-48" />
+              </div>
+              
+              {/* Award Badge */}
+              <div className="bg-white rounded-xl p-3 shadow-lg">
+                <img src={awardHome} alt="Award Recognition" className="w-20 sm:w-24 md:w-28" />
               </div>
             </div>
           </div>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, CheckCircle, Car, Clock, Calendar, ShoppingCart, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import Footer from '../components/Footer';
+import Booking from '../components/Booking';
+import ContactForm from '../components/ContactForm';
 import googlePng from '../assets/images/google png.png';
 import autoDetailingVideo from '../assets/images/Auto Detailing final.mp4';
 
@@ -649,7 +651,7 @@ const BookingModal = ({ isOpen, onClose }) => {
 
 const CarDetailingWebsite = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(Array(5).fill(false));
+  const [isVisible, setIsVisible] = useState(Array(7).fill(false)); // Updated to 7 for Booking + ContactForm sections
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -834,7 +836,7 @@ const CarDetailingWebsite = () => {
 
               <div className="bg-sky-50 p-4 rounded-lg border-l-4 border-sky-600">
                 <p className="text-base text-sky-400 font-medium">
-                  Action car Detailing offers a very thorough, deep cleaning of interior and exterior. We specialize in paint correction, ceramic coating and complete interior reconditioning. In Business for 14 years. Better Business Bureau accredited with an A+ rating. We are MPI accredited.
+                  Action car Detailing offers a very thorough, deep cleaning of interior and exterior. We specialize in Auto Detailing, Ceramic Coating, Window Tinting, Paint Protection Film (PPF), and Paintless Dent Removal.
                 </p>
               </div>
             </div>
@@ -896,7 +898,7 @@ const CarDetailingWebsite = () => {
                 <h3 className="text-xl font-bold">Step 2:</h3>
               </div>
               <p className="leading-relaxed text-sm">
-                Turbo brush vacuuming removes deeply embedded sand, dirt, hair and animal dander.
+                Turbo brush vacuuming removes deeply embedded sand, dirt and pet hair..
               </p>
             </div>
 
@@ -1051,6 +1053,18 @@ const CarDetailingWebsite = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Booking Section - Added above ContactForm */}
+      <section className={`animate-section py-12 sm:py-16 bg-white transition-all duration-1000 ease-in-out ${isVisible[5] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <Booking />
+      </section>
+
+      {/* ContactForm Section - Added below Booking section */}
+      <section className={`animate-section py-12 sm:py-16 bg-sky-50 transition-all duration-1000 ease-in-out ${isVisible[6] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className="[&>*]:before:hidden [&>*]:after:hidden">
+          <ContactForm />
         </div>
       </section>
 

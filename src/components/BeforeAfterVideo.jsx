@@ -1,6 +1,7 @@
 import React from 'react';
 import beforeAfterVideo from '../assets/images/Before AND After.mp4';
 import Footer from '../components/Footer';
+import ContactForm from '../components/ContactForm';
 
 const BeforeAfterVideo = () => {
   return (
@@ -22,7 +23,8 @@ const BeforeAfterVideo = () => {
           </video>
         </div>
       </div>
-      
+        {/* Contact Form Section */}
+      <ContactForm />
       <Footer />
     </div>
   );

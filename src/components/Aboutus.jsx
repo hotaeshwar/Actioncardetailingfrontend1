@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Car, Medal, ShieldCheck, Wrench, MapPin } from 'lucide-react';
 import aboutUsVideo from '../assets/images/about us banner.mp4';
 import Footer from '../components/Footer';
-
+import ContactForm from '../components/ContactForm';
 const ActionCarAbout = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -22,13 +22,13 @@ const ActionCarAbout = () => {
       description: "Complete detailing transformation"
     },
     {
-      title: "Silver Package Service", 
+      title: "Silver Package Service",
       videoId: "wfvj2vqgrsw",
       description: "Mid-tier detailing excellence"
     },
     {
       title: "Diamond Package Service",
-      videoId: "fXgGjLL6pYs", 
+      videoId: "fXgGjLL6pYs",
       description: "Premium detailing experience"
     },
     {
@@ -40,33 +40,37 @@ const ActionCarAbout = () => {
 
   const services = [
     'Auto Detailing',
-    'Ceramic Coating', 
+    'Ceramic Coating',
     'Paint Protection Film (PPF)',
-    'Window Tinting'
+    'Window Tinting',
+    'Paintless Dent Removal',
+    'Paint Protection Film (PPF)',
+    'Paintless Dent Removal',
+
   ];
 
   const commitments = [
     'Quality work',
     'Premium products',
-    '100% customer satisfaction', 
+    '100% customer satisfaction',
     'Expert craftsmanship'
   ];
 
   const trustReasons = [
     'XPEL Certified Dealer & Installer',
     'Fully Insured, Professional Studio',
-    'Trusted by hundreds of happy customers',
+    'Trusted by thousands of happy customers',
     'Clean, modern facility with precision-focused care'
   ];
 
   useEffect(() => {
     const typewriterEffect = () => {
       const currentPhrase = phrases[currentPhraseIndex];
-      
+
       if (isDeleting) {
         setDisplayedText(currentPhrase.substring(0, currentCharIndex - 1));
         setCurrentCharIndex(prev => prev - 1);
-        
+
         if (currentCharIndex === 0) {
           setIsDeleting(false);
           setCurrentPhraseIndex(prev => (prev + 1) % phrases.length);
@@ -74,7 +78,7 @@ const ActionCarAbout = () => {
       } else {
         setDisplayedText(currentPhrase.substring(0, currentCharIndex + 1));
         setCurrentCharIndex(prev => prev + 1);
-        
+
         if (currentCharIndex === currentPhrase.length) {
           setTimeout(() => setIsDeleting(true), 1500);
         }
@@ -83,7 +87,7 @@ const ActionCarAbout = () => {
 
     const typingSpeed = isDeleting ? 50 : 100;
     const timer = setTimeout(typewriterEffect, typingSpeed);
-    
+
     return () => clearTimeout(timer);
   }, [currentCharIndex, currentPhraseIndex, isDeleting, phrases]);
 
@@ -95,7 +99,7 @@ const ActionCarAbout = () => {
           entry.target.classList.add('opacity-100', 'translate-y-0');
         }
       });
-    }, { 
+    }, {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
     });
@@ -108,43 +112,45 @@ const ActionCarAbout = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Video Section - Force White Background and Light Blue Text */}
-      <div className="relative h-screen w-full overflow-hidden" style={{ backgroundColor: 'white' }}>
-        <div className="absolute inset-0" style={{ backgroundColor: 'white' }}>
-          <video 
-            autoPlay 
-            loop 
-            muted 
+      {/* Hero Video Section - Simple and Working */}
+      <div className="relative w-full overflow-hidden bg-white mobile-video-hero">
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
             playsInline
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-auto min-w-full object-cover"
-            style={{
-              aspectRatio: '16/9'
-            }}
+            className="w-full h-full object-cover"
           >
             <source src={aboutUsVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 flex-col items-center justify-end px-1 xs:px-2 sm:px-4 lg:px-8 pb-3 xs:pb-4 sm:pb-6 lg:pb-8 z-20 hidden sm:flex">
+
+        {/* Overlay gradient for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+
+        {/* Desktop Text Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 flex-col items-center justify-end px-4 lg:px-8 pb-6 lg:pb-8 z-20 hidden xl:flex">
           <div className="text-center w-full max-w-full overflow-hidden">
-            <h1 
-              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 lg:mb-4 leading-tight whitespace-nowrap"
-              style={{ color: 'white' }}
-            >
+            <h1 className="text-4xl xl:text-5xl font-bold mb-4 leading-tight text-white drop-shadow-2xl">
               ABOUT US
             </h1>
-            
-            <div className="min-h-[40px] lg:min-h-[50px] flex items-center justify-center overflow-hidden">
-              <p 
-                className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-medium whitespace-nowrap"
-                style={{ color: '#0ea5e9' }}
-              >
+
+            <div className="min-h-[50px] flex items-center justify-center overflow-hidden">
+              <p className="text-2xl xl:text-3xl font-medium text-sky-400 drop-shadow-lg">
                 {displayedText}
-                <span className="animate-pulse">|</span>
+                <span className="animate-pulse ml-1">|</span>
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Mobile Text Overlay - Simple */}
+        <div className="absolute bottom-0 left-0 right-0 text-center pb-6 px-4 z-20 xl:hidden">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white drop-shadow-2xl">
+            ABOUT US
+          </h1>
         </div>
       </div>
 
@@ -152,7 +158,7 @@ const ActionCarAbout = () => {
       <section className="py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12 md:space-y-16 lg:space-y-20">
-            
+
             {/* Card 1 - Who We Are */}
             <div className="scroll-animate opacity-0 translate-y-12 transition-all duration-800 w-full sm:w-10/12 md:w-9/12 lg:w-8/12 xl:w-7/12">
               <div className="bg-white p-4 sm:p-6 md:p-8 lg:p-10 rounded-xl sm:rounded-2xl shadow-xl border border-sky-300 transform transition-all duration-500 hover:shadow-2xl hover:-translate-y-3">
@@ -300,11 +306,11 @@ const ActionCarAbout = () => {
               See the precision and care we put into every vehicle
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             {videoData.map((video, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="scroll-animate opacity-0 translate-y-12 bg-white p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-sky-300 transform transition-all duration-500 hover:shadow-2xl hover:-translate-y-3"
               >
                 <div className="mb-3 sm:mb-4 lg:mb-6">
@@ -316,7 +322,7 @@ const ActionCarAbout = () => {
                   </p>
                 </div>
                 <div className="aspect-video sm:aspect-[21/9] md:aspect-video rounded-lg overflow-hidden bg-sky-50 border border-sky-200">
-                  <iframe 
+                  <iframe
                     className="w-full h-full"
                     src={`https://www.youtube.com/embed/${video.videoId}`}
                     title={video.title}
@@ -329,25 +335,58 @@ const ActionCarAbout = () => {
           </div>
         </div>
       </section>
+      <ContactForm />
+      <Footer />
 
-      {/* Custom Styles */}
-      <style jsx global>{`
-        @media (min-width: 475px) {
-          .xs\\:text-4xl {
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-          }
-          .xs\\:text-xl {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-          }
-          .xs\\:min-h-\\[80px\\] {
-            min-height: 80px;
+      {/* Simple Mobile-Responsive Styles */}
+      <style jsx>{`
+        .mobile-video-hero {
+          height: 60vh;
+          min-height: 400px;
+        }
+        
+        /* Mobile */
+        @media (max-width: 767px) {
+          .mobile-video-hero {
+            height: 50vh;
+            min-height: 300px;
+            max-height: 450px;
           }
         }
+        
+        /* Tablet */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .mobile-video-hero {
+            height: 70vh;
+            min-height: 400px;
+          }
+        }
+        
+        /* Desktop */
+        @media (min-width: 1024px) {
+          .mobile-video-hero {
+            height: 80vh;
+            min-height: 500px;
+          }
+        }
+        
+        /* Large Desktop */
+        @media (min-width: 1280px) {
+          .mobile-video-hero {
+            height: 90vh;
+            min-height: 600px;
+          }
+        }
+        
+        /* Text visibility */
+        .text-white {
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .text-sky-400 {
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
       `}</style>
-
-      <Footer />
     </div>
   );
 };

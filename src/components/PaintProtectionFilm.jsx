@@ -7,7 +7,12 @@ import PPFVideo from '../assets/images/PPF (1).mp4';
 import InstallImage from '../assets/images/Install.png';
 import PrepImage from '../assets/images/Prep.png';
 import ExecuteImage from '../assets/images/Execute.png';
-
+// Import package images
+import BumperImage from '../assets/images/Bumper.png';
+import EconomyImage from '../assets/images/economy.png';
+import FullFrontImage from '../assets/images/fullfront.png';
+import OffsetImage from '../assets/images/offset.png';
+import ContactForm from '../components/ContactForm';
 const PaintProtectionFilm = () => {
   const [openFAQ, setOpenFAQ] = useState(null);
   const [currentText, setCurrentText] = useState(0);
@@ -19,7 +24,7 @@ const PaintProtectionFilm = () => {
 
   const runningTexts = [
     "ROAD DEBRIS",
-    "HIGHWAY SCRATCHES", 
+    "HIGHWAY SCRATCHES",
     "ROCK CHIPS",
     "WEATHER DAMAGE"
   ];
@@ -38,7 +43,7 @@ const PaintProtectionFilm = () => {
         if (card) {
           const rect = card.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-          
+
           // Check if card is in viewport (with some offset for better UX)
           if (rect.top < windowHeight * 0.9 && rect.bottom > 0) {
             if (!visibleCards.has(index)) {
@@ -53,7 +58,7 @@ const PaintProtectionFilm = () => {
 
     // Initial check
     handleScroll();
-    
+
     // Add scroll listener with throttling
     let ticking = false;
     const throttledScroll = () => {
@@ -65,16 +70,16 @@ const PaintProtectionFilm = () => {
         ticking = true;
       }
     };
-    
+
     window.addEventListener('scroll', throttledScroll);
-    
+
     return () => window.removeEventListener('scroll', throttledScroll);
   }, [visibleCards]);
 
   // Video setup effect similar to Hero component
   useEffect(() => {
     const video = videoRef.current;
-    
+
     if (video) {
       // Essential settings only
       video.muted = true;
@@ -82,24 +87,24 @@ const PaintProtectionFilm = () => {
       video.volume = 0;
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
-      
+
       // Minimal preload for faster start
       video.preload = 'none';
-      
+
       // Device-specific object-fit adjustments - 16:9 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
       const adjustVideoFit = () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
+
         // Mobile screens (below 768px) - Force 16:9 aspect ratio
         if (width < 768) {
-          const idealHeight = width / (16/9); // Calculate 16:9 height
-          
+          const idealHeight = width / (16 / 9); // Calculate 16:9 height
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
           video.style.objectPosition = 'center center';
-          
+
           // Center the video container vertically in viewport
           video.style.top = '50%';
           video.style.left = '0';
@@ -108,8 +113,8 @@ const PaintProtectionFilm = () => {
         }
         // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:9 cinematic
         else if (width >= 768 && width < 1024) {
-          const idealHeight = width / (16/9);
-          
+          const idealHeight = width / (16 / 9);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -121,8 +126,8 @@ const PaintProtectionFilm = () => {
         }
         // iPad Pro: 1024x1366 - 16:9 cinematic 
         else if (width >= 1024 && width < 1280) {
-          const idealHeight = width / (16/9);
-          
+          const idealHeight = width / (16 / 9);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -144,27 +149,27 @@ const PaintProtectionFilm = () => {
           video.style.position = 'absolute';
         }
       };
-      
+
       // Apply initial adjustments
       adjustVideoFit();
-      
+
       // Reapply on orientation change
       window.addEventListener('resize', adjustVideoFit);
       window.addEventListener('orientationchange', adjustVideoFit);
-      
+
       // Simple autoplay with minimal error handling
       const playVideo = async () => {
         try {
           await video.play();
         } catch (error) {
           // Single fallback attempt
-          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+          document.addEventListener('click', () => video.play().catch(() => { }), { once: true });
         }
       };
-      
+
       // Start playing immediately
       playVideo();
-      
+
       // Cleanup
       return () => {
         window.removeEventListener('resize', adjustVideoFit);
@@ -197,7 +202,7 @@ const PaintProtectionFilm = () => {
     },
     {
       image: PrepImage,
-      title: "WE PREP", 
+      title: "WE PREP",
       description: "Using our exclusive 5 step process with DI water, baby shampoo, clay treatment, isopropyl alcohol, and paint sealant we meticulously clean and prepare all surfaces of the vehicle for surgery"
     },
     {
@@ -212,6 +217,7 @@ const PaintProtectionFilm = () => {
       name: "BUMPER ONLY",
       price: "$599",
       serviceTime: "1 Day",
+      image: BumperImage,
       features: [
         "Essential shield for maintaining the pristine condition of the most impact-prone portion of your vehicle",
         "Provides robust protection against impacts, scratches, and road debris",
@@ -221,9 +227,10 @@ const PaintProtectionFilm = () => {
       ]
     },
     {
-      name: "ECONOMY KIT", 
+      name: "ECONOMY KIT",
       price: "$999",
       serviceTime: "1.5 Day",
+      image: EconomyImage,
       features: [
         "Full bumper",
         "Mirror caps",
@@ -234,8 +241,9 @@ const PaintProtectionFilm = () => {
     },
     {
       name: "FULL FRONT",
-      price: "$1499", 
+      price: "$1499",
       serviceTime: "1.5 Day",
+      image: FullFrontImage,
       features: [
         "Everything in the partial front",
         "Full hood / fender",
@@ -246,7 +254,8 @@ const PaintProtectionFilm = () => {
     {
       name: "OFFSET TIRE PACKAGE",
       price: "$1999",
-      serviceTime: "2 Days", 
+      serviceTime: "2 Days",
+      image: OffsetImage,
       features: [
         "Everything in full front",
         "Rockers",
@@ -263,7 +272,7 @@ const PaintProtectionFilm = () => {
     },
     {
       icon: <Star className="w-8 h-8" />,
-      title: "Enhance Long Term Aesthetics", 
+      title: "Enhance Long Term Aesthetics",
       description: "Scratches from years of driving and washing won't be an issue, scratches fade away once heat is applied."
     },
     {
@@ -295,7 +304,7 @@ const PaintProtectionFilm = () => {
       ]
     },
     {
-      question: "Enhance Long-Term Aesthetics", 
+      question: "Enhance Long-Term Aesthetics",
       answer: [
         "PPF is nearly invisible, so it doesn't alter your car's original appearance.",
         "It shields your car's paint from UV rays, preventing fading and oxidation.",
@@ -340,16 +349,16 @@ const PaintProtectionFilm = () => {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden bg-snow">
-        
+
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <video 
+          <video
             ref={videoRef}
             className="absolute top-0 left-0 w-full h-full object-cover object-center"
             src={PPFVideo}
-            autoPlay 
-            muted 
-            loop 
+            autoPlay
+            muted
+            loop
             playsInline
             preload="none"
             poster=""
@@ -387,9 +396,9 @@ const PaintProtectionFilm = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent">
             PAINT PROTECTION FILM
           </h1>
-          <p className="text-xl md:text-2xl mb-4" style={{color: '#1393c4'}}>Say Goodbye To...</p>
+          <p className="text-xl md:text-2xl mb-4" style={{ color: '#1393c4' }}>Say Goodbye To...</p>
           <div className="h-12 md:h-16 mb-8">
-            <h2 className="text-3xl md:text-5xl font-bold animate-pulse" style={{color: '#1393c4'}}>
+            <h2 className="text-3xl md:text-5xl font-bold animate-pulse" style={{ color: '#1393c4' }}>
               {runningTexts[currentText]}
             </h2>
           </div>
@@ -398,41 +407,40 @@ const PaintProtectionFilm = () => {
       </section>
 
       {/* Service Cards Section */}
-      <section className="py-16" style={{backgroundColor: '#f8fafc'}}>
+      <section className="py-16" style={{ backgroundColor: '#f8fafc' }}>
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{ color: '#1393c4' }}>
             SELECT YOUR SERVICE
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {serviceCards.map((card, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index] = el}
-                className={`bg-white rounded-2xl overflow-hidden shadow-xl hover:transform hover:scale-105 transition-all duration-500 transform ${
-                  visibleCards.has(index) 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-12'
-                }`}
+                className={`bg-white rounded-2xl overflow-hidden shadow-xl hover:transform hover:scale-105 transition-all duration-500 transform ${visibleCards.has(index)
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
+                  }`}
               >
                 <div className="h-64 overflow-hidden">
-                  <img 
+                  <img
                     src={card.image}
                     alt={card.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-center mb-4" style={{color: '#1393c4'}}>
+                  <h3 className="text-2xl font-bold text-center mb-4" style={{ color: '#1393c4' }}>
                     {card.title}
                   </h3>
-                  <p className="text-center leading-relaxed mb-6" style={{color: '#1393c4'}}>
+                  <p className="text-center leading-relaxed mb-6" style={{ color: '#1393c4' }}>
                     {card.description}
                   </p>
                   <div className="text-center">
-                    <button 
+                    <button
                       onClick={handleGetQuote}
                       className="px-8 py-3 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105"
-                      style={{backgroundColor: '#1393c4'}}
+                      style={{ backgroundColor: '#1393c4' }}
                     >
                       Get Quote
                     </button>
@@ -448,20 +456,20 @@ const PaintProtectionFilm = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="max-w-4xl mx-auto text-lg leading-relaxed" style={{color: '#1393c4'}}>
+            <p className="max-w-4xl mx-auto text-lg leading-relaxed" style={{ color: '#1393c4' }}>
               Below you will find our Paint Protection Film options, these packages are custom tailored to your vehicle needs. Our PPF installation comes with a 10 Year Manufacturer Warranty, self healing properties and installed by trained and experienced technicians.
             </p>
           </div>
 
           {/* Video Section */}
           <div className="max-w-4xl mx-auto mb-16">
-            <h3 className="text-2xl md:text-3xl font-bold text-center mb-8" style={{color: '#1393c4'}}>
+            <h3 className="text-2xl md:text-3xl font-bold text-center mb-8" style={{ color: '#1393c4' }}>
               WATCH VIDEO
             </h3>
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{backgroundColor: '#1393c4'}}>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ backgroundColor: '#1393c4' }}>
               <div className="aspect-video">
-                <iframe 
-                  src="https://www.youtube.com/embed/hI4lW8uNRqY" 
+                <iframe
+                  src="https://www.youtube.com/embed/hI4lW8uNRqY"
                   title="XPEL ULTIMATE PLUS Paint Protection Film"
                   className="w-full h-full"
                   frameBorder="0"
@@ -475,24 +483,23 @@ const PaintProtectionFilm = () => {
       </section>
 
       {/* Why PPF Section */}
-      <section className="py-16 bg-sky-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{ color: '#1393c4' }}>
             WHY PAINT PROTECTION FILM?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {benefits.map((benefit, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 3] = el}
-                className={`p-6 rounded-xl text-center hover:transform hover:scale-105 transition-all duration-500 shadow-xl text-white transform ${
-                  visibleCards.has(index + 3) 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-12'
-                }`}
-                style={{background: `linear-gradient(to bottom, #1393c4, #0e7aa3)`}}
+                className={`p-6 rounded-xl text-center hover:transform hover:scale-105 transition-all duration-500 shadow-xl text-white transform ${visibleCards.has(index + 3)
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
+                  }`}
+                style={{ background: `linear-gradient(to bottom, #1393c4, #0e7aa3)` }}
               >
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4" style={{color: '#1393c4'}}>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4" style={{ color: '#1393c4' }}>
                   {benefit.icon}
                 </div>
                 <h3 className="text-lg font-bold mb-3">
@@ -511,19 +518,19 @@ const PaintProtectionFilm = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold mb-8" style={{color: '#1393c4'}}>
+            <h2 className="text-3xl md:text-5xl font-bold mb-8" style={{ color: '#1393c4' }}>
               Enjoy Peace of Mind and Protect Your Investment
             </h2>
-            <p className="max-w-4xl mx-auto text-lg leading-relaxed mb-8" style={{color: '#1393c4'}}>
-              PPF or "Clear Bra" is designed to minimize damage from rock chips, scratches, and road debris. 
-              We use templates that have been modified to custom wrap edges where applicable for an invisible install and because of our 
+            <p className="max-w-4xl mx-auto text-lg leading-relaxed mb-8" style={{ color: '#1393c4' }}>
+              PPF or "Clear Bra" is designed to minimize damage from rock chips, scratches, and road debris.
+              We use templates that have been modified to custom wrap edges where applicable for an invisible install and because of our
               meticulous installation process we stand behind our workmanship and your satisfaction.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
             <div>
-              <img 
+              <img
                 src="https://actioncardetailing.ca/wp-content/uploads/2021/05/car2-removebg-preview.png"
                 alt="Protected Car"
                 className="w-full h-auto"
@@ -531,14 +538,14 @@ const PaintProtectionFilm = () => {
             </div>
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-bold mb-4" style={{color: '#1393c4'}}>INCREASE AND RETAIN RESELL VALUE</h3>
-                <p className="leading-relaxed" style={{color: '#1393c4'}}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: '#1393c4' }}>INCREASE AND RETAIN RESELL VALUE</h3>
+                <p className="leading-relaxed" style={{ color: '#1393c4' }}>
                   Enhance the long-term value of your vehicle with our premium protection solutions. Our cutting-edge products not only shield your car from the elements but also ensure that it's resell value remains at its peak, making it a smart investment for years to come.
                 </p>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-4" style={{color: '#1393c4'}}>HIGHEST LEVEL OF PROTECTION</h3>
-                <p className="leading-relaxed" style={{color: '#1393c4'}}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: '#1393c4' }}>HIGHEST LEVEL OF PROTECTION</h3>
+                <p className="leading-relaxed" style={{ color: '#1393c4' }}>
                   Experience unmatched defense. Our advanced solutions provide the utmost protection against chips, scratches, and the elements.
                 </p>
               </div>
@@ -546,11 +553,11 @@ const PaintProtectionFilm = () => {
           </div>
 
           {/* XPEL Section */}
-          <div className="rounded-2xl p-8 md:p-12 text-white" style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}>
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: `linear-gradient(to right, #1393c4, #0e7aa3)` }}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="mb-8">
-                  <img 
+                  <img
                     src="https://actioncardetailing.ca/wp-content/uploads/2021/05/img.png"
                     alt="XPEL Ultimate Plus"
                     className="h-16 mb-4"
@@ -562,12 +569,12 @@ const PaintProtectionFilm = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <img 
+                  <img
                     src="https://actioncardetailing.ca/wp-content/uploads/2021/05/XPEL_ULTIMATE_PLUS_767_510.png"
                     alt="XPEL Ultimate Plus Logo"
                     className="w-full h-auto rounded-lg"
                   />
-                  <img 
+                  <img
                     src="https://actioncardetailing.ca/wp-content/uploads/2021/05/b57d36_73bcb0b03ef9418c8fd49d59f165adedmv2.png"
                     alt="Tesla with XPEL"
                     className="w-full h-auto rounded-lg"
@@ -609,14 +616,15 @@ const PaintProtectionFilm = () => {
       {/* Financing Section */}
       <section className="py-16 bg-sky-50">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{color: '#1393c4'}}>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: '#1393c4' }}>
             FINANCING AVAILABLE
           </h2>
-          <p className="mb-8" style={{color: '#1393c4'}}>Click below to learn more</p>
-          <img 
+          <p className="mb-8" style={{ color: '#1393c4' }}>Click below to learn more</p>
+          <img
             src="https://actioncardetailing.ca/wp-content/uploads/2021/05/financeit.jpg.webp"
             alt="Financeit"
-            className="mx-auto h-16"
+            className="mx-auto h-16 cursor-pointer hover:opacity-80 transition-opacity duration-300"
+            onClick={() => window.open('https://www.financeit.ca/s/omao8A', '_blank')}
           />
         </div>
       </section>
@@ -624,24 +632,23 @@ const PaintProtectionFilm = () => {
       {/* Packages Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{color: '#1393c4'}}>
+          <h2 className="text-3xl md:text-5xl font-bold text-center mb-16" style={{ color: '#1393c4' }}>
             SELECT YOUR COVERAGE
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {packages.map((pkg, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 8] = el}
-                className={`rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-500 shadow-2xl text-white transform ${
-                  visibleCards.has(index + 8) 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-12'
-                }`}
-                style={{background: `linear-gradient(to bottom, #1393c4, #0e7aa3)`}}
+                className={`rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-500 shadow-2xl text-white transform ${visibleCards.has(index + 8)
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
+                  }`}
+                style={{ background: `linear-gradient(to bottom, #1393c4, #0e7aa3)` }}
               >
                 <div className="text-center mb-6">
-                  <img 
-                    src="https://actioncardetailing.ca/wp-content/uploads/2021/05/Bumper.png"
+                  <img
+                    src={pkg.image}
                     alt={pkg.name}
                     className="w-full h-32 object-contain mb-4"
                   />
@@ -649,7 +656,7 @@ const PaintProtectionFilm = () => {
                   <div className="text-2xl font-bold mb-2">Starting at {pkg.price}</div>
                   <div className="text-sky-100">Service Time {pkg.serviceTime}</div>
                 </div>
-                
+
                 <div className="space-y-3 mb-6">
                   <h4 className="text-sky-200 font-semibold">WHAT IS INCLUDED:</h4>
                   {pkg.features.map((feature, featureIndex) => (
@@ -659,11 +666,11 @@ const PaintProtectionFilm = () => {
                     </div>
                   ))}
                 </div>
-                
-                <button 
+
+                <button
                   onClick={handleGetQuote}
                   className="w-full bg-white py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:bg-sky-50"
-                  style={{color: '#1393c4'}}
+                  style={{ color: '#1393c4' }}
                 >
                   Get Quote
                 </button>
@@ -678,25 +685,25 @@ const PaintProtectionFilm = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <img 
+              <img
                 src="https://actioncardetailing.ca/wp-content/uploads/2021/05/road.jpg"
                 alt="Stressed Driver"
                 className="w-full h-auto rounded-2xl shadow-2xl"
               />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{color: '#1393c4'}}>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: '#1393c4' }}>
                 THE ROAD DOESN'T HAVE TO WIN...
               </h2>
-              <div className="space-y-4 mb-8" style={{color: '#1393c4'}}>
+              <div className="space-y-4 mb-8" style={{ color: '#1393c4' }}>
                 <p>We get it. The thought of rock chips, scratches, weathering, oxidation, UV rays, stains, and fading create STRESS and ANXIETY.</p>
                 <p>Fact- There is 100% chance that doing nothing will ensure inevitable damage!</p>
                 <p className="text-xl font-semibold">We Provide The Peace of mind you and your vehicle deserve</p>
               </div>
-              <button 
+              <button
                 onClick={handleGetQuote}
                 className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-                style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
+                style={{ background: `linear-gradient(to right, #1393c4, #0e7aa3)` }}
               >
                 Get A Free Quote
               </button>
@@ -708,18 +715,18 @@ const PaintProtectionFilm = () => {
       {/* Company Trust Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <p className="leading-relaxed max-w-4xl mx-auto mb-8" style={{color: '#1393c4'}}>
-            When you pay for a product with extensive warranties, you want to use a solid company for the service. The world's top paint 
-            protection films offer up to 10 years of warranty. You need a company with a long history of successful projects and just as 
-            importantly, future longevity. Yes, films are guaranteed based on the quality of the film itself. However, it's the shop that 
-            guarantees the work done. You want a company like us because you know we will be here, doing what we do and standing by our 
-            products. Our meticulous attention to detail here at <span className="font-bold" style={{color: '#1393c4'}}>ACTION CAR DETAILING</span> is sure to keep your mind at ease. You can rest 
+          <p className="leading-relaxed max-w-4xl mx-auto mb-8" style={{ color: '#1393c4' }}>
+            When you pay for a product with extensive warranties, you want to use a solid company for the service. The world's top paint
+            protection films offer up to 10 years of warranty. You need a company with a long history of successful projects and just as
+            importantly, future longevity. Yes, films are guaranteed based on the quality of the film itself. However, it's the shop that
+            guarantees the work done. You want a company like us because you know we will be here, doing what we do and standing by our
+            products. Our meticulous attention to detail here at <span className="font-bold" style={{ color: '#1393c4' }}>ACTION CAR DETAILING</span> is sure to keep your mind at ease. You can rest
             assured knowing your vehicle will receive an expert application of a superior PPF product.
           </p>
-          <button 
+          <button
             onClick={handleGetQuote}
             className="text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-            style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
+            style={{ background: `linear-gradient(to right, #1393c4, #0e7aa3)` }}
           >
             Get A Free Quote
           </button>
@@ -727,28 +734,27 @@ const PaintProtectionFilm = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-sky-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4" style={{color: '#1393c4'}}>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4" style={{ color: '#1393c4' }}>
               DISCOVER THE HIGHEST LEVEL OF PAINT PROTECTION FILM IN WINNIPEG
             </h2>
-            <h3 className="text-2xl font-bold mb-8" style={{color: '#1393c4'}}>
+            <h3 className="text-2xl font-bold mb-8" style={{ color: '#1393c4' }}>
               WHY DO I NEED PAINT PROTECTION FILM?
             </h3>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
             {faqData.map((faq, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 12] = el}
-                className={`rounded-xl overflow-hidden shadow-xl transition-all duration-500 transform ${
-                  visibleCards.has(index + 12) 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-12'
-                }`}
-                style={{background: `linear-gradient(to right, #1393c4, #0e7aa3)`}}
+                className={`rounded-xl overflow-hidden shadow-xl transition-all duration-500 transform ${visibleCards.has(index + 12)
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
+                  }`}
+                style={{ background: `linear-gradient(to right, #1393c4, #0e7aa3)` }}
               >
                 <button
                   onClick={() => toggleFAQ(index)}
@@ -771,10 +777,10 @@ const PaintProtectionFilm = () => {
                         </div>
                       ))}
                     </div>
-                    <button 
+                    <button
                       onClick={handleGetQuote}
                       className="mt-6 bg-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-sky-50"
-                      style={{color: '#1393c4'}}
+                      style={{ color: '#1393c4' }}
                     >
                       GET MY QUOTE
                     </button>
@@ -786,6 +792,9 @@ const PaintProtectionFilm = () => {
         </div>
       </section>
 
+      {/* Contact Form Section */}
+      <ContactForm />
+
       {/* Modal for Paint Polishing Form */}
       {isFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -793,7 +802,7 @@ const PaintProtectionFilm = () => {
             <button
               onClick={closeForm}
               className="absolute top-4 right-4 z-10 text-white p-2 rounded-full hover:bg-sky-700 transition-colors duration-200"
-              style={{backgroundColor: '#1393c4'}}
+              style={{ backgroundColor: '#1393c4' }}
             >
               <X className="w-6 h-6" />
             </button>
@@ -809,7 +818,7 @@ const PaintProtectionFilm = () => {
             <button
               onClick={closeQuote}
               className="absolute top-4 right-4 z-10 text-white p-2 rounded-full hover:bg-sky-700 transition-colors duration-200"
-              style={{backgroundColor: '#1393c4'}}
+              style={{ backgroundColor: '#1393c4' }}
             >
               <X className="w-6 h-6" />
             </button>

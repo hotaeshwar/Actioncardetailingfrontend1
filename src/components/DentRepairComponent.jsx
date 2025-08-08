@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircle, Shield, Clock, Star, ArrowRight, Phone } from 'lucide-react';
 import dentRepairVideo from '../assets/images/Dent Repair.mp4';
 import Footer from '../components/Footer';
-
+import ContactForm from '../components/ContactForm';
 const DentRepairComponent = () => {
   const [activeTab, setActiveTab] = useState('hail');
   const [scrollY, setScrollY] = useState(0);
@@ -350,7 +350,7 @@ const DentRepairComponent = () => {
               <span> on your dent repair needs</span>
             </p>
           </div>
-
+      <ContactForm />
         </div>
       </section>
 

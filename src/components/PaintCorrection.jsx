@@ -2,6 +2,7 @@ import { RotateCcw, Droplets, Target, RefreshCw, Zap, Car } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import PaintPolishingForm from '../components/PaintPolishingForm';
+import ContactForm from '../components/ContactForm';
 // Import Paint Correction Video
 import paintCorrectionVideo from '../assets/images/Paint Correction Polishing (1).mp4';
 
@@ -406,8 +407,6 @@ const PaintCorrection = () => {
         </div>
       </section>
 
-
-
       {/* Call to Action */}
       <section 
         className={`py-16 sm:py-20 bg-white transition-all duration-1000 ease-out transform ${
@@ -427,7 +426,21 @@ const PaintCorrection = () => {
         </div>
       </section>
 
-      {/* Paint Polishing Form Modal */}
+      {/* Paint Polishing Form Section */}
+      <section className="py-16 sm:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <PaintPolishingForm />
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <ContactForm />
+        </div>
+      </section>
+
+      {/* Paint Polishing Form Modal - Keep this for the "Book Now" button functionality */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="relative bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">

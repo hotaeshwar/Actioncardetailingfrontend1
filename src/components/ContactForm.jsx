@@ -12,18 +12,18 @@ const ContactForm = () => {
 
     const [isHovered, setIsHovered] = useState(false);
 
-    // Section Divider Component - ADD THIS
+    // Section Divider Component - Updated with vivid azure
     const SectionDivider = () => (
         <div className="relative py-8 sm:py-12 md:py-16">
             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl h-px bg-gradient-to-r from-transparent via-sky-400/50 to-transparent"></div>
+                <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl h-px bg-gradient-to-r from-transparent via-[#1393c4]/50 to-transparent"></div>
             </div>
             <div className="relative flex justify-center">
                 <div className="bg-white px-4 sm:px-6">
                     <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></div>
-                        <div className="w-2 h-2 bg-sky-500 rounded-full animate-pulse delay-150"></div>
-                        <div className="w-2 h-2 bg-sky-600 rounded-full animate-pulse delay-300"></div>
+                        <div className="w-2 h-2 bg-[#1393c4] rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-[#1393c4] rounded-full animate-pulse delay-150" style={{backgroundColor: '#0f7ba8'}}></div>
+                        <div className="w-2 h-2 bg-[#1393c4] rounded-full animate-pulse delay-300" style={{backgroundColor: '#0b6490'}}></div>
                     </div>
                 </div>
             </div>
@@ -111,26 +111,29 @@ const ContactForm = () => {
                     <div className="flex flex-col lg:flex-row items-start sm:items-center justify-between gap-6 sm:gap-8 lg:gap-16">
                         {/* Left side content */}
                         <div className="w-full lg:w-1/2 text-left">
-                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-sky-500 mb-4 sm:mb-6">
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6" style={{color: '#1393c4'}}>
                                 We are Certified and Authorized
                             </h2>
-                            <p className="text-sm sm:text-base text-sky-400 mb-4 sm:mb-6">
+                            <p className="text-sm sm:text-base mb-4 sm:mb-6" style={{color: '#1393c4', opacity: 0.8}}>
                                 Action Car Detailing Inc., one of Winnipeg's most reputable detailing companies with over 14 years in the
                                 business. When it comes to trusting your vehicles in the right hands, look no further than guys with the most experience.
                             </p>
 
                             <div className="mb-4 sm:mb-6">
-                                <p className="text-sm sm:text-base font-medium text-sky-500">1380 Sargent avenue,</p>
-                                <p className="text-sm sm:text-base font-medium text-sky-500">Winnipeg,</p>
-                                <p className="text-sm sm:text-base font-medium text-sky-500">MB, R3E 0G5</p>
-                                <p className="text-sm sm:text-base font-medium text-sky-500">(Appointment Only)</p>
+                                <p className="text-sm sm:text-base font-medium" style={{color: '#1393c4'}}>1380 Sargent avenue,</p>
+                                <p className="text-sm sm:text-base font-medium" style={{color: '#1393c4'}}>Winnipeg,</p>
+                                <p className="text-sm sm:text-base font-medium" style={{color: '#1393c4'}}>MB, R3E 0G5</p>
+                                <p className="text-sm sm:text-base font-medium" style={{color: '#1393c4'}}>(Appointment Only)</p>
                             </div>
 
                             <div className="mb-4 sm:mb-6">
-                                <p className="text-base sm:text-lg font-semibold text-sky-500">(204) 775-0005</p>
+                                <p className="text-base sm:text-lg font-semibold" style={{color: '#1393c4'}}>(204) 775-0005</p>
                                 <a
                                     href="mailto:info@actioncardetailing.ca"
-                                    className="text-sm sm:text-base text-sky-500 hover:text-sky-400 transition duration-300"
+                                    className="text-sm sm:text-base transition duration-300"
+                                    style={{color: '#1393c4'}}
+                                    onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                                    onMouseLeave={(e) => e.target.style.opacity = '1'}
                                 >
                                     info@actioncardetailing.ca
                                 </a>
@@ -155,7 +158,10 @@ const ContactForm = () => {
                                         onChange={handleChange}
                                         placeholder="Name"
                                         required
-                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
+                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 transition duration-300"
+                                        style={{focusRingColor: '#1393c4'}}
+                                        onFocus={(e) => e.target.style.borderColor = '#1393c4'}
+                                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                                     />
                                 </div>
 
@@ -167,7 +173,9 @@ const ContactForm = () => {
                                         onChange={handleChange}
                                         placeholder="Email"
                                         required
-                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
+                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 transition duration-300"
+                                        onFocus={(e) => e.target.style.borderColor = '#1393c4'}
+                                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                                     />
                                 </div>
 
@@ -179,7 +187,9 @@ const ContactForm = () => {
                                         onChange={handleChange}
                                         placeholder="Phone"
                                         required
-                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
+                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 transition duration-300"
+                                        onFocus={(e) => e.target.style.borderColor = '#1393c4'}
+                                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                                     />
                                 </div>
 
@@ -191,19 +201,34 @@ const ContactForm = () => {
                                         placeholder="Message"
                                         rows="4"
                                         required
-                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
+                                        className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 transition duration-300"
+                                        onFocus={(e) => e.target.style.borderColor = '#1393c4'}
+                                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
                                     ></textarea>
                                 </div>
 
                                 <div className="mb-4 sm:mb-6">
-                                    <p className="mb-1 sm:mb-2 text-sm sm:text-base text-sky-500">Attach a Photo</p>
+                                    <p className="mb-1 sm:mb-2 text-sm sm:text-base" style={{color: '#1393c4'}}>Attach a Photo</p>
                                     <input
                                         type="file"
                                         name="photo"
                                         onChange={handleChange}
                                         accept="image/*"
-                                        className="w-full p-1 sm:p-2 text-sm sm:text-base border border-gray-300 rounded-lg file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 file:rounded-md file:border-0 file:bg-sky-700 file:text-white file:text-sm sm:file:text-base hover:file:bg-sky-600 transition duration-300"
+                                        className="w-full p-1 sm:p-2 text-sm sm:text-base border border-gray-300 rounded-lg file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 file:rounded-md file:border-0 file:text-white file:text-sm sm:file:text-base transition duration-300"
+                                        style={{
+                                            '--file-bg': '#1393c4',
+                                            '--file-hover-bg': '#0f7ba8'
+                                        }}
+                                        onMouseEnter={(e) => e.target.querySelector('::file-selector-button')?.style.setProperty('background-color', '#0f7ba8')}
                                     />
+                                    <style jsx>{`
+                                        input[type="file"]::file-selector-button {
+                                            background-color: #1393c4;
+                                        }
+                                        input[type="file"]::file-selector-button:hover {
+                                            background-color: #0f7ba8;
+                                        }
+                                    `}</style>
                                 </div>
 
                                 <button
@@ -211,10 +236,12 @@ const ContactForm = () => {
                                     onClick={handleSubmit}
                                     onMouseEnter={() => setIsHovered(true)}
                                     onMouseLeave={() => setIsHovered(false)}
-                                    className={`w-full py-2 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base text-white text-center cursor-pointer transition-all duration-500 ease-in-out transform ${isHovered
-                                            ? 'bg-sky-500 scale-105 shadow-lg'
-                                            : 'bg-sky-600'
-                                        }`}
+                                    className="w-full py-2 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base text-white text-center cursor-pointer transition-all duration-500 ease-in-out transform"
+                                    style={{
+                                        backgroundColor: isHovered ? '#0f7ba8' : '#1393c4',
+                                        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                                        boxShadow: isHovered ? '0 10px 25px rgba(19, 147, 196, 0.3)' : 'none'
+                                    }}
                                 >
                                     Submit
                                 </button>

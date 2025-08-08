@@ -213,41 +213,35 @@ const Navbar = ({ currentView, setCurrentView }) => {
                 </a>
               </div>
 
-              {/* Stylish Mobile Menu Button with Vivid Ozone Color */}
+              {/* Stylish Mobile Menu Button with Black Color */}
               <div className="lg:hidden flex items-center z-50 ml-auto">
                 <button
                   onClick={toggleMenu}
-                  className="mobile-menu-btn relative inline-flex items-center justify-center p-3 rounded-full text-white focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95"
+                  className="relative inline-flex items-center justify-center p-2 text-black focus:outline-none"
                   aria-expanded={isMenuOpen}
                 >
                   <span className="sr-only">Open main menu</span>
                   <div className="relative w-6 h-6 flex items-center justify-center">
-                    {/* Animated hamburger lines */}
-                    <div className="absolute w-5 h-0.5 bg-white rounded-full transition-all duration-300 ease-in-out transform" 
+                    {/* Simple hamburger lines - now black */}
+                    <div className="absolute w-6 h-0.5 bg-black transition-all duration-300 ease-in-out transform" 
                          style={{
                            top: isMenuOpen ? '50%' : '30%',
                            transform: isMenuOpen ? 'translateY(-50%) rotate(45deg)' : 'translateY(-50%)',
                            opacity: isMenuOpen ? 1 : 1
                          }}></div>
-                    <div className="absolute w-5 h-0.5 bg-white rounded-full transition-all duration-300 ease-in-out" 
+                    <div className="absolute w-6 h-0.5 bg-black transition-all duration-300 ease-in-out" 
                          style={{
                            top: '50%',
                            transform: 'translateY(-50%)',
                            opacity: isMenuOpen ? 0 : 1
                          }}></div>
-                    <div className="absolute w-5 h-0.5 bg-white rounded-full transition-all duration-300 ease-in-out transform" 
+                    <div className="absolute w-6 h-0.5 bg-black transition-all duration-300 ease-in-out transform" 
                          style={{
                            top: isMenuOpen ? '50%' : '70%',
                            transform: isMenuOpen ? 'translateY(-50%) rotate(-45deg)' : 'translateY(-50%)',
                            opacity: isMenuOpen ? 1 : 1
                          }}></div>
                   </div>
-                  
-                  {/* Enhanced ripple effect */}
-                  <div className="absolute inset-0 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 ripple-effect"
-                       style={{
-                         opacity: isMenuOpen ? 0.5 : 0
-                       }}></div>
                 </button>
               </div>
             </div>
@@ -452,26 +446,7 @@ const Navbar = ({ currentView, setCurrentView }) => {
             box-shadow: inset 4px 0 0 var(--vivid-ozone-accent), 0 0 20px var(--vivid-ozone-glow);
           }
 
-          /* Mobile Menu Button */
-          .mobile-menu-btn {
-            background: var(--vivid-ozone) !important;
-            box-shadow: 
-              0 4px 15px var(--vivid-ozone-glow),
-              0 2px 8px rgba(0, 191, 255, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-            border: 2px solid rgba(255, 255, 255, 0.3) !important;
-          }
-
-          .mobile-menu-btn:hover {
-            box-shadow: 
-              0 6px 20px var(--vivid-ozone-shadow),
-              0 4px 12px rgba(0, 191, 255, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-          }
-
-          .ripple-effect {
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%) !important;
-          }
+          /* Mobile Menu Button - Removed completely */
 
           /* Mobile Navigation Items - Updated for #1393c4 background */
           .mobile-nav-link:hover {

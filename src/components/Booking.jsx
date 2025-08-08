@@ -238,8 +238,8 @@ const Booking = () => {
         return (
           <div className="space-y-6 md:space-y-8">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-sky-400 mb-2 md:mb-4">VEHICLE TYPE</h2>
-              <p className="text-sky-300 text-xs sm:text-sm md:text-base lg:text-lg">Select vehicle type below.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1393c4] mb-2 md:mb-4">VEHICLE TYPE</h2>
+              <p className="text-[#1393c4] text-xs sm:text-sm md:text-base lg:text-lg">Select vehicle type below.</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {vehicleTypes.map((vehicle) => (
@@ -248,16 +248,16 @@ const Booking = () => {
                   onClick={() => handleVehicleSelect(vehicle)}
                   className={`p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                     selectedVehicle.id === vehicle.id
-                      ? 'border-blue-400 bg-blue-400 text-white'
-                      : 'border-blue-200 hover:border-blue-300 bg-blue-50'
+                      ? 'border-[#1393c4] bg-[#1393c4] text-white'
+                      : 'border-[#1393c4] hover:border-[#0d7aa1] bg-white'
                   }`}
                 >
                   <div className="text-center">
                     <vehicle.icon className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 ${
-                      selectedVehicle.id === vehicle.id ? 'text-white' : 'text-blue-400'
+                      selectedVehicle.id === vehicle.id ? 'text-white' : 'text-[#1393c4]'
                     }`} />
                     <h3 className={`font-semibold text-xs sm:text-sm md:text-base lg:text-lg ${
-                      selectedVehicle.id === vehicle.id ? 'text-white' : 'text-sky-400'
+                      selectedVehicle.id === vehicle.id ? 'text-white' : 'text-[#1393c4]'
                     }`}>{vehicle.name}</h3>
                   </div>
                 </div>
@@ -270,31 +270,31 @@ const Booking = () => {
         return (
           <div className="space-y-6 md:space-y-8">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-sky-400 mb-2 md:mb-4">WASH PACKAGES</h2>
-              <p className="text-sky-300 text-xs sm:text-sm md:text-base lg:text-lg">Which wash is best for your vehicle?</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1393c4] mb-2 md:mb-4">WASH PACKAGES</h2>
+              <p className="text-[#1393c4] text-xs sm:text-sm md:text-base lg:text-lg">Which wash is best for your vehicle?</p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {washPackages.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className="bg-blue-50 rounded-xl border-2 border-blue-200 p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-white rounded-xl border-2 border-[#1393c4] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <div className="text-center mb-4 md:mb-6">
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-sky-400 mb-2">{pkg.name} ({pkg.duration})</h3>
-                    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-sky-300 mb-2">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1393c4] mb-2">{pkg.name} ({pkg.duration})</h3>
+                    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1393c4] mb-2">
                       {pkg.price}<span className="text-lg sm:text-xl md:text-2xl">.00 CAD</span>
                     </div>
                   </div>
                   <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
                     {pkg.features.map((feature, index) => (
-                      <p key={index} className="text-xs sm:text-sm md:text-base text-sky-300 leading-relaxed">
+                      <p key={index} className="text-xs sm:text-sm md:text-base text-[#1393c4] leading-relaxed">
                         {feature}
                       </p>
                     ))}
                   </div>
                   <button
                     onClick={() => handlePackageSelect(pkg)}
-                    className="w-full bg-blue-400 hover:bg-blue-500 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base"
+                    className="w-full bg-[#1393c4] hover:bg-[#0d7aa1] text-white py-2 sm:py-3 px-4 sm:px-6 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base"
                   >
                     Book Now
                   </button>
@@ -308,23 +308,23 @@ const Booking = () => {
         return (
           <div className="space-y-6 md:space-y-8">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-sky-400 mb-2 md:mb-4">ADD-ON OPTIONS</h2>
-              <p className="text-sky-300 text-xs sm:text-sm md:text-base lg:text-lg">Add services to your package.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1393c4] mb-2 md:mb-4">ADD-ON OPTIONS</h2>
+              <p className="text-[#1393c4] text-xs sm:text-sm md:text-base lg:text-lg">Add services to your package.</p>
             </div>
             <div className="space-y-3 sm:space-y-4">
               {addOnOptions.map((addon) => (
                 <div
                   key={addon.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 md:p-6 bg-blue-50 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-colors duration-300"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 md:p-6 bg-white rounded-xl border-2 border-[#1393c4] hover:border-[#0d7aa1] transition-colors duration-300"
                 >
                   <div className="flex-1 mb-3 sm:mb-0">
-                    <h3 className="font-semibold text-sky-400 text-sm sm:text-base md:text-lg mb-1">{addon.name}</h3>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-sky-300">
+                    <h3 className="font-semibold text-[#1393c4] text-sm sm:text-base md:text-lg mb-1">{addon.name}</h3>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-[#1393c4]">
                       <span className="flex items-center">
                         <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         {addon.duration}
                       </span>
-                      <span className="font-semibold text-sky-400">
+                      <span className="font-semibold text-[#1393c4]">
                         {addon.price === 0 ? '0.00 CAD' : `${addon.price}.00 CAD`}
                       </span>
                     </div>
@@ -333,8 +333,8 @@ const Booking = () => {
                     onClick={() => handleAddOnToggle(addon)}
                     className={`px-3 sm:px-4 md:px-6 py-2 rounded-full font-semibold transition-colors duration-300 text-xs sm:text-sm md:text-base ${
                       selectedAddOns.find(item => item.id === addon.id)
-                        ? 'bg-blue-400 text-white'
-                        : 'bg-blue-200 text-sky-400 hover:bg-blue-300'
+                        ? 'bg-[#1393c4] text-white'
+                        : 'bg-white border border-[#1393c4] text-[#1393c4] hover:bg-[#1393c4] hover:text-white'
                     }`}
                   >
                     {selectedAddOns.find(item => item.id === addon.id) ? 'Selected' : 'Select'}
@@ -345,7 +345,7 @@ const Booking = () => {
             <div className="text-center">
               <button
                 onClick={handleNext}
-                className="bg-blue-400 hover:bg-blue-500 text-white px-6 sm:px-8 py-3 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base"
+                className="bg-[#1393c4] hover:bg-[#0d7aa1] text-white px-6 sm:px-8 py-3 rounded-full font-semibold transition-colors duration-300 text-sm sm:text-base"
               >
                 Continue
               </button>
@@ -357,27 +357,27 @@ const Booking = () => {
         return (
           <div className="space-y-6 md:space-y-8">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-sky-400 mb-2 md:mb-4">SELECT DATE AND TIME</h2>
-              <p className="text-sky-300 text-xs sm:text-sm md:text-base lg:text-lg">Click on any date and time to make a booking.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1393c4] mb-2 md:mb-4">SELECT DATE AND TIME</h2>
+              <p className="text-[#1393c4] text-xs sm:text-sm md:text-base lg:text-lg">Click on any date and time to make a booking.</p>
             </div>
             
-            <div className="bg-blue-50 rounded-xl border-2 border-blue-200 p-3 sm:p-4 md:p-6 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl border-2 border-[#1393c4] p-3 sm:p-4 md:p-6 max-w-4xl mx-auto">
               {/* Calendar Header */}
               <div className="flex items-center justify-between mb-4 md:mb-6">
                 <button
                   onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
-                  className="p-2 hover:bg-blue-200 rounded-lg text-sky-400 transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg text-[#1393c4] transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-sky-400">
+                <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#1393c4]">
                   {months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                 </div>
                 
                 <button
                   onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
-                  className="p-2 hover:bg-blue-200 rounded-lg text-sky-400 transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg text-[#1393c4] transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -386,7 +386,7 @@ const Booking = () => {
               {/* Days of week header */}
               <div className="grid grid-cols-7 gap-1 mb-3">
                 {daysOfWeek.map(day => (
-                  <div key={day} className="text-center text-sm font-semibold text-sky-400 py-2">
+                  <div key={day} className="text-center text-sm font-semibold text-[#1393c4] py-2">
                     {day}
                   </div>
                 ))}
@@ -402,9 +402,9 @@ const Booking = () => {
                     className={`
                       aspect-square flex items-center justify-center text-sm font-medium rounded-lg transition-all duration-200
                       ${!day ? 'invisible' : ''}
-                      ${isPastDate(day) ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-blue-200 cursor-pointer'}
-                      ${isToday(day) ? 'bg-blue-500 text-white font-bold' : ''}
-                      ${selectedDate.includes(`${day}`) && selectedDate.includes(months[currentMonth.getMonth()]) ? 'bg-blue-300 text-white font-bold' : day && !isPastDate(day) ? 'text-sky-600 hover:text-sky-800' : ''}
+                      ${isPastDate(day) ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-gray-100 cursor-pointer'}
+                      ${isToday(day) ? 'bg-[#1393c4] text-white font-bold' : ''}
+                      ${selectedDate.includes(`${day}`) && selectedDate.includes(months[currentMonth.getMonth()]) ? 'bg-[#1393c4] text-white font-bold' : day && !isPastDate(day) ? 'text-[#1393c4] hover:text-[#0d7aa1]' : ''}
                     `}
                   >
                     {day}
@@ -415,13 +415,13 @@ const Booking = () => {
               {/* Selected Date Display */}
               {selectedDate && (
                 <div className="text-center mb-4">
-                  <p className="text-sky-600 font-semibold">Selected Date: {selectedDate}</p>
+                  <p className="text-[#1393c4] font-semibold">Selected Date: {selectedDate}</p>
                 </div>
               )}
 
               {/* Time Slots */}
               <div>
-                <h3 className="text-lg font-bold text-sky-400 mb-4 text-center">Available Times</h3>
+                <h3 className="text-lg font-bold text-[#1393c4] mb-4 text-center">Available Times</h3>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                   {timeSlots.map(time => (
                     <button
@@ -432,8 +432,8 @@ const Booking = () => {
                         !selectedDate 
                           ? 'border-gray-200 text-gray-300 cursor-not-allowed'
                           : selectedTime === time
-                          ? 'bg-blue-500 text-white border-blue-500 font-bold'
-                          : 'border-blue-300 text-sky-600 hover:bg-blue-100 hover:border-blue-400 cursor-pointer'
+                          ? 'bg-[#1393c4] text-white border-[#1393c4] font-bold'
+                          : 'border-[#1393c4] text-[#1393c4] hover:bg-gray-100 hover:border-[#0d7aa1] cursor-pointer'
                       }`}
                     >
                       {time}
@@ -447,7 +447,7 @@ const Booking = () => {
                 <div className="text-center mt-6">
                   <button
                     onClick={handleNext}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300"
+                    className="bg-[#1393c4] hover:bg-[#0d7aa1] text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300"
                   >
                     Continue to Booking Summary
                   </button>
@@ -461,106 +461,106 @@ const Booking = () => {
         return (
           <div className="space-y-6 md:space-y-8">
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-sky-400 mb-2 md:mb-4">BOOKING SUMMARY</h2>
-              <p className="text-sky-300 text-xs sm:text-sm md:text-base lg:text-lg">Please provide us with your contact information.</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1393c4] mb-2 md:mb-4">BOOKING SUMMARY</h2>
+              <p className="text-[#1393c4] text-xs sm:text-sm md:text-base lg:text-lg">Please provide us with your contact information.</p>
             </div>
 
             {/* Booking Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
-              <div className="bg-blue-50 rounded-xl p-3 sm:p-4 md:p-6 text-center border border-blue-200">
-                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 sm:mb-3" />
-                <div className="text-xs sm:text-sm text-sky-300 mb-1">Your Appointment Date</div>
-                <div className="font-semibold text-sm sm:text-base text-sky-400">{selectedDate || '?'}</div>
+              <div className="bg-white rounded-xl p-3 sm:p-4 md:p-6 text-center border-2 border-[#1393c4]">
+                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-[#1393c4] mx-auto mb-2 sm:mb-3" />
+                <div className="text-xs sm:text-sm text-[#1393c4] mb-1">Your Appointment Date</div>
+                <div className="font-semibold text-sm sm:text-base text-[#1393c4]">{selectedDate || '?'}</div>
               </div>
-              <div className="bg-blue-50 rounded-xl p-3 sm:p-4 md:p-6 text-center border border-blue-200">
-                <Clock className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 sm:mb-3" />
-                <div className="text-xs sm:text-sm text-sky-300 mb-1">Your Appointment Time</div>
-                <div className="font-semibold text-sm sm:text-base text-sky-400">{selectedTime || '?'}</div>
+              <div className="bg-white rounded-xl p-3 sm:p-4 md:p-6 text-center border-2 border-[#1393c4]">
+                <Clock className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-[#1393c4] mx-auto mb-2 sm:mb-3" />
+                <div className="text-xs sm:text-sm text-[#1393c4] mb-1">Your Appointment Time</div>
+                <div className="font-semibold text-sm sm:text-base text-[#1393c4]">{selectedTime || '?'}</div>
               </div>
-              <div className="bg-blue-50 rounded-xl p-3 sm:p-4 md:p-6 text-center border border-blue-200">
-                <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-blue-400 mx-auto mb-2 sm:mb-3" />
-                <div className="text-xs sm:text-sm text-sky-300 mb-1">Total Price</div>
-                <div className="font-bold text-lg sm:text-xl md:text-2xl text-sky-400">{getTotalPrice()}.00 CAD</div>
+              <div className="bg-white rounded-xl p-3 sm:p-4 md:p-6 text-center border-2 border-[#1393c4]">
+                <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-[#1393c4] mx-auto mb-2 sm:mb-3" />
+                <div className="text-xs sm:text-sm text-[#1393c4] mb-1">Total Price</div>
+                <div className="font-bold text-lg sm:text-xl md:text-2xl text-[#1393c4]">{getTotalPrice()}.00 CAD</div>
               </div>
             </div>
 
             {/* Contact Form */}
-            <div className="bg-blue-50 rounded-xl border-2 border-blue-200 p-4 sm:p-6 md:p-8">
+            <div className="bg-white rounded-xl border-2 border-[#1393c4] p-4 sm:p-6 md:p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">First name *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">First name *</label>
                   <input
                     type="text"
                     name="firstName"
                     value={bookingData.firstName}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent bg-white text-[#1393c4] text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">Last name *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">Last name *</label>
                   <input
                     type="text"
                     name="lastName"
                     value={bookingData.lastName}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent bg-white text-[#1393c4] text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">Your E-mail *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">Your E-mail *</label>
                   <input
                     type="email"
                     name="email"
                     value={bookingData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent bg-white text-[#1393c4] text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">Phone Number *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">Phone Number *</label>
                   <input
                     type="tel"
                     name="phone"
                     value={bookingData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent bg-white text-[#1393c4] text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">Vehicle Make and Model *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">Vehicle Make and Model *</label>
                   <input
                     type="text"
                     name="vehicleMake"
                     value={bookingData.vehicleMake}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent bg-white text-[#1393c4] text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-xs sm:text-sm font-medium text-sky-400 mb-2">Message</label>
+                  <label className="block text-xs sm:text-sm font-medium text-[#1393c4] mb-2">Message</label>
                   <textarea
                     name="message"
                     value={bookingData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none bg-white text-sky-400 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#1393c4] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1393c4] focus:border-transparent resize-none bg-white text-[#1393c4] text-sm sm:text-base"
                   />
                 </div>
               </div>
 
               <div className="mt-6 md:mt-8 text-center">
-                <p className="text-xs sm:text-sm text-sky-300 mb-4 md:mb-6 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#1393c4] mb-4 md:mb-6 leading-relaxed">
                   We will confirm your appointment with you by phone or e-mail within 24 hours of your request. Vehicle pickup will be the next day for services scheduled later in the afternoon.
                 </p>
                 <button
                   onClick={handleSubmit}
-                  className="bg-blue-400 hover:bg-blue-500 text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base md:text-lg transition-colors duration-300"
+                  className="bg-[#1393c4] hover:bg-[#0d7aa1] text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base md:text-lg transition-colors duration-300"
                 >
                   Confirm Booking
                 </button>
@@ -575,7 +575,7 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 py-4 sm:py-6 md:py-8 lg:py-12 px-2 sm:px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 md:py-8 lg:py-12 px-2 sm:px-4 md:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Progress Indicator */}
         <div className="flex items-center justify-center mb-6 sm:mb-8 md:mb-12 px-4">
@@ -585,15 +585,15 @@ const Booking = () => {
                 <div className="flex-1 flex items-center">
                   <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm md:text-base lg:text-lg mx-auto ${
                     step <= currentStep 
-                      ? 'bg-blue-400 text-white shadow-lg' 
-                      : 'bg-white text-blue-300 border-2 border-blue-200'
+                      ? 'bg-[#1393c4] text-white shadow-lg' 
+                      : 'bg-white text-[#1393c4] border-2 border-[#1393c4]'
                   }`}>
                     {step < currentStep ? <Check className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> : step}
                   </div>
                 </div>
                 {step < 5 && (
                   <div className="flex-1 flex items-center px-2 sm:px-3 md:px-4">
-                    <div className={`w-full h-1 sm:h-1.5 md:h-2 rounded-full ${step < currentStep ? 'bg-blue-400' : 'bg-blue-200'}`} />
+                    <div className={`w-full h-1 sm:h-1.5 md:h-2 rounded-full ${step < currentStep ? 'bg-[#1393c4]' : 'bg-gray-300'}`} />
                   </div>
                 )}
               </React.Fragment>
@@ -602,7 +602,7 @@ const Booking = () => {
         </div>
 
         {/* Step Content */}
-        <div className="bg-white rounded-xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 border border-blue-100">
+        <div className="bg-white rounded-xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 border border-[#1393c4]">
           {renderStep()}
         </div>
 
@@ -611,7 +611,7 @@ const Booking = () => {
           <div className="flex justify-between mt-4 sm:mt-6 md:mt-8">
             <button
               onClick={handlePrev}
-              className="flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-sky-400 hover:text-sky-600 transition-colors duration-300"
+              className="flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-[#1393c4] hover:text-[#0d7aa1] transition-colors duration-300"
             >
               <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-2" />
               <span className="text-xs sm:text-sm md:text-base">Previous</span>

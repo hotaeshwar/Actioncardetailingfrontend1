@@ -1,42 +1,54 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import carwashVideo from '../assets/images/carwash.mp4';
 
 const Hero = () => {
   const videoRef = useRef(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
-    // Optimized single video handling
+    // Check if screen is small
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    // Optimized video handling with performance improvements
     const video = videoRef.current;
     
     if (video) {
-      // Essential settings only
+      // Essential settings for smooth playback
       video.muted = true;
       video.defaultMuted = true;
       video.volume = 0;
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
       
-      // Minimal preload for faster start
-      video.preload = 'none';
+      // Performance optimizations for smoother playback
+      video.preload = 'metadata'; // Load metadata first
+      video.poster = ''; // Prevent poster flash
       
-      // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
+      // Hardware acceleration and smooth rendering
+      video.style.willChange = 'transform';
+      video.style.backfaceVisibility = 'hidden';
+      video.style.transform = 'translateZ(0)';
+      
+      // Device-specific object-fit adjustments
       const adjustVideoFit = () => {
         const width = window.innerWidth;
-        const height = window.innerHeight;
         
-        // Mobile screens (below 768px) - Force 16:10 aspect ratio
+        // Mobile screens (below 768px) - Force 16:10 aspect ratio with custom height
         if (width < 768) {
-          const idealHeight = width / (16/10); // Calculate 16:10 height
+          const idealHeight = Math.min(452, width / (16/10)); // Use custom 452px or calculated height, whichever is smaller
           
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
           video.style.objectPosition = 'center center';
-          
-          // Center the video container vertically in viewport
           video.style.top = '50%';
           video.style.left = '0';
-          video.style.transform = 'translateY(-50%)';
+          video.style.transform = 'translateY(-50%) translateZ(0)';
           video.style.position = 'absolute';
         }
         // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
@@ -49,7 +61,7 @@ const Hero = () => {
           video.style.objectPosition = 'center center';
           video.style.top = '50%';
           video.style.left = '0';
-          video.style.transform = 'translateY(-50%)';
+          video.style.transform = 'translateY(-50%) translateZ(0)';
           video.style.position = 'absolute';
         }
         // iPad Pro: 1024x1366 - 16:10 cinematic 
@@ -62,7 +74,7 @@ const Hero = () => {
           video.style.objectPosition = 'center center';
           video.style.top = '50%';
           video.style.left = '0';
-          video.style.transform = 'translateY(-50%)';
+          video.style.transform = 'translateY(-50%) translateZ(0)';
           video.style.position = 'absolute';
         }
         // Desktop and Laptop screens (1280px and above) - Full screen as original
@@ -73,7 +85,7 @@ const Hero = () => {
           video.style.width = '100vw';
           video.style.top = '0';
           video.style.left = '0';
-          video.style.transform = 'none';
+          video.style.transform = 'translateZ(0)';
           video.style.position = 'absolute';
         }
       };
@@ -81,34 +93,75 @@ const Hero = () => {
       // Apply initial adjustments
       adjustVideoFit();
       
-      // Reapply on orientation change
-      window.addEventListener('resize', adjustVideoFit);
-      window.addEventListener('orientationchange', adjustVideoFit);
+      // Optimized event listeners with throttling
+      let resizeTimeout;
+      const throttledResize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(adjustVideoFit, 100);
+      };
       
-      // Simple autoplay with minimal error handling
+      window.addEventListener('resize', throttledResize);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(adjustVideoFit, 300); // Delay for orientation change
+      });
+      
+      // Enhanced autoplay with better error handling
       const playVideo = async () => {
         try {
-          await video.play();
+          // Ensure video is ready
+          if (video.readyState >= 2) {
+            await video.play();
+          } else {
+            video.addEventListener('loadeddata', async () => {
+              try {
+                await video.play();
+              } catch (error) {
+                console.log('Autoplay failed, waiting for user interaction');
+              }
+            }, { once: true });
+          }
         } catch (error) {
-          // Single fallback attempt
-          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+          // Fallback for autoplay restrictions
+          const enableVideo = async () => {
+            try {
+              await video.play();
+              document.removeEventListener('click', enableVideo);
+              document.removeEventListener('touchstart', enableVideo);
+            } catch (err) {
+              console.log('Video play failed:', err);
+            }
+          };
+          
+          document.addEventListener('click', enableVideo, { once: true });
+          document.addEventListener('touchstart', enableVideo, { once: true });
         }
       };
       
-      // Start playing immediately
-      playVideo();
+      // Start playing with delay to ensure smooth loading
+      setTimeout(playVideo, 100);
       
       // Cleanup
       return () => {
-        window.removeEventListener('resize', adjustVideoFit);
+        window.removeEventListener('resize', throttledResize);
         window.removeEventListener('orientationchange', adjustVideoFit);
+        clearTimeout(resizeTimeout);
       };
     }
+
+    // Cleanup for screen size listener
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-snow">
-      {/* Video background - single optimized video */}
+    <div 
+      className="relative w-full overflow-hidden bg-snow"
+      style={{ 
+        height: isSmallScreen ? '452px' : '100vh'
+      }}
+    >
+      {/* Video background - optimized for performance */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
@@ -118,21 +171,25 @@ const Hero = () => {
           loop
           muted
           playsInline
-          preload="none"
+          preload="metadata"
           poster=""
           controls={false}
           style={{
             transform: 'translateZ(0)',
             backfaceVisibility: 'hidden',
-            objectPosition: 'center center'
+            willChange: 'transform',
+            objectPosition: 'center center',
+            // Additional performance optimizations
+            WebkitTransform: 'translateZ(0)',
+            WebkitBackfaceVisibility: 'hidden',
           }}
         />
       </div>
 
-      {/* Responsive gradient overlay - height adjusts with screen size */}
+      {/* Responsive gradient overlay */}
       <div className="absolute bottom-0 left-0 w-full h-1/4 sm:h-1/3 md:h-1/3 lg:h-1/3 bg-gradient-to-t from-black/40 to-transparent z-10" />
 
-      {/* Responsive scroll indicator - position and size adjust with screen */}
+      {/* Responsive scroll indicator */}
       <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex flex-col items-center">
           <span className="text-white text-xs sm:text-sm md:text-base mb-1 sm:mb-2 tracking-widest font-medium drop-shadow-md">SCROLL</span>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Play, Check, Shield, Star, Droplets, Settings, HardHat, Sun, Atom, Beaker, X } from 'lucide-react';
 import Footer from '../components/Footer';
 import Quote from '../components/Quote';
+import ContactForm from '../components/ContactForm';
 // Import Ceramic Coating Video
 import ceramicCoatingVideo from '../assets/images/Copy of Ceramic coating.mp4';
 
@@ -15,7 +16,7 @@ const CeramicCoatings = () => {
   useEffect(() => {
     // Optimized single video handling - same as Hero component
     const video = videoRef.current;
-    
+
     if (video) {
       // Essential settings only
       video.muted = true;
@@ -23,24 +24,24 @@ const CeramicCoatings = () => {
       video.volume = 0;
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
-      
+
       // Minimal preload for faster start
       video.preload = 'none';
-      
+
       // Device-specific object-fit adjustments - 16:10 FOR MOBILE/TABLETS, FULL-SCREEN FOR DESKTOP
       const adjustVideoFit = () => {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
+
         // Mobile screens (below 768px) - Force 16:10 aspect ratio
         if (width < 768) {
-          const idealHeight = width / (16/10); // Calculate 16:10 height
-          
+          const idealHeight = width / (16 / 10); // Calculate 16:10 height
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
           video.style.objectPosition = 'center center';
-          
+
           // Center the video container vertically in viewport
           video.style.top = '50%';
           video.style.left = '0';
@@ -49,8 +50,8 @@ const CeramicCoatings = () => {
         }
         // iPad Mini: 768x1024, iPad Air: 820x1180 - 16:10 cinematic
         else if (width >= 768 && width < 1024) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -62,8 +63,8 @@ const CeramicCoatings = () => {
         }
         // iPad Pro: 1024x1366 - 16:10 cinematic 
         else if (width >= 1024 && width < 1280) {
-          const idealHeight = width / (16/10);
-          
+          const idealHeight = width / (16 / 10);
+
           video.style.objectFit = 'cover';
           video.style.width = '100vw';
           video.style.height = `${idealHeight}px`;
@@ -85,27 +86,27 @@ const CeramicCoatings = () => {
           video.style.position = 'absolute';
         }
       };
-      
+
       // Apply initial adjustments
       adjustVideoFit();
-      
+
       // Reapply on orientation change
       window.addEventListener('resize', adjustVideoFit);
       window.addEventListener('orientationchange', adjustVideoFit);
-      
+
       // Simple autoplay with minimal error handling
       const playVideo = async () => {
         try {
           await video.play();
         } catch (error) {
           // Single fallback attempt
-          document.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+          document.addEventListener('click', () => video.play().catch(() => { }), { once: true });
         }
       };
-      
+
       // Start playing immediately
       playVideo();
-      
+
       // Cleanup
       return () => {
         window.removeEventListener('resize', adjustVideoFit);
@@ -121,7 +122,7 @@ const CeramicCoatings = () => {
         if (card) {
           const rect = card.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-          
+
           // Check if card is in viewport (with some offset for better UX)
           if (rect.top < windowHeight * 0.9 && rect.bottom > 0) {
             if (!visibleCards.has(index)) {
@@ -136,7 +137,7 @@ const CeramicCoatings = () => {
 
     // Initial check
     handleScroll();
-    
+
     // Add scroll listener with throttling
     let ticking = false;
     const throttledScroll = () => {
@@ -148,9 +149,9 @@ const CeramicCoatings = () => {
         ticking = true;
       }
     };
-    
+
     window.addEventListener('scroll', throttledScroll);
-    
+
     return () => window.removeEventListener('scroll', throttledScroll);
   }, [visibleCards]);
 
@@ -158,7 +159,7 @@ const CeramicCoatings = () => {
     {
       icon: <Check className="w-8 h-8 text-white" />,
       title: "Self-cleaning",
-      description: "Its super hydrophobic effect makes any liquid bead up and roll off the surface, encapsulating dirt and grime."
+      description: "It's super hydrophobic effect makes any liquid bead up and roll off the surface, encapsulating dirt and grime."
     },
     {
       icon: <Shield className="w-8 h-8 text-white" />,
@@ -309,7 +310,7 @@ const CeramicCoatings = () => {
             />
           </div>
         </div>
-        
+
         {/* Hero Content - positioned below video */}
         <div className="bg-white py-8 sm:py-10 lg:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -393,14 +394,13 @@ const CeramicCoatings = () => {
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {features.map((feature, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index] = el}
-                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
-                  visibleCards.has(index) 
-                    ? 'opacity-100 translate-y-0' 
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index)
+                    ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-12'
-                }`}
+                  }`}
               >
                 <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
                   <div className="transform group-hover:scale-110 transition-transform duration-300">
@@ -418,14 +418,13 @@ const CeramicCoatings = () => {
           {/* Additional Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {additionalFeatures.map((feature, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 4] = el}
-                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
-                  visibleCards.has(index + 4) 
-                    ? 'opacity-100 translate-y-0' 
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index + 4)
+                    ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-12'
-                }`}
+                  }`}
               >
                 <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
                   <div className="transform group-hover:scale-110 transition-transform duration-300">
@@ -460,12 +459,12 @@ const CeramicCoatings = () => {
             <img
               src="https://actioncardetailing.ca/wp-content/uploads/2021/05/financeit.jpg.webp"
               alt="Financeit Logo"
-              className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+              onClick={() => window.open('https://www.financeit.ca/s/omao8A', '_blank')}
             />
           </div>
         </div>
       </section>
-
       {/* Installation Pricing Section */}
       <section className="py-16 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0f7a9c 50%, #1393c4 100%)' }}>
         <div className="container mx-auto px-4">
@@ -503,14 +502,13 @@ const CeramicCoatings = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {packages.map((pkg, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 8] = el}
-                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${
-                  visibleCards.has(index + 8) 
-                    ? 'opacity-100 translate-y-0' 
+                className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index + 8)
+                    ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-12'
-                }`}
+                  }`}
               >
                 <div className="p-6">
                   <div className="mb-6 transform group-hover:scale-105 transition-transform duration-300">
@@ -566,15 +564,14 @@ const CeramicCoatings = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {addOns.map((addon, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 ref={el => cardRefs.current[index + 11] = el}
-                className={`text-white rounded-lg p-6 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl group transform ${
-                  visibleCards.has(index + 11) 
-                    ? 'opacity-100 translate-y-0' 
+                className={`text-white rounded-lg p-6 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl group transform ${visibleCards.has(index + 11)
+                    ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-12'
-                }`}
-                style={{ 
+                  }`}
+                style={{
                   background: `linear-gradient(135deg, #1393c4 0%, #0f7a9c 100%)`
                 }}
               >
@@ -707,6 +704,13 @@ const CeramicCoatings = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-16 bg-gradient-to-br from-sky-100 via-white to-sky-50">
+        <div className="container mx-auto px-4">
+          <ContactForm />
         </div>
       </section>
 
