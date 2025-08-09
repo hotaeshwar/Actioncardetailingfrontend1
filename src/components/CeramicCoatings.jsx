@@ -6,7 +6,7 @@ import ContactForm from '../components/ContactForm';
 // Import Ceramic Coating Video
 import ceramicCoatingVideo from '../assets/images/Copy of Ceramic coating.mp4';
 
-const CeramicCoatings = () => {
+const CeramicCoatings = ({ setCurrentView }) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [visibleCards, setVisibleCards] = useState(new Set());
@@ -398,8 +398,8 @@ const CeramicCoatings = () => {
                 key={index}
                 ref={el => cardRefs.current[index] = el}
                 className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index)
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-12'
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
                   }`}
               >
                 <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
@@ -422,8 +422,8 @@ const CeramicCoatings = () => {
                 key={index}
                 ref={el => cardRefs.current[index + 4] = el}
                 className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index + 4)
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-12'
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
                   }`}
               >
                 <div className="p-6 text-center group-hover:from-[#1393c4] group-hover:to-[#1393c4] transition-all duration-300" style={{ background: '#1393c4' }}>
@@ -465,6 +465,7 @@ const CeramicCoatings = () => {
           </div>
         </div>
       </section>
+
       {/* Installation Pricing Section */}
       <section className="py-16 text-white" style={{ background: 'linear-gradient(135deg, #1393c4 0%, #0f7a9c 50%, #1393c4 100%)' }}>
         <div className="container mx-auto px-4">
@@ -506,8 +507,8 @@ const CeramicCoatings = () => {
                 key={index}
                 ref={el => cardRefs.current[index + 8] = el}
                 className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-transparent hover:border-[#1393c4]/50 group transform ${visibleCards.has(index + 8)
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-12'
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
                   }`}
               >
                 <div className="p-6">
@@ -568,8 +569,8 @@ const CeramicCoatings = () => {
                 key={index}
                 ref={el => cardRefs.current[index + 11] = el}
                 className={`text-white rounded-lg p-6 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl group transform ${visibleCards.has(index + 11)
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-12'
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-12'
                   }`}
                 style={{
                   background: `linear-gradient(135deg, #1393c4 0%, #0f7a9c 100%)`
@@ -618,35 +619,69 @@ const CeramicCoatings = () => {
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#1393c4] via-[#1393c4] to-[#1393c4] bg-clip-text text-transparent mb-8">
                     PROTECT YOUR VEHICLE WITH XPEL FUSION PLUS CERAMIC COATING
                   </h2>
-
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-lite')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS LITE</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS LITE
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-paint-ppf')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PAINT & PPF</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS PAINT & PPF
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-premium')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PREMIUM</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS PREMIUM
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-wheel-caliper')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS WHEEL & CALIPER</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS WHEEL & CALIPER
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-glass')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS GLASS</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS GLASS
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-plastic-trims')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS PLASTIC & TRIMS</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS PLASTIC & TRIMS
+                      </span>
                     </div>
-                    <div className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300">
+                    <div 
+                      className="flex items-center space-x-3 hover:translate-x-2 transition-transform duration-300 cursor-pointer"
+                      onClick={() => setCurrentView('fusion-plus-upholstery')}
+                    >
                       <span className="w-2 h-2 rounded-full" style={{ background: '#1393c4' }}></span>
-                      <span className="font-semibold text-lg underline transition-colors" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>FUSION PLUS UPHOLSTY</span>
+                      <span className="font-semibold text-lg underline transition-colors hover:text-[#0f7ba3]" style={{ color: '#1393c4', textDecorationColor: '#1393c4' }}>
+                        FUSION PLUS UPHOLSTERY
+                      </span>
                     </div>
                   </div>
                 </div>

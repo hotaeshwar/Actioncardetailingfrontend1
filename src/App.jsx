@@ -20,6 +20,14 @@ import DentRepairComponent from './components/DentRepairComponent'  // Import th
 import BeforeAfterVideo from './components/BeforeAfterVideo'  // Import the new Before After Video component
 import Booking from './components/Booking'  // Import the new Booking component
 import PaintPolishingForm from './components/PaintPolishingForm'  // Import the new Paint Polishing Form component
+import ServicesSection from './components/ServicesSection'  // Import the new Services Section component
+import FusionPlusLite from './components/FusionPlusLite'  // Import the FUSION PLUS LITE component
+import FusionPlusLanding from './components/FusionPlusLanding'  // Import the FUSION PLUS PAINT & PPF component (renamed from Landing)
+import FusionPlusPremium from './components/FusionPlusPremium'  // Import the FUSION PLUS PREMIUM component
+import FusionPlusWheelCaliper from './components/FusionPlusWheelCaliper'  // Import the FUSION PLUS WHEEL & CALIPER component
+import FusionPlusGlass from './components/FusionPlusGlass'  // Import the FUSION PLUS GLASS component
+import FusionPlusPlasticTrims from './components/FusionPlusPlasticTrims'  // Import the FUSION PLUS PLASTIC & TRIMS component
+import FusionPlusUpholstery from './components/FusionPlusUpholstery'  // Import the FUSION PLUS UPHOLSTERY component
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -40,8 +48,22 @@ function App() {
         return <PaintCorrection />;
       case 'window-tinting':  // Add the new window tinting case
         return <WindowTintingSite />;
-      case 'ceramic-coatings':  // Add the new ceramic coatings case
-        return <CeramicCoatings />;
+      case 'ceramic-coatings':  // Add the new ceramic coatings case - FIXED LINE
+        return <CeramicCoatings setCurrentView={setCurrentView} />;
+      case 'fusion-plus-lite':  // Add the FUSION PLUS LITE case
+        return <FusionPlusLite />;
+      case 'fusion-plus-paint-ppf':  // Add the FUSION PLUS PAINT & PPF case
+        return <FusionPlusLanding />;
+      case 'fusion-plus-premium':  // Add the FUSION PLUS PREMIUM case
+        return <FusionPlusPremium />;
+      case 'fusion-plus-wheel-caliper':  // Add the FUSION PLUS WHEEL & CALIPER case
+        return <FusionPlusWheelCaliper />;
+      case 'fusion-plus-glass':  // Add the FUSION PLUS GLASS case
+        return <FusionPlusGlass />;
+      case 'fusion-plus-plastic-trims':  // Add the FUSION PLUS PLASTIC & TRIMS case
+        return <FusionPlusPlasticTrims />;
+      case 'fusion-plus-upholstery':  // Add the FUSION PLUS UPHOLSTERY case
+        return <FusionPlusUpholstery />;
       case 'remediation-claim':  // Add the new remediation claim case
         return <RemediationClaim />;
       case 'paint-protection-film':  // Add the new paint protection film case
@@ -54,6 +76,8 @@ function App() {
         return <Booking />;
       case 'paint-polishing':  // Add the new paint polishing form case
         return <PaintPolishingForm />;
+      case 'services':  // Add the new services section case
+        return <ServicesSection />;
       case 'home':
       default:
         return (

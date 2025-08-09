@@ -28,7 +28,9 @@ const Navbar = ({ currentView, setCurrentView }) => {
 
   const handleNavClick = (view, href = null) => {
     if (href) {
-      if (href === '#auto-detailing') {
+      if (href === '#services') {
+        setCurrentView('services');
+      } else if (href === '#auto-detailing') {
         setCurrentView('auto-detailing');
       } else if (href === '#paint-correction') {
         setCurrentView('paint-correction');
@@ -103,6 +105,7 @@ const Navbar = ({ currentView, setCurrentView }) => {
   ];
 
   const serviceItems = [
+    { name: 'ALL SERVICES', href: '#services' }, // Add this as the first item
     { name: 'AUTO DETAILING', href: '#auto-detailing' },
     { name: 'PAINT CORRECTION POLISHING', href: '#paint-correction' },
     { name: 'WINDOW TINTING', href: '#window-tinting' },
@@ -114,8 +117,6 @@ const Navbar = ({ currentView, setCurrentView }) => {
 
   return (
     <>
-
-
       {/* Navbar with transparent background that becomes white on scroll */}
       <nav className={`fixed w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
         <div className="transition-all duration-300">
@@ -177,6 +178,7 @@ const Navbar = ({ currentView, setCurrentView }) => {
                               key={service.name}
                               onClick={() => handleNavClick(null, service.href)}
                               className={`service-menu-item w-full text-left block px-3 lg:px-4 py-2 lg:py-3 text-xs lg:text-sm text-white transition-all duration-200 border-l-4 border-transparent ${
+                                (service.href === '#services' && currentView === 'services') ||
                                 (service.href === '#auto-detailing' && currentView === 'auto-detailing') ||
                                 (service.href === '#paint-correction' && currentView === 'paint-correction') ||
                                 (service.href === '#window-tinting' && currentView === 'window-tinting') ||
@@ -282,6 +284,7 @@ const Navbar = ({ currentView, setCurrentView }) => {
                               key={service.name}
                               onClick={() => handleNavClick(null, service.href)}
                               className={`mobile-service-item w-full text-left block px-3 sm:px-4 py-2 sm:py-3 rounded-md text-xs sm:text-sm md:text-base font-medium text-gray-200 transition-all duration-200 border-l-2 ${
+                                (service.href === '#services' && currentView === 'services') ||
                                 (service.href === '#auto-detailing' && currentView === 'auto-detailing') ||
                                 (service.href === '#paint-correction' && currentView === 'paint-correction') ||
                                 (service.href === '#window-tinting' && currentView === 'window-tinting') ||
